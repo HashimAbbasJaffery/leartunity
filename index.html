@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leartunity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/output.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer></script>
+    <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
+    <style>
+      .none {
+        display: none;
+      }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="flex top-header  container mx-auto mt-4">
+            <div class="logo">
+                <h1>Leartunity.</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li>
+                    <li class="mx-3"><a href="#" class="bold-600">Plans</a></li>
+                    <li class="mx-3"><a href="#" class="bold-600">Courses</a></li>
+                    <li class="mx-3"><a href="#" class="bold-600">Privacy Policy</a></li>
+                    <li class="mx-3 highlighted"><a href="/login" class="bold-600">login</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section id="search-area" class="container mx-auto">
+                <select class="search-type highlighted p-1 mt-4" style="height: 35px;">
+                  <option>Categories</option>
+                  <option>Name</option>
+                  <option>Teachers</option>
+                </select>
+                <input type="text" placeholder="Search for anything!" style="border-radius: 0px; border: 1px solid #424242;" id="q" name="" />
+            </section>
+            <div>
+            <div id="separator" class="container mx-auto mt-4" style="background: black; height: 2px;">&nbsp;</div>
+            <section id="banner" class="text-center">
+              <h1>
+                Education is the most important thing
+              </h1>
+            </section>
+          </div>
+
+          <section id="courses" class="container mx-auto">
+            <h1 class="text-center">top courses</h1>
+            <div class="tabs mt-5">
+              <ul class="flex">
+                <li class="tab mx-3 active" id="tab1" onclick="changeTab(1)" data-tab="1">Web Development</li>
+                <li class="tab mx-3" id="tab2" onclick="changeTab(2)" data-tab="2">Artificial Intelligence</li>
+                <li class="tab mx-3" id="tab3" onclick="changeTab(3)" data-tab="3">Graphic Designing</li>
+              </ul>
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 courses none" style="display: none;" data-content="1">
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star-half-stroke"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>Free</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-4 courses"  data-content="2">
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Kaka Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star-half-stroke"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>Free</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 courses none" style="display: none;" data-content="3">
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star-half-stroke"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>Free</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+              <div class="course">
+                <div class="course-header">
+                  <img src="https://placehold.co/600x400" alt="">
+                </div>
+                <div class="course-instructor mt-4 flex">
+                  <div class="instructor-img">
+                    <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                  </div>
+                  <div class="instructor-details flex">
+                    <h2>Hashim A.</h2>
+                    <div class="course-rating flex"> 
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="course-detail mt-4">
+                  <div class="course-description">
+                    <p>
+                      Artificial Intelligence, or AI, refers to computer systems mimicking human intelligence...
+                    </p>
+                  </div>
+                  <div class="course-options mt-2">
+                    <a href="#">enroll</a>
+                    <a href="#">see details</a>
+                  </div>
+                  <div class="course-price flex justify-between">
+                    <p>$50</p>
+                    <p>60 Hour Course</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="plans">
+            <div class="container mx-auto" style="max-width: 900px;">
+              <h1 class="text-center" style="color: white; margin-bottom: 10px;">plans</h1>
+              <div class="plans grid gap-4 grid-cols-2">
+                <div class="monthly plan">
+                  <h1>monthly</h1>
+                  <p>$6/month</p>
+                  <div class="separator">&nbsp;</div>
+                  <p>cancel anytime</p>
+                  <button>subscribe</button>
+                </div>
+                <div class="annually plan">
+                  <h1>annually</h1>
+                  <p>$9/month</p>
+                  <div class="separator">&nbsp;</div>
+                  <p>cancel anytime</p>
+                  <button>subscribe</button>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="apply-for-teaching" class="container mx-auto flex grid grid-cols-2">
+            <div class="side-image">
+              <img src="./assets/img/sample.jpg" alt="">
+            </div>
+            <div class="apply">
+              <h1>
+                become 
+                <br>
+                teacher?
+              </h1>
+              <p>Start teaching right away, and arrange live sessions</p>
+              <button>apply</button>
+            </div>
+          </section>
+        </main>
+        <footer>
+          <div class="container mx-auto flex justify-around">
+          <div class="first-column column">
+            <h1>Learning Materials</h1>
+            <nav>
+              <ul>
+                <li>courses</li>
+                <li>books</li>
+                <li>live sessions</li>
+                <li>teachers</li>
+              </ul>
+            </nav>
+          </div>
+          <div class="second-column column">
+            <h1>Website Information</h1>
+            <nav>
+              <ul>
+                <li>privacy policy</li>
+                <li>contact us</li>
+                <li>feedbacks</li>
+              </ul>
+            </nav>
+          </div>
+          <div class="fourth-column column">
+            <h1>Newsletter</h1>
+            <div class="newsletter">
+              <input type="text" />
+              <button>Subscribe</button>
+            </div>
+          </div>
+          
+          <div class="third-column column">
+            <h1>Leartunity.</h1>
+          </div>
+        </div>
+        </footer>
+    </div>
+    <script src="./assets/js/transition.js"></script>
+</body>
+</html>
