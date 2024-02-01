@@ -2,9 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:wght@300;400;500;600;700;800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
 :root {
     --primary: #333;
     --secondary: white;
+    --family: 'Montserrat', sans-serif;
 }
 /******************* LOGIN *******************/
 
@@ -31,13 +34,13 @@
 }
 .login-form h1 {
     font-size: 55px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--family);
     font-weight: bold;
     height: 70px;
     margin-bottom: 0px;
 }
 .login-form p {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--family);
     font-weight: light;
     font-style: italic;
 }
@@ -65,7 +68,7 @@ input {
 input[type='submit'] {
     background-color: var(--primary);
     color: var(--secondary);
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--family);
     font-size: 20px;
     font-weight: light;
 }
@@ -101,7 +104,7 @@ header nav ul li a:hover {
     padding-bottom: 10px;
 }
 .logo h1 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--family);
     font-weight: bold;
     font-size: 30px;
 }
@@ -128,8 +131,8 @@ input#q {
     color: var(--secondary);
     margin: auto;
 }
-* {
-    font-family: 'Montserrat', sans-serif !important;
+*:not(i) {
+    font-family: var(--family) !important;
 }
 #q {
     padding-left: 10px;
@@ -137,7 +140,7 @@ input#q {
 #banner h1 {
     font-size: 50px;
     padding: 40px 40px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--family);
     font-weight: bold;
 }
 #banner h1::before {
@@ -373,14 +376,218 @@ footer {
     margin-bottom: 10px;
 }
 
+/*************** SINGLE COURSE *****************/
 
 
+section.intro-video {
+    margin-top: 20px;
+}
+.video {
+    width: 100%;
+    height:300px;
+    margin-bottom: 30px;
+}
+.video video {
+    margin: 0 auto;
+    width: auto;
+    height: 100%;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+.intro-video {
+    align-items: start;
+    justify-content: center;
+}
+
+/* body {
+	background-color: #6DC4F4;
+}h1 { 
+     color:white;
+ 
+} */
+
+.container_playlist {
+    width: 80%;
+    max-width: 600px;
+    margin: 50px auto;
+  }
+  
+  button.accordion {
+    width: 100%;
+    background-color: whitesmoke;
+    border: none;
+    outline: none;
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s linear;
+  }
+  
+  button.accordion:after {
+    font-family: FontAwesome;
+    content: "\f150";
+    font-family: "fontawesome";
+    font-size: 18px;
+    float: right;
+  }
+  
+  button.accordion.is-open:after {
+    content: "\f151";
+  }
+  
+  button.accordion:hover,
+  button.accordion.is-open {
+    background-color: #ddd;
+  }
+  
+  .accordion-content {
+    background-color: white;
+    border-left: 1px solid whitesmoke;
+    border-right: 1px solid whitesmoke;
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+  }
 
 
+/********** PLAYLIST DESIGN *************/
 
+.playlist {
+    width: 100%;
+}
+.container_playlist {
+    width: 95%;
+    margin: 0px;
+    float: right;
+    height: 300px;
+    overflow: auto;
+}
+.intro-video {
+    justify-content: space-between;
+}
 
+.accordion-content ul li {
+    padding-bottom: 5px;
+    
+    text-decoration: underline;
+    padding-top: 5px;
+}
+.accordion-content ul time {
+    text-decoration: none;
+}
+.accordion-content ul a{
+    /* padding-bottom: 10px; */
+    /* padding-top: 10px; */
+}
+.section-link {
+    align-items: center;
+    justify-content: space-between;
+}
 
+.paid {
+    cursor: not-allowed;
+    color: var(--primary);
+    filter: brightness(200%);
+}
+.paid time::after {
+    content: " - Paid";
+}
+.course-header > p {
+    font-size: 30px;
+    font-weight: 500;
+}
+.course-details p {
+    margin-bottom: 10px;
+}
+.course-details h1 {
+    font-size: 25px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--primary);
+}
+.course-details h1,
+.course-details ul {
+    margin-bottom: 15px;
+}
+.course-details ul {
+    list-style:disc;
+}
+.course-section {
+    justify-content: start;
+}
+.instructor-info p {
+    font-size: 13px;
+    margin-top: 10px;
+}
+.course-instruction {
+    margin-top: 20px;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    padding: 10px;;
+}
+.course-details .option {
+    margin-top: 30px;
+}
+.course-highlighted {
+    padding: 5px 10px 5px 10px;
+}
+.option {
+    margin-top: 10px;
+}
+.option button:last-child {
+    background-color: transparent;
+    color: black;
+    border: 1px solid var(--primary);
+}
+.course-instruction {
+    margin-bottom: 10px;
+}
+.review {
+    background-color: rgb(243, 242, 242);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.reply {
+    width: 90%;
+    display: flex;
+    align-items: end;
+    margin-left: 10%;
+}
+.review-header {
+    display: flex;
+    align-items: center;
+}
+#reviews {
+    margin-top: 30px;
+}
+.review-header h1 {
+    font-size: 20px;
+}
+.review-header .stars {
+    margin-left: 20px;
+}
+.write_review textarea {
+    background-color: rgb(243, 242, 242);
+    width: 100%;
+    padding: 10px;
+    border-bottom: 2px solid var(--primary);
+    resize: none;
+    outline: none;
+    transition: .5s ease;
+}
+.write_review textarea:focus {
+    border-bottom: 2px solid rgb(0, 162, 255);
+}
+#write-review {
+    margin-bottom: 40px;
+}
 
-
-
-
+#write-review .course-rating {
+    font-size: 25px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
