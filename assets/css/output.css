@@ -1237,11 +1237,6 @@ button.accordion:hover,
   text-decoration: none;
 }
 
-.accordion-content ul a{
-  /* padding-bottom: 10px; */
-  /* padding-top: 10px; */
-}
-
 .section-link {
   align-items: center;
   justify-content: space-between;
@@ -1251,10 +1246,6 @@ button.accordion:hover,
   cursor: not-allowed;
   color: var(--primary);
   filter: brightness(200%);
-}
-
-.paid time::after {
-  content: " - Paid";
 }
 
 .course-header > p {

@@ -1,1 +1,2 @@
 code .
+php artisan serve

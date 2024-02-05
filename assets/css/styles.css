@@ -478,10 +478,6 @@ section.intro-video {
 .accordion-content ul time {
     text-decoration: none;
 }
-.accordion-content ul a{
-    /* padding-bottom: 10px; */
-    /* padding-top: 10px; */
-}
 .section-link {
     align-items: center;
     justify-content: space-between;
@@ -491,9 +487,6 @@ section.intro-video {
     cursor: not-allowed;
     color: var(--primary);
     filter: brightness(200%);
-}
-.paid time::after {
-    content: " - Paid";
 }
 .course-header > p {
     font-size: 30px;

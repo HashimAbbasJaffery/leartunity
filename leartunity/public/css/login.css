@@ -110,8 +110,9 @@ body {
 .account_not_found {
     position: absolute;
     z-index: 2;
-    background-color: #FF0000;
+    background-color: var(--primary);
     color: white;
+    font-size: 13px;
     padding: 10px;
     top: 92%;
     font-family: var(--family);

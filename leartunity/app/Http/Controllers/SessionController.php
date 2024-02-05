@@ -20,7 +20,7 @@ class SessionController extends Controller
 
             $request->session()->regenerate();
 
-            return to_route("test");
+            return to_route("home");
         }
 
         return redirect()->back()->with("error", "Invalid Username or Password");
