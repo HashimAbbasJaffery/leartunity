@@ -42,10 +42,12 @@
                         <x-user.course 
                             :title="$course->title"
                             :instructor="$course->author->name"
-                            duration="50"
+                             duration="50"
                             :description="$course->description"
                             :price="$course->price"
                             :rating="$stars"
+                            :stripe="$course->stripe_id"
+                            :slug="$course->slug"
                         />
                         
                     @endforeach

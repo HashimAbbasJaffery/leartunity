@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\Authenticate;
 use App\Models\Course;
+use App\Models\Section;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\HomeController;
@@ -21,19 +22,28 @@ use App\Http\Controllers\CourseController;
 // Testing Routes 
 
 Route::get("poly", function() {
-    $course = Course::first();
-    $value = [
-        [
-            "name" => "Hashim Abbas",
-            "status" => "true",
-            "stars" => "4.3"
-        ]
-    ];
-    $course->reviews()->create([
-        "reviews" => json_encode($value),
-        "status" => true
-    ]);
+    // $course = Course::first();
+    // $value = [
+    //     [
+    //         "name" => "Hashim Abbas",
+    //         "status" => "true",
+    //         "stars" => "4.3",
+    //         "review" => "It was such an amazing course!"
+    //     ]
+    // ];
+    // $course->reviews()->create([
+    //     "reviews" => json_encode($value),
+    //     "status" => true
+    // ]);
 
+    $section = Section::first();
+    $section->contents()->create([
+        "title" => "The Paid Course",
+        "status" => 1,
+        "is_paid" => 1,
+        "content" => "dummy.mp4",
+        "duration" => 400
+    ]);
     dd("Created!");
 });
 
@@ -47,4 +57,4 @@ Route::group([ "middleware" => "auth" ], function() {
 });
 
 Route::get('/', [HomeController::class, "index"])->name("home");
-Route::get("/course/{course:slug}", [CourseController::class, "get"]);
+Route::get("/course/{course:slug}", [CourseController::class, "get"])->name("course");

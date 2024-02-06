@@ -1365,3 +1365,20 @@ button.accordion:hover,
   margin-bottom: 10px;
   cursor: pointer;
 }
+
+
+body {
+  position: relative !important;
+}
+.account_not_found {
+  position: fixed !important;
+  z-index: 2;
+  background-color: rgb(38, 173, 38);
+  color: white;
+  font-size: 13px;
+  padding: 10px;
+  top: 92%;
+  font-family: var(--family);
+  border-radius: 5px;
+  right: 1%;
+}

@@ -8,30 +8,8 @@
         </div>
         <div class="instructor-details flex">
             <h2>{{ $instructor }}</h2>
-            @php 
-                $total = 5;
-                $stars = floor($rating); // 1
-                $halfStar = $rating - $stars; // 1.4 - 1 = 0.4
-                $remainingStars = ($total - $stars);
-                if($halfStar >= 0.5) {
-                    $remainingStars -= $halfStar;
-                }
-                $remainingStars = floor($remainingStars);
-            @endphp 
             <div class="course-rating flex">
-                @if($rating <= 5 && $rating != 0)
-                    @for($i = 0; $i < $stars; $i++)
-                        <i class="fa-solid fa-star"></i>
-                    @endfor
-                    @if($halfStar >= 0.5)    
-                        <i class="fa-solid fa-star-half-stroke"></i>
-                    @endif
-                    @for($i = 0; $i < ($remainingStars); $i++)
-                        <i class="fa-regular fa-star"></i>
-                    @endfor
-                @else 
-                    <p>No rating yet!</p>
-                @endif 
+                {!! calculateReviewStars($rating) !!}
             </div>
         </div>
     </div>
@@ -44,8 +22,12 @@
             {!! substr($description, 0, 80) !!}...
         </div>
         <div class="course-options mt-2">
-            <a href="#">enroll</a>
-            <a href="#">see details</a>
+            @if(!$is_purchased)
+                <a href="{{ route("checkout", ['id' => $stripe ]) }}">enroll</a>
+            @else 
+                <a href="">Go to Course</a>
+            @endif
+            <a href="{{ route('course', [ 'course' =>  $slug]) }}">see details</a>
         </div>
         <div class="course-price flex justify-between">
             <p>{{ $price }} $</p>

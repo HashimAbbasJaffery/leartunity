@@ -17,13 +17,17 @@ class Course extends Component
     public $price;
     public $rating;
     public $description;
+    public $stripe;
+    public $slug;
     public function __construct(
         $title, 
         $instructor, 
         $price, 
         $rating, 
         $duration,
-        $description
+        $description,
+        $stripe,
+        $slug
     )
     {
         $this->title = $title;
@@ -32,6 +36,8 @@ class Course extends Component
         $this->rating = $rating;
         $this->duration = $duration;
         $this->description = $description;
+        $this->stripe = $stripe;
+        $this->slug = $slug;
     }
 
     /**
@@ -39,6 +45,12 @@ class Course extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.user.course');
+        $user = auth()->user();
+        $purchases = $user->purchases()->where("purchase_product_id", $this->stripe)->first();
+        $is_purchased = false;
+        if($purchases) {
+            $is_purchased = true;
+        }
+        return view('components.user.course', compact("is_purchased"));
     }
 }

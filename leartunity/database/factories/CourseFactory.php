@@ -28,6 +28,7 @@ class CourseFactory extends Factory
             "author_id" => 1,
             "price" => fake()->randomFloat(1, 1, 100),
             "slug" => $slug,
+            "stripe_id" => "price_1OglnuEHPJtVUmag6DxxffKD",
             "pre_req" => "<p>" . implode("</p><p>", $paragraphs) . "<p>"
         ];
     }
