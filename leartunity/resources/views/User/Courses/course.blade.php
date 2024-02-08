@@ -2,27 +2,39 @@
         <main>
           <section class="intro-video container mx-auto">
             <div class="flex">
-              <div class="video col-span-2">
+              <div class="video col-span-2" style="position: relative;">
+                  <div class="spinner" style="position: absolute; z-index: 2; background: black; width: 100%; height: 112%; display: flex; align-items: center; justify-content: center; display: none;">
+                    <div class="loader"></div>
+                  </div>
                 <video id="player" playsinline controls data-poster="https://placehold.co/600x400">
-                  <source src="{{ asset('uploads/' . $introduction) }}" type="video/mp4" />
-                  <source src="{{ asset('uploads/' . $introduction) }}" type="video/webm" />
+                  <source class="video" src="{{ asset('uploads/' . $introduction) }}" type="video/mp4" />
+                  <source class="video" src="{{ asset('uploads/' . $introduction) }}" type="video/webm" />
                 <!-- Captions are optional -->
                 </video>
               </div>
               <div class="playlist container mx-auto">
                 <div class="container_playlist">
                   
-                
+                  @php
+                    $stripe_id = $course->stripe_id;
+                    $purchased = auth()->user()->purchases()->where("purchase_product_id", $stripe_id)->exists();
+                  @endphp
                   @foreach($sections as $section)
+                  @php 
+                    $outerIndex = $loop->index;
+                  @endphp
                   <button class="accordion">{{ $section->section_name }}</button>
                   <div class="accordion-content">
                     <ul>
                       @foreach($section->contents as $content)
-                        <a class="{{ $content->is_paid ? 'paid' : '' }} flex section-link">
-                          <li>1 - {{ $content->title }}</li>
-                          <time>
+                        @php 
+                          $innerIndex = $loop->index;
+                        @endphp 
+                        <a data-id="{{ $content->id }}" href="{{ route('getContent', [ 'content' => $content->id ]) }}" class="course-link {{ ($content->is_paid && !$purchased) ? 'paid' : '' }} flex section-link">
+                          <li>{{ $outerIndex + 1}}.{{ $innerIndex + 1}} - {{ $content->title }}</li>
+                          <time style="font-size: 13px;">
                             {{ secondToMinutes($content->duration) }}
-                            @if($content->is_paid)
+                            @if($content->is_paid && !$purchased)
                               - 
                               <i class="fa-solid fa-lock"></i>
                             @endif
@@ -46,7 +58,6 @@
               {!! $course->pre_req !!}
               <div class="option">  
                 <a class="highlighted course-highlighted" href="{{ route("checkout", ['id' => $course->stripe_id ]) }}">Enroll</a>
-            
                 <button class="highlighted course-highlighted">Financial-Aid</button>
               </div>
             </div>
@@ -135,5 +146,42 @@
           <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
           <script src="{{ asset('js/transition.js') }}"></script>
           <script src="{{ asset('js/feedback.js') }}"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+          <script src="{{ asset("js/changeVideoSource.js") }}"></script>
+          <script>
+            const player = new Plyr("#player");
+            player.source = {
+              type: 'video',
+              title: 'Example title',
+              sources: [
+                  {
+                      src: '/uploads/{{ $introduction }}',
+                      type: 'video/mp4',
+                      size: 720,
+                  } 
+              ],
+            }
+            const links = document.querySelectorAll(".course-link");
+            links.forEach(link => {
+              link.addEventListener("click", function(e) {
+                e.preventDefault();
+                const id = link.dataset.id;
+                axios.get(`/content/${id}`)
+                  .then(res => {
+                    const data = res.data;
+                    if(data.type === "success") {
+
+                      changeVideoSource(player, `/uploads/${data.message}`)
+                     
+                    } else {
+                      alert("failed");
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  })
+              });
+            })
+          </script>
         @endpush
     </x-layout>

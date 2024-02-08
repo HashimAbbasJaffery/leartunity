@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContentController;
 use App\Http\Middleware\Authenticate;
 use App\Models\Course;
 use App\Models\Section;
@@ -35,15 +36,29 @@ Route::get("poly", function() {
     //     "reviews" => json_encode($value),
     //     "status" => true
     // ]);
-
-    $section = Section::first();
-    $section->contents()->create([
-        "title" => "The Paid Course",
-        "status" => 1,
-        "is_paid" => 1,
-        "content" => "dummy.mp4",
-        "duration" => 400
-    ]);
+    $array = [
+        "Welcome to this section. This is what you will learn!" => 1,
+        "What is a Vector?" => 1,
+        "Let's create some vectors" => 1,
+        "Using the [] brackets" => 1,
+        "Vectorized operations" => 0,
+        "The power of vectorized operations" => 1,
+        "Functions in R" => 1,
+        "Packages in R" => 1,
+        "Section Recap" => 1,
+        "HOMEWORK: Financial Statement Analysis" => 1,
+        "Fundamentals of R" => 1
+    ];
+    $section = Section::where("id", 12)->first();
+    foreach($array as $lessonName => $status) {
+        $section->contents()->create([
+            "title" => $lessonName,
+            "status" => 1,
+            "is_paid" => $status,
+            "content" => "dummy.mp4",
+            "duration" => 400
+        ]);
+    }
     dd("Created!");
 });
 
@@ -58,3 +73,5 @@ Route::group([ "middleware" => "auth" ], function() {
 
 Route::get('/', [HomeController::class, "index"])->name("home");
 Route::get("/course/{course:slug}", [CourseController::class, "get"])->name("course");
+
+Route::get("content/{content:id}", [ContentController::class, "get"])->name("getContent");

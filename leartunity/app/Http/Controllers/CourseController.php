@@ -25,4 +25,5 @@ class CourseController extends Controller
             $reviews = (new Pagination($reviews, request()))->manualPaginate();
         return view("user.courses.course", compact("sections", "course", "reviews", "introduction"));
     }
+
 }

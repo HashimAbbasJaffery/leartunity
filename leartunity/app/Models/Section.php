@@ -14,6 +14,9 @@ class Section extends Model
 {
     use HasFactory;
 
+    public function course() {
+        return $this->belongsTo(Course::class, "course_id");
+    }
     public function contents(): MorphMany {
         return $this->MorphMany(Content::class, "contentable");
     }
