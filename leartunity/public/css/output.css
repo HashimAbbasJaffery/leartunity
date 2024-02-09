@@ -1397,3 +1397,34 @@ body {
    66%  {background-position:-30px 0, 10px 40px, 20px 20px}
    100% {background-position:-30px 0, 10px 40px, 50px 20px}
 }
+
+
+/************* STORE AREA ***************/
+main .store {
+  margin-top: 20px;
+}
+.filter h1 {
+  font-size: 20px;
+}
+aside {
+  width: 20%;
+}
+.store-section {
+  width: 78%;
+}
+.range-inputs {
+  display: flex;
+}
+.store {
+  display: flex;
+  justify-content: space-between;
+}
+.load-more {
+  height: 30px;
+  margin-bottom: 30px;
+  width: 20%;
+}
+.load-more_section {
+  display: flex;
+  justify-content: center;
+}

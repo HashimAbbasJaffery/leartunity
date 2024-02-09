@@ -21,7 +21,7 @@ class ContentController extends Controller
         if($course["type"] === "error") return $this->response("error", "something went wrong");
         $isEligible = auth()->user()->purchases()->where("purchase_product_id", $course->stripe_id)->exists();
         if(!$content->status) return $this->response("error", "This Content is archived");
-        if(!$isEligible) return $this->response("error", "You are not eligible to access");
+        if(!$isEligible && ($content->is_paid)) return $this->response("error", "You are not eligible to access");
 
         return $this->response("success", $successResponse);
     }
@@ -29,14 +29,10 @@ class ContentController extends Controller
         
         $course = Course::find(request()->get("course_id"));
         $video = $content->content;
-        $id = $content->id;
-        if(cache()->has($content->id)) {
-            return cache()->get($content->id);
-        } else {
-            $content = $this->checkContentEligibility($content, $video);
-            cache()->put($id, $content);
-            return cache()->get($id);
-        }
+        
+        $content = $this->checkContentEligibility($content, $video);
+        
+        return $content;
     
     }
 }

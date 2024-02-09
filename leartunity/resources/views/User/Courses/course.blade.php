@@ -57,8 +57,14 @@
               <h1>Pre-Requisites</h1>
               {!! $course->pre_req !!}
               <div class="option">  
-                <a class="highlighted course-highlighted" href="{{ route("checkout", ['id' => $course->stripe_id ]) }}">Enroll</a>
-                <button class="highlighted course-highlighted">Financial-Aid</button>
+                @php 
+                  $course_stripe = $course->stripe_id;
+                  $is_purchased = auth()->user()->purchases()->where("purchase_product_id", $course_stripe)->exists();
+                @endphp
+                @if(!$is_purchased)
+                  <a class="highlighted course-highlighted" href="{{ route("checkout", ['id' => $course->stripe_id ]) }}">Enroll</a>
+                  <button class="highlighted course-highlighted">Financial-Aid</button>
+                @endif
               </div>
             </div>
           </section>
@@ -174,7 +180,7 @@
                       changeVideoSource(player, `/uploads/${data.message}`)
                      
                     } else {
-                      alert("failed");
+                      alert("You are trying you hack... right?");
                     }
                   })
                   .catch(err => {
