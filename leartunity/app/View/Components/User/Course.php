@@ -19,6 +19,7 @@ class Course extends Component
     public $description;
     public $stripe;
     public $slug;
+    public $profile;
     public function __construct(
         $title, 
         $instructor, 
@@ -27,7 +28,8 @@ class Course extends Component
         $duration,
         $description,
         $stripe,
-        $slug
+        $slug,
+        $profile
     )
     {
         $this->title = $title;
@@ -38,6 +40,7 @@ class Course extends Component
         $this->description = $description;
         $this->stripe = $stripe;
         $this->slug = $slug;
+        $this->profile = $profile;
     }
 
     /**

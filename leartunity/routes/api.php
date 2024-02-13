@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get("/courses", function() {
+    $courses = Course::whereStatus(1)->paginate(6);
+    return json_encode($courses);
+})->name("getApiCourses");
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

@@ -77,4 +77,6 @@ Route::get("/course/{course:slug}", [CourseController::class, "get"])->name("cou
 Route::get("content/{content:id}", [ContentController::class, "get"])->name("getContent");
 
 Route::get("courses", [CourseController::class, "getCourses"])->name("getCourses");
-Route::post("courses", [CourseController::class, "getData"])->name("getCourses");
+Route::post("get/courses", [CourseController::class, "getData"])->name("getCourses");
+
+Route::get("ajaxCourses", [CourseController::class, "ajax"]);

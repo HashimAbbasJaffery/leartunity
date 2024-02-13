@@ -7,9 +7,11 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use App\Classes\Pagination;
+use Illuminate\Support\Facades\Http;
 
 class CourseController extends Controller
 {
+    public $i = 0;
     public function get(Course $course) {
         $sections = $course->sections;
         if(!count($sections) ) {
@@ -29,6 +31,8 @@ class CourseController extends Controller
 
     public function getCourses() {
         $courses = Course::whereStatus(1)->paginate(6);
+        $courses->withPath("get/courses");
+        // $courses = Http::get("ajaxCourses");
         $categories = Category::whereStatus(1)->get();
         return view("guest.courses.courses", compact("courses", "categories"));
     }
@@ -51,12 +55,17 @@ class CourseController extends Controller
             $parameters["search"] = json_decode(request()->search);
         }
 
-        $courses = Course::with("author", "reviews")->filter($parameters)->whereStatus(1)->paginate(6);
+        $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->whereStatus(1)->paginate(6);
         $courses->map(function($course) {
             $stripe_id = $course->stripe_id;
             $is_purchased = auth()->user()->purchases()->where("purchase_product_id", $stripe_id)->exists();
             $course["is_purchased"] = $is_purchased;
         });
+        return $courses;
+    }
+
+    public function ajax() {
+        $courses = Course::whereStatus(1)->paginate(6);
         return $courses;
     }
 

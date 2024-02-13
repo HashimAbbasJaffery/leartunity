@@ -43,6 +43,7 @@
                     </div>
                     <input type="submit" value="Apply Filters" class="mt-3"  style="cursor: pointer;width: 100%; border-radius: 5px; font-size: 14px;"/>
                 </form>
+                <input style="background: transparent; color: black;font-size: 14px; cursor: pointer;text-align: center;width: 100%; border-radius: 5px; padding-left: 10px;" type="submit" value="Clear Filters" class="mt-3" id="clear-filter"/>
             </aside>
             <div class="store-section">
                 <div class="grid grid-cols-3 gap-4 store-cards">
@@ -54,12 +55,14 @@
                             if(isset($reviews->stars)) {
                                 $stars = $reviews->stars;
                             }
+                            $profile = $course->author->profile;
                             @endphp
                             <x-user.course 
                                 :title="$course->title"
                                 :instructor="$course->author->name"
                                 duration="50"
                                 :description="$course->description"
+                                :profile="$profile->profile_pic ?? ''"
                                 :price="$course->price"
                                 :rating="$stars"
                                 :stripe="$course->stripe_id"
@@ -68,9 +71,11 @@
                             
                         @endforeach
                 </div>
-                <div class="load-more_section">
-                    <button class="highlighted load-more">Load More</button>
-                </div>
+                @if($courses->hasPages())
+                    <div class="load-more_section">
+                        <button class="highlighted load-more" style="display: none;" data-url="{{ $courses->nextPageUrl() }}">Load More</button>
+                    </div>
+                @endif
             </div>
         </section>
     </main>
@@ -78,6 +83,7 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module">
             import course from "./js/templates/course.js";
+            const lol = "lol";
             const form = document.querySelector("#submitFilter");
 
             form.addEventListener("submit", function(e) {
@@ -99,14 +105,14 @@
 
                 prices = Array.from(prices);
                 console.log(prices);
-
+                
                 const flag = prices.every(price => {
                     return price.value !== "" && price.value >= 0;
                 })
 
                 // Checking if from < to or not 
 
-                if(flag === true && (prices[0].value <= prices[1].value)) {
+                if(flag === true && (+prices[0].value <= +prices[1].value)) {
                     priceRange.push(prices[0].value);
                     priceRange.push(prices[1].value);
                 }
@@ -122,15 +128,33 @@
                         keyword: keyword.value
                     }
                 };
-
-                axios.post("/courses", {
+                window.parameters = {
+                    categories: checkedIds,
+                    price_range: priceRange,
+                    search: JSON.stringify(search)
+                };
+                axios.post("/get/courses", {
                     categories: checkedIds,
                     price_range: priceRange,
                     search: JSON.stringify(search)
                 })
                     .then(res => {
+                        console.log(res);
+                        const next_page_url = res.data.next_page_url;
+                        console.log(next_page_url);
+
+                        // Loadmore pagination visibility 
+
+                        const loadmore = document.querySelector(".load-more");
+                        if(loadmore && !next_page_url) {
+                            loadmore.style.display = "none";
+                        } else { 
+                            if(loadmore) {
+                                loadmore.style.display = "block";
+                                loadmore.setAttribute("data-url", next_page_url);
+                            }
+                        }
                         const courses = res.data.data;
-                        console.log(courses);
                         const store = document.querySelector(".store-cards");
                         store.innerHTML = "";
                         courses.forEach(data => {
@@ -144,6 +168,62 @@
                     .catch(err => {
                         console.log(err)
                     });
+            })
+
+            const clear = document.getElementById("clear-filter");
+            clear.addEventListener("click", function() {
+                const checkboxes = document.querySelectorAll(".category-checkbox:checked");
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                const prices = document.querySelectorAll(".price_range");
+                prices.forEach(price => {
+                    price.value = "";
+                })
+
+                const keyword = document.getElementById("q");
+                keyword.value = "";
+            });
+        </script>
+        <script type="module">
+            
+            import course from "./js/templates/course.js";
+            const loadmore = document.querySelector(".load-more");
+            loadmore.addEventListener("click", function() {
+                const url = loadmore.dataset.url;
+                const paremeters = {};
+                if(window.parameters) {
+                    parameters = window.parameters;
+                }
+                axios.post(url, parameters)
+                    .then(res =>{
+                        const next_page_url = res.data.next_page_url;
+                        
+                        // Loadmore pagination visibility 
+
+                        const loadmore = document.querySelector(".load-more");
+                        if(loadmore && !next_page_url) {
+                            loadmore.style.display = "none";
+                        } else { 
+                            loadmore.style.display = "block";
+                            loadmore.setAttribute("data-url", next_page_url);
+                        }
+
+                        const courses = res.data.data;
+                        console.log(courses);
+                        const store = document.querySelector(".store-cards");
+                        courses.forEach(data => {
+                            console.log(data);
+                            store.innerHTML += course(data);
+                        })
+                        if(courses.length < 1) {
+                            store.innerHTML = '<div><p>No course was found!</p></div>';
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                    })
             })
         </script>
     @endpush 

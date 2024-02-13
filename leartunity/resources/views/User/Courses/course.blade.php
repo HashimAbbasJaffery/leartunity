@@ -71,7 +71,14 @@
           <section id="instructor" class="course-instruction container mx-auto">
             <div class="course-instructor course-section mt-4 flex">
               <div class="instructor-img">
-                <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                @php 
+                  $profile = $course->author->profile;
+                @endphp 
+                @if($profile)
+                  <img src="/profile/{{ $profile->profile_pic }}" height="45" width="45" class="rounded-full" alt="">
+                @else 
+                  <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                @endif 
               </div>
               <div class="instructor-details flex">
                 <h2>{{ $course->author->name }}</h2>

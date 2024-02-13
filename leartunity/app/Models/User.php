@@ -51,4 +51,7 @@ class User extends Authenticatable implements CanResetPassword
     public function purchases() {
         return $this->hasMany(Purchase::class, "user_id");
     }
+    public function profile(){
+        return $this->hasOne(Profile::class);
+    }
 }
