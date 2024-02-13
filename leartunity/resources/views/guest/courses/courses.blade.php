@@ -67,15 +67,14 @@
                                 :rating="$stars"
                                 :stripe="$course->stripe_id"
                                 :slug="$course->slug"
+                                :thumbnail="$course->thumbnail"
                             />
                             
                         @endforeach
                 </div>
-                @if($courses->hasPages())
-                    <div class="load-more_section">
-                        <button class="highlighted load-more" style="display: none;" data-url="{{ $courses->nextPageUrl() }}">Load More</button>
-                    </div>
-                @endif
+                <div class="load-more_section">
+                    <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif" data-url="{{ $courses->nextPageUrl() }}">Load More</button>
+                </div>
             </div>
         </section>
     </main>
@@ -192,7 +191,7 @@
             const loadmore = document.querySelector(".load-more");
             loadmore.addEventListener("click", function() {
                 const url = loadmore.dataset.url;
-                const paremeters = {};
+                let parameters = {};
                 if(window.parameters) {
                     parameters = window.parameters;
                 }

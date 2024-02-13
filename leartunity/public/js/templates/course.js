@@ -8,7 +8,8 @@ const course = data => {
         price,
         is_purchased,
         slug,
-        stripe_id
+        stripe_id,
+        thumbnail
      } = data;
     const { name } = author;
     const { reviews } = data;
@@ -17,7 +18,7 @@ const course = data => {
     // {!! substr($description, 0, 80) !!}...
     return `
     <div class="course">
-    <div class="course-header" style="position: relative;">
+    <div class="course-header" style="position: relative;position: relative; background: #333; height: 185px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
         ${
             (is_purchased)
                 ?
@@ -25,7 +26,7 @@ const course = data => {
                 :
             ""
         }
-        <img src="https://placehold.co/600x400" alt="">
+        <img style="border-radius: 0px;" src="${thumbnail ? '/course/' + thumbnail : 'https://placehold.co/600x400'}" height="600" width="400" alt="">
     </div>
     <div class="course-instructor mt-4 flex">
         <img src="${ profile?.profile_pic ? '/profile/' + profile.profile_pic : 'https://placehold.co/45x45' }" height="45" width="45"  class="rounded-full" alt="">

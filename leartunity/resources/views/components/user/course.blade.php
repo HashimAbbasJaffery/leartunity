@@ -1,11 +1,15 @@
 <div class="course">
     <div class="course-header" style="position: relative;">
         @if($is_purchased)
-            <div class="course-pill bg-black text-white px-2 py-1 text-xs" style="border-radius: 10px;position: absolute; right: 10px; top: 10px;">
+            <div class="course-pill bg-black text-white px-2 py-1 text-xs" style="position: absolute; right: 10px; top: 10px; border-radius: 10px;">
                 <p>Purchased</p>
             </div>
         @endif
-        <img src="https://placehold.co/600x400" alt="">
+        @if($thumbnail)
+            <img src="/course/{{ $thumbnail }}" style="border-radius: 10px;" height="600" width="400" alt="">
+        @else 
+            <img src="https://placehold.co/600x400" height="600" width="400" alt="">
+        @endif 
     </div>
     <div class="course-instructor mt-4 flex">
         <div class="instructor-img">

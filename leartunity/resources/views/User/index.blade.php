@@ -41,6 +41,7 @@
                         @endphp
                         <x-user.course 
                             :title="$course->title"
+                            :profile="$course->author->profile->profile_pic ?? ''"
                             :instructor="$course->author->name"
                              duration="50"
                             :description="$course->description"
@@ -48,6 +49,7 @@
                             :rating="$stars"
                             :stripe="$course->stripe_id"
                             :slug="$course->slug"
+                            :thumbnail="$course->thumbnail"
                         />
                         
                     @endforeach

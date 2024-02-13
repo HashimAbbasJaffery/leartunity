@@ -20,6 +20,7 @@ class Course extends Component
     public $stripe;
     public $slug;
     public $profile;
+    public $thumbnail;
     public function __construct(
         $title, 
         $instructor, 
@@ -29,7 +30,8 @@ class Course extends Component
         $description,
         $stripe,
         $slug,
-        $profile
+        $profile,
+        $thumbnail
     )
     {
         $this->title = $title;
@@ -41,6 +43,7 @@ class Course extends Component
         $this->stripe = $stripe;
         $this->slug = $slug;
         $this->profile = $profile;
+        $this->thumbnail = $thumbnail;
     }
 
     /**
