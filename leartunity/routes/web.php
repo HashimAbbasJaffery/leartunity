@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Authenticate;
 use App\Models\Course;
 use App\Models\Section;
@@ -80,3 +81,5 @@ Route::get("courses", [CourseController::class, "getCourses"])->name("getCourses
 Route::post("get/courses", [CourseController::class, "getData"])->name("getCourses");
 
 Route::get("ajaxCourses", [CourseController::class, "ajax"]);
+
+Route::get("/profile/{id}", [ProfileController::class, "index"]);

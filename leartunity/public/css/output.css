@@ -1428,3 +1428,24 @@ aside {
   display: flex;
   justify-content: center;
 }
+.profile-intro {
+  background: var(--primary);
+  border-radius: 10px;
+  height: 200px;
+  margin: 10px 10px;
+  position: relative;
+  margin-bottom: 80px;
+}
+.profile-pic {
+  background-color: black;
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  border: 8px solid white;
+  position: absolute;
+  bottom: -80px;
+  left: 20px;
+}
+.profile-content p {
+  opacity: 0.8;
+}
