@@ -10,8 +10,11 @@
         <aside class="py-4" style="width: 30%;">
             <p style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">{{ $profile->user->name ?? "Dummy Account"}}</p>
             <section id="follows" class="flex mb-3">
-                <p class="mr-2">50 Followers</p>
-                <button class="highlighted px-2">Follow</button>
+                <form method="POST" id="follow">
+                    @csrf 
+                    <p class="mr-2"><span id="follower-count">{{ $followersCount }}</span> Followers</p>
+                    <button style="background: var(--primary);" type="submit" class="follow-button highlighted px-2">{{ ($is_following ? 'Unfollow' : "Follow") }}</button>
+                </form>
             </section>
             <h1 style="font-weight: 600;" class="mb-1">Achievments</h1>
             <section class="achievements flex">
@@ -35,7 +38,10 @@
             </section>
             <h1 style="font-weight: 600;" class="mb-1 mt-3">Overall Reviews</h1>
             <section class="level">
-                {!! calculateReviewStars(4.8) !!} (194)
+                {!! calculateReviewStars($avgRating) !!} 
+                @if($count > 0)
+                    ({{ $count }})
+                @endif
             </section>
         </aside>
         <section id="other-info" style="width: 100%;">
@@ -69,4 +75,32 @@
             @endforelse
         </section>
     </div>
+    @push("scripts")
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const form = document.getElementById("follow");
+        const button = document.querySelector(".follow-button")
+        const countElement = document.getElementById("follower-count");
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            axios.post("/user/{{ $profile?->id ?? "null" }}/follow")
+                .then(res => {
+                    const data = res.data;
+                    const count = data.message;
+                    const status = +data.type;
+                    if(!status) {
+                        button.textContent = "Unfollow";
+                    } else {
+                        button.textContent = "follow";
+                    }
+                    countElement.textContent = count;
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        })
+    </script>
+
+    @endpush 
 </x-layout>
