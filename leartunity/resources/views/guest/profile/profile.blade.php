@@ -136,17 +136,18 @@
             console.log(parameters);
             axios.post("/user/{{ $profile?->id ?? "null" }}/picture", data)
                 .then(res => {
-                    
                     const data = res.data;
-                    const isSuccess = data.type;
-                    if(isSuccess === "failed") return;
-                    const fileType = data.message.type;
-                    const fileName = data.message.file;
+                    data.forEach(data => {
+                        const isSuccess = data.type;
+                        if(isSuccess === "failed") return;
+                        const fileType = data.message.type;
+                        const fileName = data.message.file;
 
-                    const element = document.querySelector(`.${fileType}`);
-                    const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/cover/' }${fileName}')`;
-                    console.log(url);
-                    element.style.backgroundImage = url;
+                        const element = document.querySelector(`.${fileType}`);
+                        const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/cover/' }${fileName}')`;
+                        console.log(url);
+                        element.style.backgroundImage = url;
+                    }) 
                 })
                 .catch(err => {
                     console.log(err)

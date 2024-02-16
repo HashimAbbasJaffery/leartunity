@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImageUploadingRequest;
 use App\Models\Course;
 use App\Models\Profile;
 use Illuminate\Http\Request;
@@ -38,54 +39,47 @@ class ProfileController extends Controller
 
         return view("guest.profile.profile", compact("count", "avgRating", "profile", "courses", "is_following", "followersCount"));
     }
-    public function changeProfileImage(Request $request, Profile $profile) {
+    public function changeProfileImage(ImageUploadingRequest $request, Profile $profile) {
         // Authorizing the user
         if(Gate::denies("change-pic", $profile)) {
             abort(405);
         }
-
-        // Validating 
-        $validation = Validator::make($request->all(), []);
-        $FileRule = [
-            "required",
-            FileValidation::types(["jpg", "jpeg", "png"])->max(2048)
-        ];
-
-        $validation->sometimes("profile_pic", $FileRule, function() {
-            return request()->file("profile_pic");
-        });
-
-        $validation->sometimes("cover", $FileRule, function() {
-            return request()->file("cover");
-        });
-
-        if($validation->fails()) {
+        $validatedData = $request->validated();
+        if(!$validatedData) {
             return $this->response("failed", "There is some problem");
         }
 
         // File Uploading logic
+        $files = [];
+        $responses = [];
         $cover = $request->file("cover");
         $profile_pic = $request->file("profile_pic");
         $user = auth()->user();
         if($cover) {
-            $fileName = time() . $cover->getClientOriginalName();
-            $cover->move("cover", $fileName);
-            $old_cover = $user->profile->cover;
-            $user->profile()->update([
-                "cover" => $fileName,
-            ]);
-            File::delete("cover/$old_cover");
-            return $this->response("success", [ "type" => "cover", "file" => $fileName ]);
-        } 
+            $files["cover"] = [
+                "file" => $cover,
+                "name" => "cover"
+            ];
+        }
         if($profile_pic) {
-            $fileName = time() . $profile_pic->getClientOriginalName();
-            $profile_pic->move("profile", $fileName);
-            $user->profile()->update([
-                "profile_pic" => $fileName,
-            ]);
-            File::delete("profile/$profile_pic");
-            return $this->response("success", [ "type" => "profile_pic", "file" => $fileName ]);
+            $files["profile_pic"] = [
+                "file" => $profile_pic,
+                "name" => "profile"
+            ];
         }
 
+        foreach($files as $key => $file) {
+            $fileName = time() . $file["file"]->getClientOriginalName();
+            $file["file"]->move($file["name"], $fileName);
+            $old_cover = $user->profile->$key;
+            $user->profile()->update([
+                $key => $fileName,
+            ]);
+            File::delete("$key/$old_cover");  
+            $responses[] = $this->response("success", [ "type" => $key, "file" => $fileName ]);
+        }
+        return $responses;
+        
+        // return $this->response("success", [ "type" => $key, "file" => $fileName ]);
     }
 }
