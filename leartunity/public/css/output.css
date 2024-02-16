@@ -1431,7 +1431,7 @@ aside {
 .profile-intro {
   background: var(--primary);
   border-radius: 10px;
-  height: 200px;
+  height: 300px;
   margin: 10px 10px;
   position: relative;
   margin-bottom: 80px;
@@ -1448,4 +1448,23 @@ aside {
 }
 .profile-content p {
   opacity: 0.8;
+}
+.edit-cover {
+  border: 1px solid var(--primary); 
+  bottom: -10px;
+  position: absolute; 
+  right: 0px;
+  border-radius: 50px; 
+  font-size: 11px;
+  justify-content: center; 
+  align-items: center;
+  background: white; 
+  padding: 5px;
+  right: 10px;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+}
+.cover {
+
 }

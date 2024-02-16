@@ -10,7 +10,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function response(string $type, string $message) {
+    public function response(string $type, $message) {
         return [
             "type" => $type,
             "message" => $message
