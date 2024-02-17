@@ -1370,7 +1370,8 @@ button.accordion:hover,
 body {
   position: relative !important;
 }
-.account_not_found {
+.account_not_found,
+.notification {
   position: fixed !important;
   z-index: 2;
   background-color: rgb(38, 173, 38);
@@ -1464,6 +1465,9 @@ aside {
   cursor: pointer;
   width: 22px;
   height: 22px;
+}
+.highlighted:disabled {
+  background-color: #565656;
 }
 .cover {
 

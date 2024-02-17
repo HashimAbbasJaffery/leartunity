@@ -66,6 +66,9 @@
                     ({{ $count }})
                 @endif
             </section>
+            <section class="level mt-3">
+                <p>Viewings: <span class="views">0</span></p>
+            </section>
         </aside>
         <section id="other-info" style="width: 100%;">
             @if(count($courses) > 0)
@@ -103,9 +106,11 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const form = document.getElementById("follow");
-        const button = document.querySelector(".follow-button")
+        const button = document.querySelector(".follow-button");
         const countElement = document.getElementById("follower-count");
         form.addEventListener("submit", function(e) {
+        button.textContent = "Processing...";
+        button.setAttribute("disabled", "");
             e.preventDefault();
             axios.post("/user/{{ $profile?->id ?? "null" }}/follow")
                 .then(res => {
@@ -118,6 +123,7 @@
                         button.textContent = "follow";
                     }
                     countElement.textContent = count;
+                    button.removeAttribute("disabled");
                 })
                 .catch(err => {
                     console.log(err)
@@ -152,8 +158,40 @@
                 .catch(err => {
                     console.log(err)
                 })
+        }          
+    </script>
+    <script>
+        window.onload = function() {
+        Echo.channel(`follower`)
+          .listen('FollowerCounter', (e) => {
+                const count = document.getElementById("follower-count");
+                count.textContent = e.counts;
+          });
         }
-            
+    </script>
+    <script>
+        window.onload = function() {
+            const views = document.querySelector(".views");
+            let viewers = 0;
+            Echo.join('profile.{{ $profile->id }}')
+                .here((users) => {
+                    console.log(users)
+                    const length = users.length;
+                    viewers = length;
+                    views.textContent = length;
+                })
+                .joining((users) => {
+                    viewers++;
+                    views.textContent = viewers;
+                })
+                .leaving((users) => {
+                    viewers--;
+                    views.textContent = viewers;
+                })
+                .error((error) => {
+                    console.log(error);
+                })
+        }
     </script>
     @endpush 
 </x-layout>

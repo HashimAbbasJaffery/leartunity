@@ -79,7 +79,5 @@ class ProfileController extends Controller
             $responses[] = $this->response("success", [ "type" => $key, "file" => $fileName ]);
         }
         return $responses;
-        
-        // return $this->response("success", [ "type" => $key, "file" => $fileName ]);
     }
 }
