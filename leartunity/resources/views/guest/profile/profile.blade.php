@@ -170,7 +170,7 @@
     <script>
         window.onload = function() {
             // Follower Channel
-            Echo.channel(`follower`)
+            Echo.channel(`follower.{{ $profile->user_id }}`)
                 .listen('FollowerCounter', (e) => {
                         console.log("kaka");
                         const count = document.getElementById("follower-count");

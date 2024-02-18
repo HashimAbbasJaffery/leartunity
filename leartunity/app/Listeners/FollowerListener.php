@@ -30,14 +30,18 @@ class FollowerListener
         $achievementables = Achievement::with("achievements")->achieveables([ "type" => $this->type, "quantity" => $counts ])->get();
         $achievementable_ids = $achievementables->pluck("id")->toArray();
 
-        // Checking if that is already awarded or not 
-        $is_awarded = $following->achievements()->where("user_id", $following->id)->whereIn("achievement_id", $achievementable_ids)->exists();
-        if($is_awarded) return;
+        // Achievements of the user
+        $achievements = $following->achievements->pluck("id")->toArray();
+
+        /* Filtering the both arrays like A - B set to know which achievement 
+        is not granted yet! */  
+        $achievements = array_diff($achievementable_ids, $achievements);
 
         // If everything works the award the badge!
-        $following->achievements()->attach($achievementable_ids);
+        $following->achievements()->attach($achievements);
 
-        NotificationEvent::dispatch($following->id, "You have been awarded Badge!");
+        if(count($achievements) > 0)
+            NotificationEvent::dispatch($following->id, "You have been awarded Badge!");
         
     }
 }

@@ -35,7 +35,7 @@ class FollowerCounter implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel("follower")
+            new Channel("follower." . $this->following->id)
         ];
     }
     public function broadcastQueue() {

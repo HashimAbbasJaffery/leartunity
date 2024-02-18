@@ -17,7 +17,10 @@ class FollowCOntroller extends Controller
         $is_following = $profile->user->follows()->where("follower_id", $follower_id->id)->exists();
         $status = 0;
         if(!$is_following) {
-            NotificationEvent::dispatch($followee_id, $follower_id->name . " Followed you!");
+            $followingSelf = auth()->user()->id != $followee_id;
+
+            if($followingSelf)
+                NotificationEvent::dispatch($followee_id, $follower_id->name . " Followed you!");
             $follower_id->follows_to()->attach($followee_id);
         } else {
             $follower_id->follows_to()->detach($followee_id);
