@@ -121,14 +121,14 @@
         
     </script>
     <script>
-      window.onload = function() {
+      window.addEventListener("load", function() {
         Echo.private(`notification.{{ auth()->user()->id }}`)
           .listen('NotificationEvent', (e) => {
               const notify = document.querySelector(".notify");
               notify.classList.remove("none");
               messageAppearence(e.message, 5000);
           });
-      }
+      })
     </script>
     @stack("scripts")
 </body>

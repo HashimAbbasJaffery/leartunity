@@ -24,7 +24,7 @@ class FollowCOntroller extends Controller
             $status = 1;
         }
         $followersCount = $profile->user->follows->count();
-        FollowerCounter::dispatch($followersCount);
+        FollowerCounter::dispatch($followersCount, $profile->user);
 
 
         return $this->response("$status", "$followersCount");

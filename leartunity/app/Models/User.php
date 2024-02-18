@@ -60,4 +60,7 @@ class User extends Authenticatable implements CanResetPassword
     public function follows() {
         return $this->belongsToMany(User::class, "follow_user", "followee_id", "follower_id");
     }
+    public function achievements() {
+        return $this->belongsToMany(Achievement::class, "achievement_user");
+    }
 }

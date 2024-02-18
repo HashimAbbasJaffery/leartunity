@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CourseController;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------

@@ -41,10 +41,12 @@
             </section>
             <h1 style="font-weight: 600;" class="mb-1">Achievments</h1>
             <section class="achievements flex">
-                <img src="https://placehold.co/40x40" class="mr-2" style="border-radius: 50px;" />
-                <img src="https://placehold.co/40x40" class="mr-2" style="border-radius: 50px;" />
-                <img src="https://placehold.co/40x40" class="mr-2" style="border-radius: 50px;" />
-                <img src="https://placehold.co/40x40" class="mr-2" style="border-radius: 50px;" />
+                @forelse($profile->user->achievements as $achievement)
+                    @if($loop->index >= 3) @break @endif
+                    <img src="/badges/{{ $achievement->achievement_image }}" class="mr-2" style="border-radius: 50px;" height="50" width="50"/>
+                @empty 
+                    <p style="font-size: 14px;">No badges have been awarded yet!</p>
+                @endforelse
             </section>
             <h1 style="font-weight: 600;" class="mb-1 mt-3">Level</h1>
             <section class="level">
@@ -95,7 +97,12 @@
                         :thumbnail="$course->thumbnail"
                     />
                 @endforeach
+                
             </div>
+            
+                <div class="load-more_section">
+                    <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif" data-url="{{ $courses->nextPageUrl() }}">Load More</button>
+                </div>
             @else
                 <div class="text-white p-2 rounded" style="width: 100%; background: var(--primary)">No Courses Found!</div>
             @endforelse
@@ -162,15 +169,15 @@
     </script>
     <script>
         window.onload = function() {
-        Echo.channel(`follower`)
-          .listen('FollowerCounter', (e) => {
-                const count = document.getElementById("follower-count");
-                count.textContent = e.counts;
-          });
-        }
-    </script>
-    <script>
-        window.onload = function() {
+            // Follower Channel
+            Echo.channel(`follower`)
+                .listen('FollowerCounter', (e) => {
+                        console.log("kaka");
+                        const count = document.getElementById("follower-count");
+                        count.textContent = e.counts;
+                });
+            
+            // View Channel 
             const views = document.querySelector(".views");
             let viewers = 0;
             Echo.join('profile.{{ $profile->id }}')
@@ -193,5 +200,46 @@
                 })
         }
     </script>
+        <script type="module">
+            
+            import course from "/js/templates/course.js";
+            const loadmore = document.querySelector(".load-more");
+            loadmore.addEventListener("click", function() {
+                const url = loadmore.dataset.url;
+                let parameters = {};
+                if(window.parameters) {
+                    parameters = window.parameters;
+                }
+                axios.post(url, parameters)
+                    .then(res =>{
+                        
+                        const next_page_url = res.data.next_page_url;
+                        
+                        // Loadmore pagination visibility 
+
+                        const loadmore = document.querySelector(".load-more");
+                        if(loadmore && !next_page_url) {
+                            loadmore.style.display = "none";
+                        } else { 
+                            loadmore.style.display = "block";
+                            loadmore.setAttribute("data-url", next_page_url);
+                        }
+
+                        const courses = res.data.data;
+                        console.log({courses});
+                        const store = document.querySelector(".courses");
+                        courses.forEach(data => {
+                            console.log(data);
+                            store.innerHTML += course(data);
+                        })
+                        if(courses.length < 1) {
+                            store.innerHTML = '<div><p>No course was found!</p></div>';
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                    })
+            })
+        </script>
     @endpush 
 </x-layout>

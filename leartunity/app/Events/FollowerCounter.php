@@ -10,6 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\User;
 
 class FollowerCounter implements ShouldBroadcast
 {
@@ -19,9 +20,11 @@ class FollowerCounter implements ShouldBroadcast
      * Create a new event instance.
      */
     public $counts;
-    public function __construct($counts)
+    public User $following;
+    public function __construct($counts, User $following)
     {
         $this->counts = $counts;
+        $this->following = $following;
     }
 
     /**

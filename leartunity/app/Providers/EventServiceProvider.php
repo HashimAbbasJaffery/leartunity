@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\FollowerCounter;
+use App\Listeners\FollowerListener;
 use App\Listeners\StripeEventListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         WebhookReceived::class => [
             StripeEventListener::class
+        ],
+        FollowerCounter::class => [
+            FollowerListener::class
         ]
     ];
 
