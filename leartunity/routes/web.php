@@ -10,6 +10,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,3 +85,5 @@ Route::post("get/courses", [CourseController::class, "getData"])->name("getCours
 Route::get("ajaxCourses", [CourseController::class, "ajax"]);
 
 Route::get("/profile/{id}", [ProfileController::class, "index"]);
+
+Route::post("/search", [SearchController::class, "get"])->name("search");
