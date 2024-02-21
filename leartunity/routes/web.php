@@ -26,43 +26,43 @@ use App\Http\Controllers\SearchController;
 // Testing Routes 
 
 Route::get("poly", function() {
-    $course = Course::first();
-    $value = [
-        [
-            "name" => "Hashim Abbas",
-            "status" => "true",
-            "stars" => "4.3",
-            "review" => "It was such an amazing course!"
-        ]
-    ];
-    $course->reviews()->create([
-        "reviews" => json_encode($value),
-        "status" => true
-    ]);
-    // $array = [
-    //     "Welcome to this section. This is what you will learn!" => 1,
-    //     "What is a Vector?" => 1,
-    //     "Let's create some vectors" => 1,
-    //     "Using the [] brackets" => 1,
-    //     "Vectorized operations" => 0,
-    //     "The power of vectorized operations" => 1,
-    //     "Functions in R" => 1,
-    //     "Packages in R" => 1,
-    //     "Section Recap" => 1,
-    //     "HOMEWORK: Financial Statement Analysis" => 1,
-    //     "Fundamentals of R" => 1
+    // $course = Course::first();
+    // $value = [
+    //     [
+    //         "name" => "Hashim Abbas",
+    //         "status" => "true",
+    //         "stars" => "4.3",
+    //         "review" => "It was such an amazing course!"
+    //     ]
     // ];
-    // $section = Section::where("id", 12)->first();
-    // foreach($array as $lessonName => $status) {
-    //     $section->contents()->create([
-    //         "title" => $lessonName,
-    //         "status" => 1,
-    //         "is_paid" => $status,
-    //         "content" => "dummy.mp4",
-    //         "duration" => 400
-    //     ]);
-    // }
-    // dd("Created!");
+    // $course->reviews()->create([
+    //     "reviews" => json_encode($value),
+    //     "status" => true
+    // ]);
+    $array = [
+        "Welcome to this section. This is what you will learn!" => 1,
+        "What is a Vector?" => 1,
+        "Let's create some vectors" => 1,
+        "Using the [] brackets" => 1,
+        "Vectorized operations" => 0,
+        "The power of vectorized operations" => 1,
+        "Functions in R" => 1,
+        "Packages in R" => 1,
+        "Section Recap" => 1,
+        "HOMEWORK: Financial Statement Analysis" => 1,
+        "Fundamentals of R" => 1
+    ];
+    $section = Section::where("id", 1)->first();
+    foreach($array as $lessonName => $status) {
+        $section->contents()->create([
+            "title" => $lessonName,
+            "status" => 1,
+            "is_paid" => $status,
+            "content" => "dummy.mp4",
+            "duration" => 400
+        ]);
+    }
+    dd("Created!");
 });
 
 Route::group([ 'middleware' => ['web', "guest"] ], function() {
@@ -71,7 +71,7 @@ Route::group([ 'middleware' => ['web', "guest"] ], function() {
         ->name("login");
 });
 Route::group([ "middleware" => "auth" ], function() {
-    Route::get("test", [SessionController::class, "test"])->name("test");
+    Route::get("logout", [SessionController::class, "logout"])->name("logout");
 });
 
 Route::get('/', [HomeController::class, "index"])->name("home");
@@ -86,4 +86,3 @@ Route::get("ajaxCourses", [CourseController::class, "ajax"]);
 
 Route::get("/profile/{id}", [ProfileController::class, "index"]);
 
-Route::post("/search", [SearchController::class, "get"])->name("search");

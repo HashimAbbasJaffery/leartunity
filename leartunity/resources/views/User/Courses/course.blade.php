@@ -17,7 +17,7 @@
                   
                   @php
                     $stripe_id = $course->stripe_id;
-                    $purchased = auth()->user()->purchases()->where("purchase_product_id", $stripe_id)->exists();
+                    $purchased = auth()->user()?->purchases()->where("purchase_product_id", $stripe_id)->exists();
                   @endphp
                   @foreach($sections as $section)
                   @php 
@@ -59,7 +59,7 @@
               <div class="option">  
                 @php 
                   $course_stripe = $course->stripe_id;
-                  $is_purchased = auth()->user()->purchases()->where("purchase_product_id", $course_stripe)->exists();
+                  $is_purchased = auth()->user()?->purchases()->where("purchase_product_id", $course_stripe)->exists();
                 @endphp
                 @if(!$is_purchased)
                   <a class="highlighted course-highlighted" href="{{ route("checkout", ['id' => $course->stripe_id ]) }}">Enroll</a>

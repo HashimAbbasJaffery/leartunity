@@ -1498,6 +1498,14 @@ aside {
 .hide {
   animation: slideUp 0.3s ease-in-out forwards;
 }
+.teacher {
+  padding: 8px;
+}
+.teacher:hover {
+  background-color: rgb(238, 237, 237);
+  padding: 8px;
+  border-radius: 5px;
+}
 @keyframes slideDown {
   from {
     max-height: 0;

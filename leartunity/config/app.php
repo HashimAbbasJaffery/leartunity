@@ -163,6 +163,7 @@ return [
         /*
          * Application Service Providers...
          */
+        App\Providers\WebGeneralSettingProvider::class,
         App\Providers\HelperServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,

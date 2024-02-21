@@ -25,7 +25,7 @@ class SessionController extends Controller
 
         return redirect()->back()->with("error", "Invalid Username or Password");
     }
-    public function test(Request $request) {
+    public function logout(Request $request) {
         Auth::logout();
 
         $request->session()->invalidate();

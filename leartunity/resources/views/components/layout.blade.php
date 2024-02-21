@@ -18,10 +18,24 @@
   />
       <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css">
  @vite('resources/js/app.js')
-   
+   @php 
+    $settings = config()->get("settings");
+    $primary_color = $settings->primary_color;
+    $secondary_color = $settings->secondary_color;
+    $family = $settings->font_family;
+   @endphp
     <style>
       .container {
         max-width: 1120px !important;
+      }
+      :root {
+        --primary: {{ $primary_color }};
+      }
+      :root {
+        --family: {!! $family !!}}
+      }
+      :root {
+        --secondary: {{ $secondary_color }}
       }
     </style>
 </head>
@@ -51,6 +65,9 @@
                     <li ><a href="#" class="bold-600 text-xl" style="position: relative;">
                       <div class="notify none" style="position: absolute; right: 0px;background: #00ff00; width: 12px; height: 12px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
                       <i class="fa-solid fa-bell"></i>
+                    </a></li>
+                    <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative;">
+                      <i class="fa-solid fa-power-off"></i>
                     </a></li>
                 </ul>
             </nav>
@@ -120,16 +137,18 @@
         }, 10000);
         
     </script>
-    <script>
-      window.addEventListener("load", function() {
-        Echo.private(`notification.{{ auth()->user()->id }}`)
-          .listen('NotificationEvent', (e) => {
-              const notify = document.querySelector(".notify");
-              notify.classList.remove("none");
-              messageAppearence(e.message, 5000);
-          });
-      })
-    </script>
+    @auth 
+      <script>
+        window.addEventListener("load", function() {
+          Echo.private(`notification.{{ auth()->user()->id }}`)
+            .listen('NotificationEvent', (e) => {
+                const notify = document.querySelector(".notify");
+                notify.classList.remove("none");
+                messageAppearence(e.message, 5000);
+            });
+        })
+      </script>
+    @endauth
     @stack("scripts")
 </body>
 </html>

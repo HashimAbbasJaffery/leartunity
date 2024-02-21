@@ -32,13 +32,15 @@
     <div class="profile-content container mx-auto flex">
         <aside class="py-4" style="width: 30%;">
             <p style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">{{ $profile->user->name ?? "Dummy Account"}}</p>
-            <section id="follows" class="flex mb-3">
-                <form method="POST" id="follow">
-                    @csrf 
-                    <p class="mr-2"><span id="follower-count">{{ $followersCount }}</span> Followers</p>
-                    <button style="background: var(--primary);" type="submit" class="follow-button highlighted px-2">{{ ($is_following ? 'Unfollow' : "Follow") }}</button>
-                </form>
-            </section>
+            @auth
+                <section id="follows" class="flex mb-3">
+                    <form method="POST" id="follow">
+                        @csrf 
+                        <p class="mr-2"><span id="follower-count">{{ $followersCount }}</span> Followers</p>
+                        <button style="background: var(--primary);" type="submit" class="follow-button highlighted px-2">{{ ($is_following ? 'Unfollow' : "Follow") }}</button>
+                    </form>
+                </section>
+            @endauth
             <h1 style="font-weight: 600;" class="mb-1">Achievments</h1>
             <section class="achievements flex">
                 @forelse($profile->user->achievements as $achievement)

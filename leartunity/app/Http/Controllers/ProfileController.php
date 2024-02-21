@@ -35,7 +35,7 @@ class ProfileController extends Controller
         if($count)
             $avgRating = $sum / $count;
 
-        $is_following = $user->follows_to()->where("follower_id", $user->id)->exists();
+        $is_following = $user?->follows_to()->where("follower_id", $user->id)->exists();
         $followersCount = $profile->user->follows->count();
 
         return view("guest.profile.profile", compact("count", "avgRating", "profile", "courses", "is_following", "followersCount"));

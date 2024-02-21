@@ -52,7 +52,7 @@ class Course extends Component
     public function render(): View|Closure|string
     {
         $user = auth()->user();
-        $purchases = $user->purchases()->where("purchase_product_id", $this->stripe)->first();
+        $purchases = $user?->purchases()->where("purchase_product_id", $this->stripe)->first();
         $is_purchased = false;
         if($purchases) {
             $is_purchased = true;

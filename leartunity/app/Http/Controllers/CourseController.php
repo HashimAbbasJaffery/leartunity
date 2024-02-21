@@ -33,7 +33,7 @@ class CourseController extends Controller
         $courses = Course::whereStatus(1)->paginate(6);
         $courses->withPath("get/courses");
         // $courses = Http::get("ajaxCourses");
-        $categories = Category::whereStatus(1)->get();
+        $categories = Category::whereHas("courses")->get();
         return view("guest.courses.courses", compact("courses", "categories"));
     }
 
@@ -58,7 +58,7 @@ class CourseController extends Controller
         $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->whereStatus(1)->paginate(6);
         $courses->map(function($course) {
             $stripe_id = $course->stripe_id;
-            $is_purchased = auth()->user()->purchases()->where("purchase_product_id", $stripe_id)->exists();
+            $is_purchased = auth()->user()?->purchases()->where("purchase_product_id", $stripe_id)->exists();
             $course["is_purchased"] = $is_purchased;
         });
         return $courses;

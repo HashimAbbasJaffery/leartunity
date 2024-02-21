@@ -13,16 +13,20 @@ class SearchController extends Controller
 
         $table = "users";
         $column = "name";
-        $flag = false;
-        $path = "profile.profile_pic";
-        $directories = "/profile/";
+        $flag = false; // This Flag Determines that whether the result requires some attribute from the relationship
+        $path = "profile.profile_pic"; // It provides the Database column location, '.' represents that column is inside relationship 
+        $directories = "/profile/"; // It provides the directory path 
+        $url = "/profile";
+        $findingColumn = "id";
 
         if($type === "course") {
             $table = "courses";
             $column = "title";
             $flag = true;
+            $findingColumn = "slug";
             $path = "thumbnail";
             $directories = "/course/";
+            $url = "/course";
         }
         if($type === "categories") {
             $table = "categories";
@@ -30,6 +34,7 @@ class SearchController extends Controller
             $flag = true;
             $path = "";
             $directories = "";
+            $findingColumn = "";
         }
         
         if($flag) {

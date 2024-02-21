@@ -1,5 +1,4 @@
 <x-layout>
-
     
         <main>
             <section id="search-area" class="container mx-auto" style="position: relative;">
@@ -17,9 +16,9 @@
             </section>
             <div>
             <div id="separator" class="container mx-auto mt-4" style="background: black; height: 2px;">&nbsp;</div>
-            <section id="banner" class="text-center">
+            <section id="banner" style="background: {{ $quote->bg_color }};" class="text-center">
               <h1>
-                Education is the most important thing
+                {{ $quote->quote }}
               </h1>
             </section>
           </div>
@@ -77,9 +76,9 @@
               </div>
             </div>
           </section>
-          <section id="apply-for-teaching" class="container mx-auto flex grid grid-cols-2">
+          <section id="apply-for-teaching" class="container mx-auto flex ">
             <div class="side-image">
-              <img src="./assets/img/sample.jpg" alt="">
+              <img src="{{ asset("img/sample.jpg") }}" alt="">
             </div>
             <div class="apply">
               <h1>
@@ -120,7 +119,7 @@
         }
       </script>
       <script>
-        const result = (data, column, path, directory) => {
+        const result = (data, column, path, directory, url) => {
           const imageAttribute = getImage(data, path);
           console.log(directory + imageAttribute);
           const optionalEl = `
@@ -129,7 +128,7 @@
               </div>
           `
           return `
-          <a href="/courses">
+          <a href="${ url ? url : '#' }">
               <div class="teacher flex mb-4 mt-2">
               ${(column !== "category") ? optionalEl : ""}
               <div class="teacher-detail">
@@ -154,11 +153,18 @@
               const path = res.data[2];
               const directory = res.data[3];
               const results = document.querySelector(".results");
+              let url = "";
               results.textContent = "";
-
               data.forEach(data => {
-                results.innerHTML += result(data, column, path, directory);
-                return;
+                
+                if(type.value === "course") {
+                  url = `/course/${data.slug}`; 
+                }
+                if(type.value === "teachers") {
+                  url = `/profile/${data.id}`;
+                }
+                console.log(url)
+                results.innerHTML += result(data, column, path, directory, url);
               });
 
               if(!data.length) {
@@ -187,8 +193,8 @@
         const search = document.getElementById("q");
         const type = document.querySelector(".search-type");
 
-        search.addEventListener("keyup", debounce(searchResult, 500))
-        type.addEventListener("change", debounce(searchResult, 500))
+        search.addEventListener("keyup", debounce(searchResult, 200))
+        type.addEventListener("change", debounce(searchResult, 200))
       </script>
     @endpush
 </x-layout>
