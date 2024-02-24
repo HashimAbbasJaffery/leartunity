@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Section;
+use App\Models\Setting;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Course;
@@ -24,6 +25,16 @@ class DatabaseSeeder extends Seeder
         Course::factory()
                 ->has(Category::factory()->count(50))
                 ->create();
+        Setting::create([
+            "primary_color" => "#333",
+            "secondary_color" => "white",
+            "font_family" => "'Montserrat', sans-serif"
+        ]);
+        \App\Models\Quote::create([
+            "quote" => "No one can steal your education and skills",
+            "bg_color" => "#333",
+            "status" => 1
+        ]);
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

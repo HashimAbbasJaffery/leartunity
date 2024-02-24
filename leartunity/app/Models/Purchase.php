@@ -13,4 +13,7 @@ class Purchase extends Model
     public function user(): BelongsTo {
         return $this->BelongsTo(User::class);
     }
+    public function course() {
+        return $this->belongsTo(Course::class, "purchase_product_id", "stripe_id");
+    }
 }

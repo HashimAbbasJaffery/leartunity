@@ -57,6 +57,7 @@
             <nav>
                 <ul>
                     <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li>
+                    <li class="mx-3"><a href="{{ route("learn") }}" class="bold-600">My Learning</a></li>
                     <li class="mx-3"><a href="#" class="bold-600">Plans</a></li>
                     <li class="mx-3"><a href="#" class="bold-600">Courses</a></li>
                     <li class="mx-3"><a href="#" class="bold-600">Privacy Policy</a></li>

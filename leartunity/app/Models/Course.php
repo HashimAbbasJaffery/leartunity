@@ -25,6 +25,9 @@ class Course extends Model
     public function sections() {
         return $this->hasMany(Section::class);
     }
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
 
     public function scopeFilter($query, array $filters = []) {
         

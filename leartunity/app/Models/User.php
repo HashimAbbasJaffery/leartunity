@@ -63,4 +63,7 @@ class User extends Authenticatable implements CanResetPassword
     public function achievements() {
         return $this->belongsToMany(Achievement::class, "achievement_user");
     }
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
 }

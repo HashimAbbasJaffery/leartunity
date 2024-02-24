@@ -1523,3 +1523,62 @@ aside {
     max-height: 0;
   }
 }
+.plyr {
+  border-radius: 10px;
+}
+.section {
+  padding-left: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  background: rgb(235, 234, 234);
+  padding: 15px;
+  border-radius: 10px; 
+}
+.detail {
+  background: var(--primary);
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+.play-video {
+  background: black;
+  color: white;
+  height: 35px;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+}
+.links {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.link {
+  font-size: 15px;
+}
+.additional-links {
+  color: white;
+}
+.link.extra {
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--primary);
+  width: 50%;
+}
+.comment {
+  background: var(--primary);
+  color: white;
+  margin-bottom: 10px;
+}
+.comment-body h2 {
+  font-size: 40px;
+}
+.content-material p {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.separator {
+  background-color: white;
+}
