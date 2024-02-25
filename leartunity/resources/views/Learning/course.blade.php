@@ -188,9 +188,10 @@
                 }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
-window.location.href = "{{ route('watch.course', ['course' => $course->slug, 'content' => $next_content->id]) }}"
+                    window.location.href = "{{ route('watch.course', ['course' => $course->slug, 'content' => $next_content->id]) }}"
             
                 } else if (result.isDenied) {
+
                 }
                 });
 

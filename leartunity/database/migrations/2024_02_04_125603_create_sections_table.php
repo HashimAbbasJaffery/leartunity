@@ -18,6 +18,7 @@ return new class extends Migration
                     ->cascadeOnDelete();
             $table->string("section_name");
             $table->boolean("status");
+            $table->integer("sequence");
             $table->timestamps();
         });
     }

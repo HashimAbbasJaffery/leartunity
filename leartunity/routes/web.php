@@ -52,7 +52,7 @@ Route::get("poly", function() {
         "HOMEWORK: Financial Statement Analysis" => 1,
         "Fundamentals of R" => 1
     ];
-    $section = Section::where("id", 1)->first();
+    $section = Section::where("id", 2)->first();
     $loop = 1;
     foreach($array as $lessonName => $status) {
         $section->contents()->create([
