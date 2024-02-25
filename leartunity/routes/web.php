@@ -53,14 +53,18 @@ Route::get("poly", function() {
         "Fundamentals of R" => 1
     ];
     $section = Section::where("id", 1)->first();
+    $loop = 1;
     foreach($array as $lessonName => $status) {
         $section->contents()->create([
             "title" => $lessonName,
             "status" => 1,
             "is_paid" => $status,
             "content" => "dummy.mp4",
-            "duration" => 400
+            "duration" => 400,
+            "sequence" => $loop, 
+            "description" => "[Mastering R Basics]: Learn the fundamental concepts and techniques of the R programming language, essential for data analysis and statistical modeling."
         ]);
+        $loop++;
     }
     dd("Created!");
 });

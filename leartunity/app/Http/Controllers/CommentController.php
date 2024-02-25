@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Content;
 use App\Models\Course;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function create(Course $course) {
+    public function create(Course $course, Content $content) {
+        $replies_to = request()->get("replies_to");
+        $comment = request()->get("comment");
         $course->comments()->create([
-            "comment" => request()->get("comment"),
+            "comment" => $comment,
             "status" => 1,
+            "replies_to" => $replies_to,
             "user_id" => auth()->user()->id,
+            "content_id" => $content->id
         ]);
 
         return 1;

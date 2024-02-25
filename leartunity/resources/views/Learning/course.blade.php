@@ -2,7 +2,7 @@
     <div style="border: 1px solid white; background: var(--primary); width: 50%; margin: auto; height: 400px; z-index: 2;" class="animate__animated none comment-post rounded alert-box fixed left-0 right-0 bottom-0 p-2 text-white">
         <div class="comment-post-header flex items-center">
             <i class="fa-solid fa-reply mr-2"></i>
-            <p>Replying to Post</p> 
+            <p>Replying to <span class="replying_to">Post</span></p> 
         </div>
         <div class="comment-post-body" style="height: 75%; background: var(--primary);">
             <div class="separator">&nbsp;</div>
@@ -24,7 +24,7 @@
                 </video>
                 <div class="course-detail">
                     <div class="lecture-detail detail mt-3">
-                        Let's get a head start on our new application by using the Blueprint package to generate migrations, model classes (including relationships) and factories.
+                        {{ $current_content->description }}
                     </div> 
                     <div class="instructor-detail detail mt-3 flex">
                         <div class="instructor-pic mr-3">
@@ -56,9 +56,9 @@
                     </div>
                     <div class="comments mt-2">
                         @foreach($comments as $comment)
-                            <x-comment-component :isInstructor="$comment->user_id === $course->author_id" :isreply="false" :comment="$comment"/>
+                            <x-comment-component :isreply="false" :comment="$comment"/>
                             @forelse($comment->replies as $reply)
-                                <x-comment-component :isInstructor="$comment->user_id === $course->author_id" :isreply="true" :comment="$reply"/>
+                                <x-comment-component :isreply="true" :comment="$reply"/>
                             @empty 
                             @endforelse
                         @endforeach
@@ -69,18 +69,29 @@
                 <div class="sections mb-2">
                     @foreach($course->sections as $section)
                         <x-section-component :id="$loop->index" :name="$section->section_name" />
-                        @if($section->contents)
-                            <x-lessons-component :id="$loop->index" :lessons="$section->contents" />
+                        @php 
+                            $contents = $section->contents()->orderBy("sequence", "asc")->get();
+                        @endphp 
+                        @if($contents)
+                            <x-lessons-component :id="$loop->index" :lessons="$contents" />
                         @endif 
                     @endforeach
                 </div>
             </div>
         </div>
+        <input type="hidden" id="replies_to" />
         <p></p>
     </section>
     @push("scripts")
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-          
+    <script>
+        const replying_to = replying_to => {
+            const comment = document.getElementById("add-comment");
+            const replying = document.querySelector(".replying_to");
+            replying.textContent = replying_to;
+            comment.value = `@${replying_to.replaceAll(" ", "-")}`
+        }
+    </script>   
     <script>
         const player = new Plyr("#player");
         player.source = {
@@ -88,7 +99,7 @@
             title: 'Example title',
             sources: [
                 {
-                    src: '/uploads/dummy.mp4',
+                    src: '/uploads/{{ $current_content->content }}',
                     type: 'video/mp4',
                 } 
             ],
@@ -108,7 +119,10 @@
         const btn = document.querySelector(".comment-post-button");
         const cancelBtn = document.querySelector(".cancel-post");
         btn.addEventListener("click", function() {
+            const replies = document.getElementById("replies_to");
+            replies.value = "";
             const post = document.querySelector(".comment-post");
+            replying_to("Post");
             post.classList.remove("none")
             post.classList.remove("animate__backOutDown")
             post.classList.add("animate__backInUp")
@@ -123,13 +137,13 @@
         })
     </script>
     <script>
-        const post = document.querySelector(".post-comment");
-        post.addEventListener("click", function() {
-            const comment = document.getElementById("add-comment");
-            axios.post("{{ route('create.comment', ['course' => $course->slug]) }}", {
-                comment: comment.value
+        const postComment = (userComment, replies_to) => {
+            axios.post("{{ route('create.comment', ['course' => $course->slug, 'content' => $current_content->id]) }}", {
+                comment: userComment,
+                replies_to: replies_to 
             })
             .then(res => {
+                console.log(res);
                 if(res.data === 1) {
                     location.reload();
                 }
@@ -137,7 +151,51 @@
             .catch(err => {
                 console.log(err)
             })
+        }
+        const post = document.querySelector(".post-comment");
+        const commentModal = document.querySelector(".comment-post")
+        const replies = document.querySelectorAll(".comment-reply");
+        post.addEventListener("click", function() {
+            
+            const replies = document.getElementById("replies_to");
+            const comment = document.getElementById("add-comment");
+            postComment(comment.value, replies.value);
+        })
+        replies.forEach(reply => {
+            reply.addEventListener("click", function() {
+                const comment = document.getElementById("add-comment");
+                const replies = document.getElementById("replies_to");
+                const replies_to = reply.dataset.id;
+                const name = reply.dataset.name;
+                replying_to(name);
+                replies.value = replies_to;
+                // postComment(comment.value, replies_to);
+                commentModal.classList.remove("none")
+                commentModal.classList.remove("animate__backOutDown")
+                commentModal.classList.add("animate__backInUp")
+            })
         })
     </script>
+    @if($next_content)
+    <script>
+        const plyr = document.querySelector(".plyr");
+        plyr.addEventListener("ended", function() {
+            Swal.fire({
+                title: "Do you want to see next tutorial?",
+                showDenyButton: true,
+                confirmButtonText: "Yes",
+                denyButtonText: `No`
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+window.location.href = "{{ route('watch.course', ['course' => $course->slug, 'content' => $next_content->id]) }}"
+            
+                } else if (result.isDenied) {
+                }
+                });
+
+        })
+    </script>
+    @endif
     @endpush
 </x-layout>

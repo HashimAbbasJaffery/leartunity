@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string("content");
             $table->bigInteger("duration");
             $table->boolean("is_paid");
+            $table->integer("sequence");
+            $table->text("description");
             $table->timestamps();
         });
     }

@@ -17,6 +17,7 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
   />
       <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css">
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  @vite('resources/js/app.js')
    @php 
     $settings = config()->get("settings");

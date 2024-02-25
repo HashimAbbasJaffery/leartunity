@@ -20,6 +20,9 @@ return new class extends Migration
             $table->foreignId("course_id")
                     ->constrained("courses")
                     ->cascadeOnDelete();
+            $table->foreignId("content_id")
+                    ->constrained("contents")
+                    ->cascadeOnDelete();
             $table->foreignId("replies_to")
                     ->nullable()
                     ->constrained("comments")

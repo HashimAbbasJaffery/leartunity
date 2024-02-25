@@ -14,12 +14,10 @@ class CommentComponent extends Component
      */
     public Comment $comment;
     public $isreply;
-    public $isInstructor;
-    public function __construct(Comment $comment, $isreply, $isInstructor)
+    public function __construct(Comment $comment, $isreply)
     {
         $this->comment = $comment;
         $this->isreply = $isreply;
-        $this->isInstructor = $isInstructor;
     }
 
     /**

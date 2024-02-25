@@ -1582,3 +1582,9 @@ aside {
 .separator {
   background-color: white;
 }
+.tagging-to {
+  color: #01B9F9;
+}
+.lesson-body {
+  padding: 10px;
+}

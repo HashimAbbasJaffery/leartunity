@@ -13,9 +13,11 @@ class LessonComponent extends Component
      * Create a new component instance.
      */
     public Content $content;
-    public function __construct(Content $content)
+    public $current;
+    public function __construct(Content $content, Content $current)
     {
         $this->content = $content;
+        $this->current = $current;
     }
 
     /**
