@@ -31,6 +31,9 @@ class Course extends Model
     public function contents() {
         return $this->hasManyThrough(Content::class, Section::class, "course_id", "contentable_id");
     }
+    public function tracker() {
+        return $this->hasOne(Tracker::class)->where("user_id", auth()->user()->id);
+    }
 
     public function scopeFilter($query, array $filters = []) {
         

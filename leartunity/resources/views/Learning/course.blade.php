@@ -176,10 +176,29 @@
             })
         })
     </script>
+    <script>
+
+        window.addEventListener("beforeunload", function() {
+            const plyr = document.querySelector(".plyr");
+            plyr.on('timeupdate', event => {
+                const duration = event;
+                console.log(duration);
+            })
+        })
+    </script>
     @if($next_content)
     <script>
         const plyr = document.querySelector(".plyr");
         plyr.addEventListener("ended", function() {
+            
+            axios.post("{{ route('update.tracker', ['content' => $current_content, 'course' => $course]) }}")
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
             Swal.fire({
                 title: "Do you want to see next tutorial?",
                 showDenyButton: true,

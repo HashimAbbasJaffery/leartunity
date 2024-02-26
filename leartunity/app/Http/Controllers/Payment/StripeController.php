@@ -44,10 +44,16 @@ class StripeController extends Controller
         if(!$status) return to_route("home");
         
         $user = auth()->user();
-        $user->purchases()->create([
+        $purchase = $user->purchases()->create([
             "purchase_product_id" => $id  
         ]);
-
+        $purchase->course->tracker()->create([
+            "tracking" => "[]",
+            "user_id" => $user->id,
+            "progress" => 0,
+            "status" => 1
+        ]);
+        
         return redirect()->to(route("home"))->with("flash", "You haved purchased your course!");
     }
     public function cancel() {

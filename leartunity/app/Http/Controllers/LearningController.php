@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Content;
 use App\Models\Course;
+use App\Models\Purchase;
 use App\Services\SectionContentService;
 use App\Models\Section;
 use Illuminate\Http\Request;

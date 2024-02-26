@@ -10,9 +10,12 @@
                     <p>{{ substr(str_replace("</p>", "", str_replace("<p>", "", $purchase->course->description)),0, 180) }}...</p>
                     <a href="/profile/{{ $purchase->course->author->id }}" style="font-size: 13px;" class="mt-2 mb-2">{{ $purchase->course->author->name }}</a>
                     <div class="progress mt-2">
-                        <p style="font-size: 13px; float: right;">50%</p>
+                        @php 
+                            $progress = $purchase->course->tracker->progress;
+                        @endphp
+                        <p style="font-size: 13px; float: right;">{{ $progress }}%</p>
                         <div class="progress-bar" style="background: rgb(222, 222, 222); height: 2px;">
-                            <div class="completed-progress" style="background: var(--primary); height: 2px; width: 50%;">&nbsp;</div>
+                            <div class="completed-progress" style="background: var(--primary); height: 2px; width: {{ $progress }}%;">&nbsp;</div>
                         </div>
                     </div>
                 </div>
