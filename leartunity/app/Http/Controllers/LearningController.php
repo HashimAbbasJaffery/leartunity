@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Purchase;
 use App\Services\SectionContentService;
 use App\Models\Section;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 
 class LearningController extends Controller
@@ -32,6 +33,7 @@ class LearningController extends Controller
         $comments = $course->comments()->where("content_id", $content->id)->whereNull("replies_to")->get();
         abort_if(!$does_own_course, 403); 
         $next_content = $this->sectionService->next_content($content);
-        return view("Learning.course", compact("course", "comments", "current_content", "next_content"));
+        $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
+        return view("Learning.course", compact("course", "comments", "current_content", "next_content", "tracker"));
     }
 }

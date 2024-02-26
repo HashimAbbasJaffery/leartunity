@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Models\Content;
+use Illuminate\Support\Arr;
 
 class TrackerControler extends Controller
 {
@@ -18,6 +19,9 @@ class TrackerControler extends Controller
         
         // Tracker JSON Data
         $tracking_track[] = $trackerInfo;
+
+        $is_already_tracked = Arr::exists(Arr::pluck($tracking_track, "id"), $content->id);
+        if($is_already_tracked) return 0;
 
         // Get all of the contents of specific course
         $contents = $course->contents;

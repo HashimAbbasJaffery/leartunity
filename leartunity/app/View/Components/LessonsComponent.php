@@ -14,10 +14,12 @@ class LessonsComponent extends Component
      */
     public $lessons;
     public $id;
-    public function __construct($lessons, $id)
+    public $tracker;
+    public function __construct($lessons, $id, $tracker)
     {
         $this->lessons = $lessons;
         $this->id = $id;
+        $this->tracker = $tracker;
     }
 
     /**

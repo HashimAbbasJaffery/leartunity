@@ -6,10 +6,14 @@
         @endif
     >
         <div class="play-video mr-3 flex align-items justify-center">
-            @if(request()->route("content")->id == $content->id)
-                <i class="fa-solid fa-pause"></i>
-            @else
-                <i class="fa-solid fa-play"></i>
+            @if($watched)
+                <i class="fa-solid fa-check"></i>
+            @else 
+                @if(request()->route("content")->id == $content->id)
+                    <i class="fa-solid fa-pause"></i>
+                @else
+                    <i class="fa-solid fa-play"></i>
+                @endif
             @endif
         </div>
         <div class="details">

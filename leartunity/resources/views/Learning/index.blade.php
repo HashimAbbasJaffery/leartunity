@@ -19,7 +19,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#" style="text-align:center; width: 10%;padding: 3px 6px 3px 6px;position: absolute; right: 0px;" class="highlighted">Resume</a>
+                <a href="{{ route('watch.course', ['course' => $purchase->course->slug, 'content' => '1']) }}" style="text-align:center; width: 10%;padding: 3px 6px 3px 6px;position: absolute; right: 0px;" class="highlighted">Resume</a>
             </div>
         @empty 
             <div class="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3" role="alert">

@@ -14,10 +14,12 @@ class LessonComponent extends Component
      */
     public Content $content;
     public $current;
-    public function __construct(Content $content, Content $current)
+    public $watched;
+    public function __construct(Content $content, Content $current, $watched)
     {
         $this->content = $content;
         $this->current = $current;
+        $this->watched = $watched;
     }
 
     /**

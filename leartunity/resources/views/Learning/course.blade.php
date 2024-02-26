@@ -73,7 +73,7 @@
                             $contents = $section->contents()->orderBy("sequence", "asc")->get();
                         @endphp 
                         @if($contents)
-                            <x-lessons-component :id="$loop->index" :lessons="$contents" />
+                            <x-lessons-component :tracker="$tracker" :id="$loop->index" :lessons="$contents" />
                         @endif 
                     @endforeach
                 </div>
@@ -173,16 +173,6 @@
                 commentModal.classList.remove("none")
                 commentModal.classList.remove("animate__backOutDown")
                 commentModal.classList.add("animate__backInUp")
-            })
-        })
-    </script>
-    <script>
-
-        window.addEventListener("beforeunload", function() {
-            const plyr = document.querySelector(".plyr");
-            plyr.on('timeupdate', event => {
-                const duration = event;
-                console.log(duration);
             })
         })
     </script>
