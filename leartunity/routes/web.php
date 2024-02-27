@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\SearchController;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,13 @@ use App\Http\Controllers\SearchController;
 */
 
 // Testing Routes 
+
+Route::get("certificate", function() {
+    $customPaper = array(0,0,1056,516);
+    $pdf = Pdf::loadView("certification")->setPaper($customPaper);
+    $pdf = $pdf->stream();
+    return $pdf;
+});
 
 Route::get("poly", function() {
     // $course = Course::first();
@@ -52,7 +60,7 @@ Route::get("poly", function() {
         "HOMEWORK: Financial Statement Analysis" => 1,
         "Fundamentals of R" => 1
     ];
-    $section = Section::where("id", 2)->first();
+    $section = Section::where("id", 3)->first();
     $loop = 1;
     foreach($array as $lessonName => $status) {
         $section->contents()->create([

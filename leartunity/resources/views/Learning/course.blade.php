@@ -176,7 +176,6 @@
             })
         })
     </script>
-    @if($next_content)
     <script>
         const plyr = document.querySelector(".plyr");
         plyr.addEventListener("ended", function() {
@@ -188,7 +187,9 @@
                 .catch(err => {
                     console.log(err);
                 })
-
+            
+            
+            @if($next_content)
             Swal.fire({
                 title: "Do you want to see next tutorial?",
                 showDenyButton: true,
@@ -203,9 +204,9 @@
 
                 }
                 });
+            @endif
 
         })
     </script>
-    @endif
     @endpush
 </x-layout>
