@@ -19,8 +19,7 @@ class VideoTrackingService implements TrackingService {
         
         $ids = Arr::pluck($tracking_track, "id");
         $is_already_tracked = in_array($content->id, $ids);
-        if($is_already_tracked) return 0;
-
+        
         // Tracker JSON Data
         $tracking_track[] = $trackerInfo;
 
@@ -32,6 +31,8 @@ class VideoTrackingService implements TrackingService {
 
         // Put them into the formula to generate the progress
         $progress = ($completedContents / count($contents)) * 100;
+
+        if($is_already_tracked) return [ round($progress, 2), -1 ];
 
         return [ round($progress, 2), $tracking_track ];
     }

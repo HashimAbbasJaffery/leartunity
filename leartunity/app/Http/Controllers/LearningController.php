@@ -30,6 +30,7 @@ class LearningController extends Controller
                             ->purchases()
                             ->where("purchase_product_id", $stripe_id)
                             ->exists();
+                            
         $comments = $course->comments()->where("content_id", $content->id)->whereNull("replies_to")->get();
         abort_if(!$does_own_course, 403); 
         $next_content = $this->sectionService->next_content($content);

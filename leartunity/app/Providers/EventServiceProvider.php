@@ -5,13 +5,17 @@ namespace App\Providers;
 use App\Events\FollowerCounter;
 use App\Listeners\FollowerListener;
 use App\Listeners\StripeEventListener;
+use App\Models\Certificate;
+use App\Observers\CertificateObserver;
 use App\Observers\CommentObserver;
+use App\Observers\TrackingObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Laravel\Cashier\Events\WebhookReceived;
 use App\Models\Comment;
+use App\Models\Tracker;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -38,6 +42,8 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Comment::observe(CommentObserver::class);
+        // Tracker::observe(TrackingObserver::class);
+        Certificate::observe(CertificateObserver::class);
     }
 
     /**

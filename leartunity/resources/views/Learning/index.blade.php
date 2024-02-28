@@ -14,9 +14,13 @@
                             $progress = $purchase->course->tracker->progress;
                         @endphp
                         <p style="font-size: 13px; float: right;">{{ $progress }}%</p>
+                        @if($progress < 100)
                         <div class="progress-bar" style="background: rgb(222, 222, 222); height: 2px;">
                             <div class="completed-progress" style="background: var(--primary); height: 2px; width: {{ $progress }}%;">&nbsp;</div>
                         </div>
+                        @else 
+                            <a class="highlighted px-4 py-1" href="#">download certificate</a>
+                        @endif
                     </div>
                 </div>
                 <a href="{{ route('watch.course', ['course' => $purchase->course->slug, 'content' => '1']) }}" style="text-align:center; width: 10%;padding: 3px 6px 3px 6px;position: absolute; right: 0px;" class="highlighted">Resume</a>
@@ -27,5 +31,6 @@
                 <p>Oops! No course foumd! Time to grab your learning cap and join the fun by purchasing <a style="text-decoration: underline;" href="/courses">Courses</a>! 🎓😄</p>
             </div>
         @endforelse
+        
     </section>
 </x-layout>

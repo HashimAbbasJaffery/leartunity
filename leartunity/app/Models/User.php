@@ -66,4 +66,7 @@ class User extends Authenticatable implements CanResetPassword
     public function comments() {
         return $this->hasMany(Comment::class);
     }
+    public function certificates() {
+        return $this->hasMany(Certificate::class, "certificate_id")->whereStatus(1);
+    }
 }

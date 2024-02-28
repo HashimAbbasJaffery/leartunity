@@ -28,7 +28,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 Route::get("certificate", function() {
     $customPaper = array(0,0,1056,516);
-    $pdf = Pdf::loadView("certification")->setPaper($customPaper);
+    $name = "hashim";
+    $duration = "1";
+    $course_title = "The Data Science";
+    $awarded_date = \Carbon\Carbon::now();
+    $pdf = Pdf::loadView("certification", compact("name", "duration", "course_title", "awarded_date"))->setPaper($customPaper);
     $pdf = $pdf->stream();
     return $pdf;
 });

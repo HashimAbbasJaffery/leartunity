@@ -2,21 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\Certificate;
 use App\Interfaces\TrackingService;
 use App\Models\Course;
+use App\Services\CourseCertificate;
 use Illuminate\Http\Request;
 use App\Models\Content;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 
 class TrackerControler extends Controller
 {
-    public function __construct(protected TrackingService $service) {}
+    public function __construct(
+        protected TrackingService $service,
+        // protected CourseCertificate $certificate
+        protected Certificate $certificate
+    ) {}
 
     public function update(Content $content, Course $course) {
         $service = $this->service->track($content, $course);
-        if(!$service) return;
-
         [ $progress, $tracking_track ] = $service;
+        if($progress >= 100) {
+            // $this->certificate->generate("hashim", "fd", "sd", "sd");
+            $this->certificate->generateAndStore($course);
+        }
+
+        if($tracking_track === -1) return;
+
         // Store the results into the database (Core Code)
         $course->tracker()->update([
             "tracking" => json_encode($tracking_track),
