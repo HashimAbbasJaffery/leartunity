@@ -13,13 +13,13 @@
                         @php 
                             $progress = $purchase->course->tracker->progress;
                         @endphp
-                        <p style="font-size: 13px; float: right;">{{ $progress }}%</p>
                         @if($progress < 100)
+                        <p style="font-size: 13px; float: right;">{{ $progress }}%</p>
                         <div class="progress-bar" style="background: rgb(222, 222, 222); height: 2px;">
                             <div class="completed-progress" style="background: var(--primary); height: 2px; width: {{ $progress }}%;">&nbsp;</div>
                         </div>
                         @else 
-                            <a class="highlighted px-4 py-1" href="#">download certificate</a>
+                            <a class="highlighted px-4 py-1" href="/learn/certificate/{{ $purchase->course->id }}">download certificate</a>
                         @endif
                     </div>
                 </div>

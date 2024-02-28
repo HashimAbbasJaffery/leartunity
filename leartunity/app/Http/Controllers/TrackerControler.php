@@ -23,11 +23,10 @@ class TrackerControler extends Controller
         $service = $this->service->track($content, $course);
         [ $progress, $tracking_track ] = $service;
         if($progress >= 100) {
-            // $this->certificate->generate("hashim", "fd", "sd", "sd");
             $this->certificate->generateAndStore($course);
         }
 
-        if($tracking_track === -1) return;
+        if($tracking_track === -1) return $progress;
 
         // Store the results into the database (Core Code)
         $course->tracker()->update([
@@ -37,6 +36,6 @@ class TrackerControler extends Controller
             "status" => 1
         ]);
 
-        return 1;
+        return $progress;
     }
 }

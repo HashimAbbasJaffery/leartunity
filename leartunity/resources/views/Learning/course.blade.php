@@ -1,4 +1,7 @@
 <x-layout>
+    <div class="progress {{ $course->tracker->progress >= 100 ? '' : 'none'}} container mx-auto download-certificate py-3 px-2 rounded" style="bottom: 10px; left: 10px;background: #15F5BA; position: fixed; width: 50%; z-index: 2">
+        You Have completed this course! Download your certificate from <a href="/learn/certificate/{{ $course->id }}" style="text-decoration: underline;">Here</a>
+    </div>
     <div style="border: 1px solid white; background: var(--primary); width: 50%; margin: auto; height: 400px; z-index: 2;" class="animate__animated none comment-post rounded alert-box fixed left-0 right-0 bottom-0 p-2 text-white">
         <div class="comment-post-header flex items-center">
             <i class="fa-solid fa-reply mr-2"></i>
@@ -182,7 +185,11 @@
             
             axios.post("{{ route('update.tracker', ['content' => $current_content, 'course' => $course]) }}")
                 .then(res => {
-                    console.log(res)
+                    const progress = res.data;
+                    const progressDiv = document.querySelector(".progress");
+                    if(progress >= 100){
+                        progressDiv.classList.remove("none");
+                    }
                 })
                 .catch(err => {
                     console.log(err);

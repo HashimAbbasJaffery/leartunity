@@ -27,6 +27,7 @@ class CourseCertificate implements Certificate {
 
         $is_awarded = auth()->user()->certificates()->where("certificate", $path)->exists();
         if($is_awarded) return;
+        
         auth()->user()->certificates()->create([
             "user_id" => auth()->id(),
             "certificate_id" => $certificate_id,
