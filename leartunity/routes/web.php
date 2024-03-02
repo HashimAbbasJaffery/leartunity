@@ -102,3 +102,9 @@ Route::get("ajaxCourses", [CourseController::class, "ajax"]);
 
 Route::get("/profile/{id}", [ProfileController::class, "index"]);
 
+Route::post("/preview", function() {
+    return Str::markdown(request()->get("value"), [
+        "html_input" => 'strip'
+    ]);
+});
+

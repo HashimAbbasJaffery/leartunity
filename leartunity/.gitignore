@@ -3,6 +3,13 @@
 /public/build
 /public/hot
 /public/storage
+/public/audio
+/public/badge
+/public/certificates
+/public/course
+/public/cover
+/public/profile
+/public/uploads
 /storage/*.key
 /vendor
 .env

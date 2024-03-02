@@ -95,3 +95,15 @@ if(!function_exists("secondToMinutes")) {
 
     }
 }
+
+if(!function_exists("dollarsToCents")) {
+    function dollarsToCents($dollars) {
+        // Remove any non-numeric characters from the input
+        $dollars = preg_replace("/[^0-9.]/", "", $dollars);
+        
+        // Convert dollars to cents
+        $cents = round(floatval($dollars) * 100);
+        
+        return $cents;
+    }
+}
