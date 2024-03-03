@@ -12,8 +12,14 @@
                     <p>{{ $section->contents->count() }} Videos</p>
                 </div>
                 <div class="none contents" id="content-{{ $section->id }}">
-                   
-                    
+                    <div class="core-contents" id="core-contents-{{ $section->id }}">
+                        @foreach($section->contents as $content)
+                            <a href="#" style="margin-bottom: 5px" class="content flex justify-between block">
+                                <p style="text-decoration: underline; margin-bottom: 8px;">{{ $content->title }}</p>
+                                <p>{{ secondToMinutes($content->duration) }}</p>
+                            </a>
+                        @endforeach
+                    </div>
                     <a href="#" id="contents-{{ $section->id }}"
                         class="create-content create-course rounded text-center py-2"
                         style="width:100%; display: inline-block">
@@ -115,6 +121,7 @@
                         resumable.on("fileSuccess", function(file) {
                             const progressBar = document.querySelector(".progress-bar");
                             progressBar.style.display = "none";
+                            location.reload();
                         })
 
                         resumable.on('fileError', function (file, response) { // trigger when there is any error
@@ -143,6 +150,8 @@
                     }).then((result) => {
                      
                         if (result.isConfirmed) {
+                            const contentList = document.getElementById("core-contents-" + id);
+                            
                             const content = document.getElementById("content-video");
                             const title = document.getElementById("content-title").value;
                             const description = document.getElementById("content-description").value;
@@ -151,12 +160,15 @@
                                 title,
                                 description
                             }
+                            resumable.opts.target = `/instructor/content/${id}/add`
                             const data = new FormData();
                             data.append("content", content.files[0])
                             data.append("title", title.value);
                             data.append("description", description);
                             
                             resumable.upload();
+
+                            
                             
 
                             // const config = {

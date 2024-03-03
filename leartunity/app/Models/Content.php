@@ -16,11 +16,18 @@ class Content extends Model
     use HasFactory;
     protected $guarded = [];
 
+
     public function contentable(): MorphTo {
         return $this->morphTo();
     }
 
     public function section(): BelongsTo {
         return $this->belongsTo(Section::class, "contentable_id");
+    }
+    public function next() {
+        return $this->belongsTo(Content::class, "next_video");
+    }
+    public function previous() {
+        return $this->hasOne(Content::class, "previous_video");
     }
 }

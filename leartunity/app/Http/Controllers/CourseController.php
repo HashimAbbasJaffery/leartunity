@@ -19,8 +19,8 @@ class CourseController extends Controller
         protected Stripe $stripe
     ){}
     public function index() {
-        $courses = Course::where("author_id", auth()->user()->id)->paginate(6);
-        $courses->withPath("get/courses");
+        $courses = Course::where("author_id", auth()->user()->id)->whereStatus(1)->paginate(6);
+        $courses->withPath("/get/courses");
         
         return view("Teaching.index", compact("courses"));
     }

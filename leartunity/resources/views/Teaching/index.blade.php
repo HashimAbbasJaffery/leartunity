@@ -41,7 +41,7 @@
     
     <script type="module">
             
-        import course from "./js/templates/course.js";
+        import course from "../js/templates/course.js";
         const loadmore = document.querySelector(".load-more");
         loadmore.addEventListener("click", function() {
             const url = loadmore.dataset.url;

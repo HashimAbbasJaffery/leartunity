@@ -41,6 +41,8 @@
                 <a href="">Go to Course</a>
             @endif
             <a href="{{ route('course', [ 'course' =>  $slug]) }}">see details</a>
+            
+            <a href="{{ route('course.show', ["course" => $slug]) }}">Manage</a>
         </div>
         <div class="course-price flex justify-between">
             <p>{{ $price }} $</p>

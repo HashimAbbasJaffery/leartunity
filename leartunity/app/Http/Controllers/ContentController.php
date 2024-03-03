@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\LinkedList;
 use App\Models\Content;
 use App\Models\Course;
 use App\Models\Section;
+use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
@@ -38,24 +40,7 @@ class ContentController extends Controller
         return $content;
     
     }
-    public function store(Request $request, Section $section) {
-        // $content = request()->file("content");
-        // $title = request()->title;
-        // $description = request()->description;
-
-        // $filename = time() . $content->getClientOriginalName();
-        // $content->move(public_path("uploads"), $filename);
-        // $counts = $section->contents->count();
-
-        // $section->contents()->create([
-        //     "title" => $title,
-        //     "status" => 1,
-        //     "content" => $content, 
-        //     "sequence" => $counts + 1,
-        //     "is_paid" => 1,
-        //     "duration" => 50,
-        //     "description" => $description
-        // ]);
+    public function store(Request $request, Section $section, LinkedList $list) {
         $title = $request->title;
         $description = $request->description;
         $reciever = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
@@ -70,16 +55,23 @@ class ContentController extends Controller
             $file = $save->getFile();
             $fileName = time() . $file->getClientOriginalName();
             $file->move(public_path("uploads"), $fileName);
+
+
             $count = $section->contents->count();
+            $previous_content = $list->get_last($section);
             
-            $section->contents()->create([
+            $new_content = $section->contents()->create([
                 "title" => $title,
                 "status" => 1,
                 "content" => $fileName,
                 "duration" => 400,
                 "is_paid" => 1,
                 "sequence" => $count +  1,
-                "description" => $description
+                "description" => $description,
+                "previous_video" => $previous_content?->id
+            ]);
+            $previous_content?->update([
+                "next_video" => $new_content->id
             ]);
         }
 

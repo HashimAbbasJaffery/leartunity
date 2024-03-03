@@ -54,6 +54,8 @@ const course = data => {
                     "<a href=''>Go to Course</a>" 
             }
             <a href="/course/${slug}">see details</a>
+            <a href="/instructor/course/${slug}">Manage</a>
+        
         </div>
         <div class="course-price flex justify-between">
             <p>${price} $</p>

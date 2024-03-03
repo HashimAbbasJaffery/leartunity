@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Authenticate;
+use App\Interfaces\LinkedList;
 use App\Models\Course;
 use App\Models\Section;
 use Illuminate\Support\Facades\Route;
@@ -79,6 +80,11 @@ Route::get("poly", function() {
         $loop++;
     }
     dd("Created!");
+});
+
+Route::get("serviceTest", function(LinkedList $list) {
+    $section = Section::find(13);
+    dd($list->get_last($section));
 });
 
 Route::group([ 'middleware' => ['web', "guest"] ], function() {

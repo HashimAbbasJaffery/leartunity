@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Interfaces\Certificate;
+use App\Interfaces\LinkedList;
 use App\Interfaces\TrackingService;
+use App\Services\ContentService;
 use App\Services\CourseCertificate;
 use App\Services\VideoTrackingService;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->bind(TrackingService::class, VideoTrackingService::class);
+        $this->app->bind(LinkedList::class, ContentService::class);
         $this->app->bind(Certificate::class, CourseCertificate::class);
         $this->app->when(StripeClient::class)
                     ->needs('$config')
