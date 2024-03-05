@@ -25,12 +25,36 @@
                 <span class="highlighted px-3 py-2">Upload Thumbnail</span>
                 <input type="file" class="none rounded px-2" id="thumbnail" name="thumbnail" style="width: 100%;"/>
             </label>
-            <button type="submut" class="highlighted px-3 preview mb-1" data-for="description">Preview</button>
+            <div class="categories rounded mb-3 flex items-start flex-wrap" style="overflow: auto;border: 1px solid black; height: 100px;">
+                @foreach($categories as $category)
+                    <label class="flex items-center px-2" for="category-{{ $category->id }}">
+                        <input class="mr-2 category" type="checkbox" id="category-{{ $category->id }}" style="width: 15px;"/>
+                        {{ $category->category }}
+                    </label>
+                @endforeach
+            </div>
+            <input type="hidden" name="categories" id="categories"/>
+            <button type="submut" class="highlighted px-3 preview mb-1" data-for="description">Create</button>
         </form>
     </section>
     @push("scripts")
         <script>
+            
+        </script>
+        <script>
             const previewButton = document.querySelector(".preview");
+            let ids = [];
+            const categories = document.querySelectorAll(".category");
+            const categoriesInput = document.getElementById("categories");
+            categories.forEach(category => {
+                category.addEventListener("change", function() {
+                    const checkedCategories = document.querySelectorAll(".category:checked");
+                    ids = Array.from(checkedCategories).map(category => {
+                        return category.id.split("-")[1];
+                    });
+                    categoriesInput.value = ids;
+                })
+            })
 
             previewButton.addEventListener("click", function(e) {
                 e.preventDefault();

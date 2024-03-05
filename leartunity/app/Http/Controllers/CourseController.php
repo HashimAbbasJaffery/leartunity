@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CourseRequest;
 use App\Models\Category;
 use App\Models\Course;
+use App\Services\FilterService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use App\Classes\Pagination;
 use Illuminate\Support\Facades\Http;
 use Stripe\StripeClient as Stripe;
 use App\Http\Helpers\Helpers;
+use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
@@ -19,12 +21,15 @@ class CourseController extends Controller
         protected Stripe $stripe
     ){}
     public function index() {
-        $courses = Course::where("author_id", auth()->user()->id)->whereStatus(1)->paginate(6);
-        $courses->withPath("/get/courses");
+        $courses = Course::where("author_id", auth()->user()->id)->paginate(6);
+        $courses->withPath("/get/courses/" . "1");
         
         return view("Teaching.index", compact("courses"));
     }
     public function get(Course $course) {
+        $course->description = Str::markdown($course->description, [
+            "html_input" => "strip"
+        ]);
         $sections = $course->sections;
         if(!count($sections) ) {
             abort(405);
@@ -49,30 +54,8 @@ class CourseController extends Controller
         return view("guest.courses.courses", compact("courses", "categories"));
     }
 
-    public function getData() {
-        $parameters = [];
-
-        // Category Filter
-        if(request()->categories) {
-            $parameters["categories"] = request()->categories; 
-        }
-
-        // Price Filter
-        if(request()->price_range) {
-            $parameters["price_range"] = request()->price_range;
-        }
-
-        // Search Filter 
-        if(request()->search) {
-            $parameters["search"] = json_decode(request()->search);
-        }
-
-        $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->whereStatus(1)->paginate(6);
-        $courses->map(function($course) {
-            $stripe_id = $course->stripe_id;
-            $is_purchased = auth()->user()?->purchases()->where("purchase_product_id", $stripe_id)->exists();
-            $course["is_purchased"] = $is_purchased;
-        });
+    public function getData(Request $request, FilterService $service, $status = null) {
+        $courses = $service->filter($request, $status);
         return $courses;
     }
 
@@ -81,9 +64,11 @@ class CourseController extends Controller
         return $courses;
     }
     public function create() {
-        return view("Teaching.create");
+        $categories = Category::all();
+        return view("Teaching.create", compact("categories"));
     }
     public function store(CourseRequest $request) {
+        $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
         
@@ -95,7 +80,7 @@ class CourseController extends Controller
             ]
         ]);
 
-        Course::create([
+        $course = Course::create([
             "title" => $request->title,
             "description" => $request->description, 
             "pre_req" => $request->pre_req,
@@ -106,6 +91,7 @@ class CourseController extends Controller
             "slug" => $slug,
             "stripe_id" => $stripe->default_price
         ]);
+        $course->categories()->attach($categories);
         $fileName = time() . $file->getClientOriginalName();
         $file->move(public_path("course"), $fileName);
 

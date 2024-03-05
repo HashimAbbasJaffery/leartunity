@@ -16,7 +16,16 @@
                         @foreach($section->contents as $content)
                             <a href="#" style="margin-bottom: 5px" class="content flex justify-between block">
                                 <p style="text-decoration: underline; margin-bottom: 8px;">{{ $content->title }}</p>
-                                <p>{{ secondToMinutes($content->duration) }}</p>
+                                <div class="right-side-info flex items-center">
+                                    <p class="mr-2">{{ secondToMinutes($content->duration) }}</p>
+                                    <form method="POST" action="{{ route('content.delete', [ 'content' => $content->id ]) }}">
+                                        @csrf
+                                        {{ method_field("DELETE") }}
+                                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                                            Button
+                                        </button>
+                                    </form>
+                                </div>
                             </a>
                         @endforeach
                     </div>

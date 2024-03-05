@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         // User::factory($this->quantity)->create();
-        Course::factory($this->quantity)->create();
-        Category::factory($this->quantity)->create();
+        Course::factory(50)->create();
+        // Category::factory($this->quantity)->create();
         // Course::factory()
         //         ->has(Category::factory()->count(50))
         //         ->create();

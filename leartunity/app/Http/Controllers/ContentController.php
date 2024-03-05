@@ -83,4 +83,8 @@ class ContentController extends Controller
         ]);
 
     }
+    public function destroy(Content $content, LinkedList $list) {
+        $list->remove($content);
+        return redirect()->back();
+    }
 }

@@ -28,6 +28,6 @@ class Content extends Model
         return $this->belongsTo(Content::class, "next_video");
     }
     public function previous() {
-        return $this->hasOne(Content::class, "previous_video");
+        return $this->belongsTo(Content::class, "previous_video");
     }
 }
