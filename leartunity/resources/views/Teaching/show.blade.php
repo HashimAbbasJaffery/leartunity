@@ -9,7 +9,15 @@
             @foreach ($sections as $section)
                 <div class="section flex justify-between mb-3" id="{{ $section->id }}">
                     <p>{{ $section->section_name }}</p>
-                    <p>{{ $section->contents->count() }} Videos</p>
+                    <div class="flex">
+                        <form method="POST" name="deleteCourse" action="{{ route('section.delete', [ 'section' => $section ]) }}" class="flex" id="deleteCourse">
+                            @csrf 
+                            {{ method_field("DELETE") }}
+                            <p class="mr-2">{{ $section->contents->count() }} Videos</p>
+                            <p class="mr-2">|</p> 
+                            <button class="text-red-400">Delete</button>
+                        </form>
+                    </div>
                 </div>
                 <div class="none contents" id="content-{{ $section->id }}">
                     <div class="core-contents" id="core-contents-{{ $section->id }}">
@@ -21,10 +29,13 @@
                                     <form method="POST" action="{{ route('content.delete', [ 'content' => $content->id ]) }}">
                                         @csrf
                                         {{ method_field("DELETE") }}
-                                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
-                                            Button
+                                        <button class="mr-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                                            Delete
                                         </button>
                                     </form>
+                                    <button class="content-update" data-id="content-{{ $content->id }}" class="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                                        Update
+                                    </button>
                                 </div>
                             </a>
                         @endforeach
@@ -177,30 +188,54 @@
                             
                             resumable.upload();
 
+                        }
+                    });
+                })
+            })
+
+            const contentUpdate = document.querySelectorAll(".content-update")
+
+            contentUpdate.forEach(update => {
+                update.addEventListener("click", function() {
+                    const id = update.id.split("-")[1];
+                    Swal.fire({
+                        title: "Update Content",
+                        html: '<input type="text" id="content-title" class="mb-2" style="width: 100%; border: 1px solid var(--primary); resize: none" ><textarea id="content-description" type="text" style="width: 100%; border: 1px solid var(--primary); height: 100px; resize: none" class="mb-2" /></textarea>' +
+                            "<br>" +
+                            "<input id='content-video' style='border: none;width: 100%;' type='file' />",
+                        inputAttributes: {
+                            autocapitalize: "off"
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: "Save",
+                        showLoaderOnConfirm: true,
+                        didOpen: function() {
+                            const content = document.getElementById("content-video");
+                            console.log(resumable.assignBrowse(content)); 
+                        },
+
+                        allowOutsideClick: () => !Swal.isLoading(),
+                    }).then((result) => {
+                     
+                        if (result.isConfirmed) {
+                            const contentList = document.getElementById("core-contents-" + id);
                             
+                            const content = document.getElementById("content-video");
+                            const title = document.getElementById("content-title").value;
+                            const description = document.getElementById("content-description").value;
+                            resumable.opts.query = {
+                                ...resumable.opts.query, 
+                                title,
+                                description
+                            }
+                            resumable.opts.target = `/instructor/content/${id}/add`
+                            const data = new FormData();
+                            data.append("content", content.files[0])
+                            data.append("title", title.value);
+                            data.append("description", description);
                             
+                            resumable.upload();
 
-                            // const config = {
-                            //     onUploadProgress: progressEvent => {
-                            //         const {
-                            //             loaded,
-                            //             total
-                            //         } = progressEvent;
-                            //         const progressPercentage = Math.round((loaded * 100) /
-                            //             total);
-                            //         console.log(`Upload Progress: ${progressPercentage}%`);
-                            //     }
-                            // };
-
-                            // axios.post(`/instructor/content/${id}/add`, data, config)
-                            //     .then(res => {
-
-
-
-                            //     })
-                            //     .catch(err => {
-                            //         console.log(err)
-                            //     });
                         }
                     });
                 })

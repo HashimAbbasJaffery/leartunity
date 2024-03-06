@@ -13,16 +13,7 @@
                         $profile = $course->author->profile;
                         @endphp
                         <x-user.course 
-                            :title="$course->title"
-                            :instructor="$course->author->name"
-                            duration="50"
-                            :description="$course->description"
-                            :profile="$profile->profile_pic ?? ''"
-                            :price="$course->price"
-                            :rating="$stars"
-                            :stripe="$course->stripe_id"
-                            :slug="$course->slug"
-                            :thumbnail="$course->thumbnail"
+                            :course="$course"
                         />
                         
                     @endforeach

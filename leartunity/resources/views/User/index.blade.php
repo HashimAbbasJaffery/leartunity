@@ -150,20 +150,19 @@
             .then(res => {
               const column = res.data[0];
               const data = res.data[1];
+              console.log(data);
               const path = res.data[2];
               const directory = res.data[3];
               const results = document.querySelector(".results");
               let url = "";
               results.textContent = "";
               data.forEach(data => {
-                
                 if(type.value === "course") {
                   url = `/course/${data.slug}`; 
                 }
                 if(type.value === "teachers") {
                   url = `/profile/${data.id}`;
                 }
-                console.log(url)
                 results.innerHTML += result(data, column, path, directory, url);
               });
 
@@ -172,6 +171,7 @@
               }
               
               results.classList.add("show");
+              results.classList.remove("none");
             })
             .catch(err => {
               console.log(err)

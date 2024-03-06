@@ -57,7 +57,7 @@
                             }
                             $profile = $course->author->profile;
                             @endphp
-                            <x-user.course 
+                            <!-- <x-user.course 
                                 :title="$course->title"
                                 :instructor="$course->author->name"
                                 duration="50"
@@ -68,6 +68,10 @@
                                 :stripe="$course->stripe_id"
                                 :slug="$course->slug"
                                 :thumbnail="$course->thumbnail"
+                                :status="true"
+                            /> -->
+                            <x-user.course 
+                                :course="$course"
                             />
                             
                         @endforeach

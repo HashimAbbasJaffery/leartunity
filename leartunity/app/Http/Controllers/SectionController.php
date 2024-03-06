@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Models\Section;
 
 class SectionController extends Controller
 {
@@ -17,5 +18,11 @@ class SectionController extends Controller
         ]);
 
         return 1;
+    }
+
+    public function destroy(Section $section) {
+        $section->delete();
+
+        return redirect()->back();
     }
 }

@@ -22,6 +22,7 @@ class CourseController extends Controller
     ){}
     public function index() {
         $courses = Course::where("author_id", auth()->user()->id)->paginate(6);
+        
         $courses->withPath("/get/courses/" . "1");
         
         return view("Teaching.index", compact("courses"));
@@ -100,6 +101,13 @@ class CourseController extends Controller
     public function show(Course $course) {
         $sections = $course->sections;
         return view("Teaching.show", compact("course", "sections"));
+    }
+    public function changeStatus(Request $request, Course $course) {
+        $course->update([
+            "status" => !$course->status
+        ]);
+
+        return 1;
     }
 
 }

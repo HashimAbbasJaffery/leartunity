@@ -119,6 +119,24 @@
     <script src="{{ asset("js/transition.js") }}"></script>
     
     <script>
+        const switches = document.querySelectorAll(".course-switch");
+        switches.forEach(switchItems => {
+          switchItems.addEventListener("change", function(e) {
+            const target = e.target;
+            const id = target.id.split("-")[1];
+            axios.put(`/instructor/course/${id}/status`)
+              .then(res => {
+                console.log(res)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+
+          })
+        })
+        // switches.forEach()
+      </script>
+    <script>
       const messageAppearence = (message, time) => {
         const messageEl = document.querySelector(".notification-message");
         messageEl.textContent = message;
@@ -126,8 +144,8 @@
         notification.classList.remove("none");
         notification.classList.add("animate__bounceIn"); 
         setTimeout(() =>{
-            notification.classList.add("animate__bounceOut");
-            notification.classList.remove("animate__bounceIn");
+            notification.classList?.add("animate__bounceOut");
+            notification.classList?.remove("animate__bounceIn");
         }, time)
       }
       const playAudio = file => {
@@ -152,6 +170,7 @@
             });
         })
       </script>
+
     @endauth
     @stack("scripts")
 </body>

@@ -5,45 +5,31 @@ namespace App\View\Components\User;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Models\Course as CourseInstance;
 
 class Course extends Component
 {
     /**
      * Create a new component instance.
      */
-    public $title;
-    public $instructor;
-    public $duration;
-    public $price;
-    public $rating;
-    public $description;
-    public $stripe;
-    public $slug;
-    public $profile;
-    public $thumbnail;
+    // public $title;
+    // public $instructor;
+    // public $duration;
+    // public $price;
+    // public $rating;
+    // public $description;
+    // public $stripe;
+    // public $slug;
+    // public $profile;
+    // public $thumbnail;
+    // public $status;
+
+    public CourseInstance $course;
     public function __construct(
-        $title, 
-        $instructor, 
-        $price, 
-        $rating, 
-        $duration,
-        $description,
-        $stripe,
-        $slug,
-        $profile,
-        $thumbnail
+        CourseInstance $course,
     )
     {
-        $this->title = $title;
-        $this->instructor = $instructor;
-        $this->price = $price;
-        $this->rating = $rating;
-        $this->duration = $duration;
-        $this->description = $description;
-        $this->stripe = $stripe;
-        $this->slug = $slug;
-        $this->profile = $profile;
-        $this->thumbnail = $thumbnail;
+        $this->course = $course;
     }
 
     /**
@@ -52,7 +38,7 @@ class Course extends Component
     public function render(): View|Closure|string
     {
         $user = auth()->user();
-        $purchases = $user?->purchases()->where("purchase_product_id", $this->stripe)->first();
+        $purchases = $user?->purchases()->where("purchase_product_id", $this->course->stripe_id)->first();
         $is_purchased = false;
         if($purchases) {
             $is_purchased = true;
