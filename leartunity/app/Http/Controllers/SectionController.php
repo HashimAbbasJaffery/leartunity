@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SectionRequest;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Models\Section;
 
 class SectionController extends Controller
 {
-    public function store(Request $request, Course $course) {
+    public function store(SectionRequest $request, Course $course) {
         $section_name = $request->section_name;
         $count = $course->sections->count();
         $course->sections()->create([
@@ -25,7 +26,7 @@ class SectionController extends Controller
 
         return redirect()->back();
     }
-    public function update(Request $request, Section $section) {
+    public function update(SectionRequest $request, Section $section) {
         $section_name = $request->section_name;
         $section->update([
             "section_name" => $section_name,

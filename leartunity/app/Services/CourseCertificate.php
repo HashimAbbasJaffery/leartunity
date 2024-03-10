@@ -26,11 +26,12 @@ class CourseCertificate implements Certificate {
         // Validate if certificate exists or not
 
         $is_awarded = auth()->user()->certificates()->where("certificate", $path)->exists();
+
         if($is_awarded) return;
-        
-        auth()->user()->certificates()->create([
+
+        \App\Models\Certificate::create([
             "user_id" => auth()->id(),
-            "certificate_id" => $certificate_id,
+            "certificate_id" => $course->id,
             "certificate" => $path, 
             "status" => 1
         ]);

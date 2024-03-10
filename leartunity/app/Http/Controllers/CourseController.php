@@ -83,21 +83,23 @@ class CourseController extends Controller
 
         $product_id = $stripe->id;
 
+        
+        $fileName = time() . $file->getClientOriginalName();
+        $file->move(public_path("course"), $fileName);
+
         $course = Course::create([
             "title" => $request->title,
             "description" => $request->description, 
             "pre_req" => $request->pre_req,
             "price" => $request->price,
-            "thumbnail" => "",
+            "thumbnail" => $fileName,
             "author_id" => auth()->id(),
             "status" => 0,
             "slug" => $slug,
             "stripe_id" => $stripe->default_price,
-            "product_id" => $product_id
+            "stripe_product_id" => $product_id
         ]);
         $course->categories()->attach($categories);
-        $fileName = time() . $file->getClientOriginalName();
-        $file->move(public_path("course"), $fileName);
 
         return redirect()->to("/instructor");
     }
@@ -111,6 +113,9 @@ class CourseController extends Controller
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
         
+        $stripe = $this->stripe->products->retrieve($course->stripe_product_id);
+        
+
         $stripe = $this->stripe->products->create([
             'name' => $request->title,
             'default_price_data' => [
@@ -118,14 +123,22 @@ class CourseController extends Controller
                 "unit_amount" => dollarsToCents($request->price)
             ]
         ]);
-        // $product = $this->stripe->products->retrieve($course->stripe_id);
+        $product = $this->stripe->products->retrieve($course->stripe_product_id);
+        $product->name = $request->title;
+        $product->default_price_data["unit_amount"] = $request->price;
+        $product->save();
+        $fileName = $course->thumbnail;
+        if($file) {
+            $fileName = time() . $file->getClientOriginalName();
+            $file->move(public_path("course"), $fileName);
+        } 
 
-        $course = $course->update([
+        $course->update([
             "title" => $request->title,
             "description" => $request->description, 
             "pre_req" => $request->pre_req,
             "price" => $request->price,
-            "thumbnail" => "",
+            "thumbnail" => $fileName,
             "author_id" => auth()->id(),
             "status" => 0,
             "slug" => $slug,
@@ -135,10 +148,7 @@ class CourseController extends Controller
 
         $course->categories()->sync($categories);
 
-        if($file) {
-            $fileName = time() . $file->getClientOriginalName();
-            $file->move(public_path("course"), $fileName);
-        }
+        
 
         return redirect()->to("/instructor");
     }

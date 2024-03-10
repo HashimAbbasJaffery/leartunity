@@ -3,15 +3,15 @@
         @forelse($purchases as $purchase)
             <div class="course flex" style="position: relative;">
                 <div class="course-image mr-5" style="width: 20%">
-                    <img src="{{ ( $purchase->course->thumbnail )? "/course/" . $purchase->course->thumbnail : 'https://placehold.co/600x400' }}" height="250" width="250" class="rounded" />
+                    <img src="{{ ( $purchase?->course?->thumbnail ?? 'null' )? "/course/" . ($purchase?->course?->thumbnail ?? 'null') : 'https://placehold.co/600x400' }}" height="250" width="250" class="rounded" />
                 </div>
                 <div class="course-detail" style="width: 80%">
-                    <h1 class="text-xl mb-2" style="font-weight: 600;">{{ $purchase->course->title }}</h1>
-                    <p>{{ substr(str_replace("</p>", "", str_replace("<p>", "", $purchase->course->description)),0, 180) }}...</p>
-                    <a href="/profile/{{ $purchase->course->author->id }}" style="font-size: 13px;" class="mt-2 mb-2">{{ $purchase->course->author->name }}</a>
+                    <h1 class="text-xl mb-2" style="font-weight: 600;">{{ $purchase->course?->title ?? "null" }}</h1>
+                    <p>{{ substr(str_replace("</p>", "", str_replace("<p>", "", $purchase->course?->description ?? "null")),0, 180) }}...</p>
+                    <a href="/profile/{{ $purchase->course?->author->id ?? "null" }}" style="font-size: 13px;" class="mt-2 mb-2">{{ $purchase->course?->author->name ?? "null"}}</a>
                     <div class="progress mt-2">
                         @php 
-                            $progress = $purchase->course->tracker->progress;
+                            $progress = $purchase->course?->tracker->progress ?? "null";
                         @endphp
                         @if($progress < 100)
                         <p style="font-size: 13px; float: right;">{{ $progress }}%</p>
@@ -19,11 +19,11 @@
                             <div class="completed-progress" style="background: var(--primary); height: 2px; width: {{ $progress }}%;">&nbsp;</div>
                         </div>
                         @else 
-                            <a class="highlighted px-4 py-1" href="/learn/certificate/{{ $purchase->course->id }}">download certificate</a>
+                            <a class="highlighted px-4 py-1" href="/learn/certificate/{{ $purchase->course?->id ?? "null" }}">download certificate</a>
                         @endif
                     </div>
                 </div>
-                <a href="{{ route('watch.course', ['course' => $purchase->course->slug, 'content' => $purchase->course?->sections[0]?->contents[0]?->id ?? 'null']) }}" style="text-align:center; width: 10%;padding: 3px 6px 3px 6px;position: absolute; right: 0px;" class="highlighted">Resume</a>
+                <a href="{{ route('watch.course', ['course' => $purchase->course?->slug ?? "null", 'content' => $purchase->course?->sections[0]?->contents[0]?->id ?? 'null']) }}" style="text-align:center; width: 10%;padding: 3px 6px 3px 6px;position: absolute; right: 0px;" class="highlighted">Resume</a>
             </div>
         @empty 
             <div class="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3" role="alert">

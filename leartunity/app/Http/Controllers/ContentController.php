@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContentRequest;
 use App\Http\Requests\ContentUpdateRequest;
 use App\Interfaces\LinkedList;
 use App\Models\Content;
@@ -42,7 +43,7 @@ class ContentController extends Controller
         return $content;
     
     }
-    public function store(Request $request, Section $section, LinkedList $list, ResumableJS $jws, VideoDescription $videoService) {
+    public function store(ContentRequest $request, Section $section, LinkedList $list, ResumableJS $jws, VideoDescription $videoService) {
         $title = $request->title;
         $description = $request->description;
 

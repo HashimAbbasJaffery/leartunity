@@ -5,7 +5,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", [CourseController::class, "index"]);
+Route::get("/", [CourseController::class, "index"])->name("instructor");
 
 Route::delete("/section/{section}/delete", [SectionController::class, "destroy"])->name("section.delete");
 Route::post("/section/{course:slug}/create", [SectionController::class, "store"])->name("section.create");

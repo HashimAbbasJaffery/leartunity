@@ -28,5 +28,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("change-pic", function(User $user, Profile $profile) {
             return auth()->user()->profile->is($profile);
         });
+
+        Gate::define("teach", function(User $user) {
+            return auth()->user()->role === "instructor";
+        });
     }
 }

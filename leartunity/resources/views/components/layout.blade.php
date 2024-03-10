@@ -59,20 +59,24 @@
             </div>
             <nav>
                 <ul>
-                    <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li>
+                    <!-- <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li> -->
                     <li class="mx-3"><a href="{{ route("learn") }}" class="bold-600">My Learning</a></li>
-                    <li class="mx-3"><a href="#" class="bold-600">Plans</a></li>
-                    <li class="mx-3"><a href="#" class="bold-600">Courses</a></li>
-                    <li class="mx-3"><a href="#" class="bold-600">Privacy Policy</a></li>
+                    <!-- <li class="mx-3"><a href="#" class="bold-600">Plans</a></li> -->
+                    <li class="mx-3"><a href="{{ route('courseList') }}" class="bold-600">Courses</a></li>
+                    <!-- <li class="mx-3"><a href="#" class="bold-600">Privacy Policy</a></li> -->
+                    @can("teach")
+                      <li class="mx-3"><a href="{{ route("instructor") }}" class="bold-600">Instructor</a></li>
+                    @endcan
                     <li class="mx-3 highlighted"><a href="{{ route("login") }}" class="bold-600">{{ !auth()->user() ? "login" : auth()->user()->name }}</a></li>
                     
                     <li ><a href="#" class="bold-600 text-xl" style="position: relative;">
                       <div class="notify none" style="position: absolute; right: 0px;background: #00ff00; width: 12px; height: 12px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
                       <i class="fa-solid fa-bell"></i>
                     </a></li>
-                    <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative;">
+                    <!-- <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative;">
                       <i class="fa-solid fa-power-off"></i>
-                    </a></li>
+                    </a></li> -->
+                    
                 </ul>
             </nav>
         </header>

@@ -1,44 +1,60 @@
 <x-layout>
     <section class="mt-5 create-field container mx-auto" style="width: 100%;">
         <form enctype="multipart/form-data" style="width: 100%; display: block;" class="py-2" method="POST" action="{{ route('course.update', [ 'course' => $course->slug ]) }}">
-            @csrf
-            {{ method_field("PUT") }}
+        @csrf
+        {{ method_field("PUT") }}
             <label for="title" style="display: block; margin-bottom: 20px">
                 Course Title
-                <input type="text" value="{{ $course->title }}" class="rounded px-2" id="title" name="title" style="width: 100%;"/>
+                @error("title")
+                    <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
+                @enderror
+                <input type="text" class="rounded px-2 @error('title') has-error @enderror" value="{{ $course->title }}" id="title" name="title" style="width: 100%;"/>
             </label>
             <button type="cancel" class="highlighted px-3 preview mb-1" data-for="description">Preview</button>
             <label for="description" style="display: block; margin-bottom: 20px">
                 Description - It supports Github markdown
-                <textarea id="description" name="description" class="rounded px-2" style="height: 300px;outline: none;resize: none;width: 100%; border: 1px solid var(--primary)">{{ $course->description }}</textarea>
+                @error("description")
+                    <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
+                @enderror
+                <textarea id="description" name="description" class="@error('description') has-error @enderror rounded px-2" style="height: 300px;outline: none;resize: none;width: 100%; border: 1px solid var(--primary)">{{ $course->description }}</textarea>
             </label>
             <div class="description-preview none">fjhdf</div>
             <label for="pre_req" style="display: block; margin-bottom: 20px">
                 Course Pre Requisites - It supports Github markdown
+                @error("pre_req")
+                    <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
+                @enderror
                 <textarea id="description" name="pre_req" class="rounded px-2" style="height: 300px;outline: none;resize: none;width: 100%; border: 1px solid var(--primary)">{{ $course->pre_req }}</textarea>
             </label>
             <div class="pre_req-preview none">&nbsp;</div>
             <label for="price" style="display: block; margin-bottom: 20px">
                 Price
-                <input type="number" value="{{ $course->price }}" class="rounded px-2" id="price" name="price" style="width: 100%;"/>
+                @error("price")
+                    <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
+                @enderror
+                <input type="number" class="rounded px-2 @error('price') has-error @enderror" value="{{ $course->price }}" id="price" name="price" style="width: 100%;"/>
             </label>
             <label for="thumbnail" style="display: block; margin-bottom: 20px">
                 <span class="highlighted px-3 py-2">Upload Thumbnail</span>
-                <input type="file" class="none rounded px-2" id="thumbnail" name="thumbnail" style="width: 100%;"/>
+                @error("thumbnail")
+                    <p class="text-red-600 mt-2" style="font-size: 13px;">{{ $message }}</p>
+                @enderror
+                <input type="file" class="none rounded px-2 @error('thumbnail') has-error @enderror" id="thumbnail" name="thumbnail" style="width: 100%;"/>
             </label>
+            @error("categories")
+                <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
+            @enderror
+            
             <div class="categories rounded mb-3 flex items-start flex-wrap" style="overflow: auto;border: 1px solid black; height: 100px;">
                 @foreach($categories as $category)
-                @php 
-                    $is_attached = $course->categories()->where("category_id", $category->id)->exists()
-                @endphp   
                     <label class="flex items-center px-2" for="category-{{ $category->id }}">
-                        <input class="mr-2 category" type="checkbox" @checked(in_array($category->id, $course->categories_id)) id="category-{{ $category->id }}" style="width: 15px;"/>
+                        <input class="mr-2 category @error('categories') has-error @enderror" @checked(in_array($category->id, $course->categories_id))  type="checkbox" id="category-{{ $category->id }}" style="width: 15px;"/>
                         {{ $category->category }}
                     </label>
                 @endforeach
             </div>
-            <input type="hidden" name="categories" id="categories"/>
-            <button type="submut" class="highlighted px-3 preview mb-1" data-for="description">Create</button>
+            <input type="hidden" value="{{ implode(",", $course->categories_id) }}" name="categories" id="categories"/>
+            <button type="submut" class="highlighted px-3 preview mb-1" data-for="description">Update</button>
         </form>
     </section>
     @push("scripts")

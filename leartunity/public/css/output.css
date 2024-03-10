@@ -1693,3 +1693,6 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+.has-error {
+  border: 1px solid red;
+}
