@@ -58,7 +58,7 @@
             @if(!$is_purchased)
                 <a href="{{ route("checkout", ['id' => $course->stripe_id ?? 'null' ]) }}">enroll</a>
             @else 
-                <a href="">Go to Course</a>
+            
             @endif
             <a href="{{ route('course', [ 'course' =>  $course->slug ?? 'null']) }}">see details</a>
             

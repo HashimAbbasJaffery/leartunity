@@ -112,13 +112,13 @@
                       <img src="https://placehold.co/45x45" class="rounded-full" alt="">
                     </div>
                     <div class="instructor-details flex">
-                      <h2>{{ $review->name }}</h2>
+                      <h2>{{ $review?->name ?? "null" }}</h2>
                       <div class="course-rating flex"> 
-                        {!! calculateReviewStars($review->stars) !!}
+                        {!! calculateReviewStars($review?->stars ?? 0) !!}
                       </div>
                     </div>
                   </div>
-                  <p style="font-size: 13px;" class="mt-2">{{ $review->review }}</p>
+                  <p style="font-size: 13px;" class="mt-2">{{ $review?->review ?? "null" }}</p>
                 </div>
               </div>
             @endforeach

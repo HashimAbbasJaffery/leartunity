@@ -3,13 +3,14 @@ const stars = document.querySelectorAll(".feedback-star")
 const mouseoverStar = element => {
     element.addEventListener("mouseover", function() {
         const starSeries = element.dataset.star;
-        console.log(starSeries);
         for(let i = 5; i > 0; i--) {
             const star = document.querySelector(`.feedback-star[data-star='${i}']`);
             if(i > starSeries) {
                 star.classList.remove("fa-solid");
                 star.classList.add("fa-regular");
+                star.classList.remove("starred");
             } else {
+                star.classList.add("starred")
                 star.classList.add("fa-solid");
                 star.classList.remove("fa-regular");
             }

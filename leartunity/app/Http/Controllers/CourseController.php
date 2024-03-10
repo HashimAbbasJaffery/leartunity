@@ -41,7 +41,7 @@ class CourseController extends Controller
                         ?->contents()
                         ?->first()
                         ->content ?? "";
-        $reviews = json_decode($course?->reviews->reviews ?? "");
+        $reviews = $course?->reviews->reviews ?? "";
         if($reviews)
             $reviews = (new Pagination($reviews, request()))->manualPaginate();
         return view("user.courses.course", compact("sections", "course", "reviews", "introduction"));

@@ -1,6 +1,16 @@
 <x-layout>
     <section id="purchased-courses" class="container mx-auto mt-10">
         @forelse($purchases as $purchase)
+        @php 
+            $reviews = $purchase->course?->reviews?->reviews ?? null;
+            $reviewCount = 0;
+            if($reviews) {
+                $reviewCollection = array_filter($reviews, function($review) {
+                    return $review?->id == auth()->user()?->id;
+                });
+                $reviewCount = count($reviewCollection);
+            }
+        @endphp 
             <div class="course flex" style="position: relative;">
                 <div class="course-image mr-5" style="width: 20%">
                     <img src="{{ ( $purchase?->course?->thumbnail ?? 'null' )? "/course/" . ($purchase?->course?->thumbnail ?? 'null') : 'https://placehold.co/600x400' }}" height="250" width="250" class="rounded" />
@@ -19,6 +29,13 @@
                             <div class="completed-progress" style="background: var(--primary); height: 2px; width: {{ $progress }}%;">&nbsp;</div>
                         </div>
                         @else 
+                            @if($progress >= 25 && $reviewCount === 0)
+                                <a class="give-review highlighted px-4 py-1 bg-green-500 hover:bg-green-600" data-id="{{ $purchase->course?->id ?? "null" }}">Give Review</a>
+                            @endif
+                            <a id="edit-review-{{ $purchase->course?->id ?? "null" }}" class="edit-review none highlighted px-4 py-1 bg-yellow-500 hover:bg-yellow-600" data-id="{{ $purchase->course?->id ?? "null" }}">Edit     Review</a>
+                            @if($reviewCount > 0)
+                                <a class="edit-review highlighted px-4 py-1 bg-yellow-500 hover:bg-yellow-600" data-id="{{ $purchase->course?->id ?? "null" }}">Edit     Review</a>
+                            @endif
                             <a class="highlighted px-4 py-1" href="/learn/certificate/{{ $purchase->course?->id ?? "null" }}">download certificate</a>
                         @endif
                     </div>
@@ -33,4 +50,63 @@
         @endforelse
         
     </section>
+    @push("scripts")
+    <script src="{{ asset('js/transition.js') }}"></script>
+          <script src="{{ asset('js/feedback.js') }}"></script>
+          
+        <script>
+
+            const buttons = document.querySelectorAll(".give-review");
+            console.log(buttons)
+        
+
+            buttons.forEach(button => {
+                const id = button.dataset.id;
+                button.addEventListener("click", function() {
+                
+                    Swal.fire({
+                    title: "Leave an Honest Review!",
+                    input: "text",
+                    html: `<div class="stars" style="font-size: 25px;">
+                                <i class="fa-solid fa-star feedback-star starred" data-star="1" onmouseover="mouseoverStar(this)" style="cursor: pointer;"></i>
+                                <i class="fa-regular fa-star feedback-star" data-star="2" onmouseover="mouseoverStar(this)" style="cursor: pointer;"></i>
+                                <i class="fa-regular fa-star feedback-star" data-star="3" onmouseover="mouseoverStar(this)" style="cursor: pointer;"></i>
+                                <i class="fa-regular fa-star feedback-star" data-star="4" onmouseover="mouseoverStar(this)" style="cursor: pointer;"></i>
+                                <i class="fa-regular fa-star feedback-star" data-star="5" onmouseover="mouseoverStar(this)" style="cursor: pointer;"></i>
+                            </div>`,
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Give Review",
+                    showLoaderOnConfirm: true,
+
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let stars = document.querySelectorAll(".starred");
+                        const feedback = result.value;
+                        stars = stars.length;
+                        axios.post(`/review/${id}`, {
+                                feedback,
+                                stars
+                            })
+                            .then(res => {
+                                console.log(res);
+                                if(res.data === 1) {
+                                    button.classList.add("none");
+                                    alert(id);
+                                    const edit = document.getElementById(`edit-review-${id}`);
+                                    edit.classList.remove("none");
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            });
+                    }
+                });
+                })
+            })
+        </script>
+    @endpush
 </x-layout>
