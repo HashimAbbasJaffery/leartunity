@@ -107,3 +107,22 @@ if(!function_exists("dollarsToCents")) {
         return $cents;
     }
 }
+
+if(!function_exists("secondsToHours")) {
+        function secondsToHours($seconds) {
+            // Calculate hours
+            $hours = floor($seconds / 3600);
+    
+            // Calculate remaining minutes
+            $minutes = floor(($seconds % 3600) / 60);
+            
+            // Calculate remaining seconds
+            $remainingSeconds = $seconds % 60;
+            
+            // Format the result
+            $result = sprintf('%02d:%02d:%02d', $hours, $minutes, $remainingSeconds);
+            
+            return $result;
+        }
+        
+}

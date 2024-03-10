@@ -25,4 +25,12 @@ class SectionController extends Controller
 
         return redirect()->back();
     }
+    public function update(Request $request, Section $section) {
+        $section_name = $request->section_name;
+        $section->update([
+            "section_name" => $section_name,
+        ]);
+        
+        return 1;
+    }
 }

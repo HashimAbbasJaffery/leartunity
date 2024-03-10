@@ -9,6 +9,17 @@
                 <span class="slider round"></span>
             </label>
         @endif
+        <div style="position: absolute; bottom: 10px; right: 10px;" class="flex">
+            <form class="mr-2" action="{{ route("course.delete", [ 'course' => $course->slug ?? 'nnull']) }}" method="POST" name="courseDelete" id="courseDelete">
+                {{ method_field("DELETE") }}
+                @csrf
+                <button class="text-white px-2 rounded bg-red-500 hover:bg-red-600">Delete</button>
+            </form>
+            <form action="{{ route("course.edit", [ 'course' => $course->slug ?? 'null' ]) }}" name="courseDelete" id="courseDelete">
+                @csrf
+                <button class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600">Update</button>
+            </form>
+        </div>
         @if($is_purchased)
             <div class="course-pill bg-black text-white px-2 py-1 text-xs" style="position: absolute; right: 10px; top: 10px; border-radius: 10px;">
                 <p>Purchased</p>
@@ -57,7 +68,7 @@
         </div>
         <div class="course-price flex justify-between">
             <p>{{ $course->price }} $</p>
-            <p>{{ $course->duration }} Hour Course</p>
+            <p>Duration: {{ secondsToHours($course->contents_sum_duration) }}</p>
         </div>
     </div>
 </div>

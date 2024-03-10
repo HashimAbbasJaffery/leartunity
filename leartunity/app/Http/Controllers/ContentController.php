@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContentUpdateRequest;
 use App\Interfaces\LinkedList;
 use App\Models\Content;
 use App\Models\Course;
 use App\Models\Section;
+use App\Services\ResumableJS;
+use App\Services\VideoDescription;
 use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
-use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
-use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
-use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use Illuminate\Support\Facades\File;
+
 
 class ContentController extends Controller
 {
@@ -40,31 +42,21 @@ class ContentController extends Controller
         return $content;
     
     }
-    public function store(Request $request, Section $section, LinkedList $list) {
+    public function store(Request $request, Section $section, LinkedList $list, ResumableJS $jws, VideoDescription $videoService) {
         $title = $request->title;
         $description = $request->description;
-        $reciever = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
 
-        if($reciever->isUploaded() === false) {
-            throw new UploadMissingFileException();
-        }
-
-        $save = $reciever->receive();
-
-        if($save->isFinished()) {
-            $file = $save->getFile();
-            $fileName = time() . $file->getClientOriginalName();
-            $file->move(public_path("uploads"), $fileName);
-
+        $progress = $jws->upload($request, function($fileName) use($section, $title, $description, $list, $videoService) {
 
             $count = $section->contents->count();
             $previous_content = $list->get_last($section);
+            $duration = $videoService->getDuration($fileName);;
             
             $new_content = $section->contents()->create([
                 "title" => $title,
                 "status" => 1,
                 "content" => $fileName,
-                "duration" => 400,
+                "duration" => $duration,
                 "is_paid" => 1,
                 "sequence" => $count +  1,
                 "description" => $description,
@@ -73,14 +65,34 @@ class ContentController extends Controller
             $previous_content?->update([
                 "next_video" => $new_content->id
             ]);
-        }
 
-        $handler = $save->handler();
+            
 
-        return response()->json([
-            "done" => $handler->getPercentageDone(),
-            'status' => true
-        ]);
+        });
+        
+        return $progress;
+
+    }
+    public function update(ContentUpdateRequest $request, Content $content, LinkedList $list, ResumableJS $jws) {
+        $title = $request->title;
+        $description = $request->description;
+        
+        $progress = $jws->upload($request, function($fileName) use($content, $title, $description) {
+            File::delete(public_path("uploads/" . $content->content));
+            $content->update([
+                "title" => $title,
+                "description"=> $description,
+                "content" => $fileName
+            ]);
+        }, function() use($content, $title, $description) {
+            $content->update([
+                "title"=> $title,
+                "description"=> $description
+            ]);
+        });
+
+
+        return $progress;
 
     }
     public function destroy(Content $content, LinkedList $list) {

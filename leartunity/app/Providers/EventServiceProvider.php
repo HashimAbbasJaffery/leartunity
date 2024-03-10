@@ -8,6 +8,7 @@ use App\Listeners\StripeEventListener;
 use App\Models\Certificate;
 use App\Observers\CertificateObserver;
 use App\Observers\CommentObserver;
+use App\Observers\ContentObserver;
 use App\Observers\TrackingObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Event;
 use Laravel\Cashier\Events\WebhookReceived;
 use App\Models\Comment;
 use App\Models\Tracker;
+use App\Models\Content;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -44,6 +46,7 @@ class EventServiceProvider extends ServiceProvider
         Comment::observe(CommentObserver::class);
         // Tracker::observe(TrackingObserver::class);
         Certificate::observe(CertificateObserver::class);
+        Content::observe(ContentObserver::class);
     }
 
     /**

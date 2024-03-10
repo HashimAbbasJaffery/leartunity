@@ -48,9 +48,9 @@ class CourseController extends Controller
     }
 
     public function getCourses() {
-        $courses = Course::whereStatus(1)->paginate(6);
+        $courses = Course::withSum("contents", "duration")->whereStatus(1)->paginate(6);
         $courses->withPath("get/courses");
-        // $courses = Http::get("ajaxCourses");
+        
         $categories = Category::whereHas("courses")->get();
         return view("guest.courses.courses", compact("courses", "categories"));
     }
@@ -81,6 +81,8 @@ class CourseController extends Controller
             ]
         ]);
 
+        $product_id = $stripe->id;
+
         $course = Course::create([
             "title" => $request->title,
             "description" => $request->description, 
@@ -90,11 +92,53 @@ class CourseController extends Controller
             "author_id" => auth()->id(),
             "status" => 0,
             "slug" => $slug,
-            "stripe_id" => $stripe->default_price
+            "stripe_id" => $stripe->default_price,
+            "product_id" => $product_id
         ]);
         $course->categories()->attach($categories);
         $fileName = time() . $file->getClientOriginalName();
         $file->move(public_path("course"), $fileName);
+
+        return redirect()->to("/instructor");
+    }
+    public function edit(Course $course) {
+        $course["categories_id"] = $course->categories->pluck("id")->toArray();
+        $categories = Category::all();
+        return view("Teaching.edit", compact("categories", "course"));
+    }
+    public function update(Request $request, Course $course) {
+        $categories = explode(",", $request->categories);
+        $slug = str($request->title)->slug("-");
+        $file = $request->file("thumbnail");
+        
+        $stripe = $this->stripe->products->create([
+            'name' => $request->title,
+            'default_price_data' => [
+                "currency" => "usd",
+                "unit_amount" => dollarsToCents($request->price)
+            ]
+        ]);
+        // $product = $this->stripe->products->retrieve($course->stripe_id);
+
+        $course = $course->update([
+            "title" => $request->title,
+            "description" => $request->description, 
+            "pre_req" => $request->pre_req,
+            "price" => $request->price,
+            "thumbnail" => "",
+            "author_id" => auth()->id(),
+            "status" => 0,
+            "slug" => $slug,
+            "stripe_id" => $stripe->default_price,
+        ]);
+
+
+        $course->categories()->sync($categories);
+
+        if($file) {
+            $fileName = time() . $file->getClientOriginalName();
+            $file->move(public_path("course"), $fileName);
+        }
 
         return redirect()->to("/instructor");
     }
@@ -108,6 +152,11 @@ class CourseController extends Controller
         ]);
 
         return 1;
+    }
+
+    public function destroy(Course $course) {
+        $course->delete();
+        return redirect()->back();
     }
 
 }

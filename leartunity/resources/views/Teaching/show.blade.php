@@ -8,15 +8,17 @@
         <div class="course-sections mb-3">
             @foreach ($sections as $section)
                 <div class="section flex justify-between mb-3" id="{{ $section->id }}">
-                    <p>{{ $section->section_name }}</p>
+                    <p id="section-title-{{ $section->id }}">{{ $section->section_name }}</p>
                     <div class="flex">
                         <form method="POST" name="deleteCourse" action="{{ route('section.delete', [ 'section' => $section ]) }}" class="flex" id="deleteCourse">
                             @csrf 
                             {{ method_field("DELETE") }}
                             <p class="mr-2">{{ $section->contents->count() }} Videos</p>
                             <p class="mr-2">|</p> 
-                            <button class="text-red-400">Delete</button>
+                            <button class="text-red-400 mr-2">Delete</button>
+                            <p class="mr-2">|</p>
                         </form>
+                        <button class="text-blue-400 update-section" data-id="{{ $section->id }}">Update</button>
                     </div>
                 </div>
                 <div class="none contents" id="content-{{ $section->id }}">
@@ -33,7 +35,7 @@
                                             Delete
                                         </button>
                                     </form>
-                                    <button class="content-update" data-id="content-{{ $content->id }}" class="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                                    <button class="content-update" id="content-{{ $content->id }}" class="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
                                         Update
                                     </button>
                                 </div>
@@ -55,6 +57,40 @@
         </a>
     </section>
     @push('scripts')
+        <script>
+            const updateButtons = document.querySelectorAll(".update-section");
+            updateButtons.forEach(updateButton => {
+                updateButton.addEventListener("click", function() {
+                    const id = updateButton.dataset.id;
+                    Swal.fire({
+                    title: "Enter Section name",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Save",
+                    showLoaderOnConfirm: true,
+
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const section_name = result.value;
+                        axios.put(`/instructor/section/${id}/update`, {
+                                section_name
+                            })
+                            .then(res => {
+                                const title = document.getElementById(`section-title-${id}`);
+                                title.textContent = section_name
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            });
+                    }
+                });
+                })
+            })
+        </script>
         <script>
             const sectionsCard = document.querySelectorAll(".section");
             sectionsCard.forEach(section => {
@@ -116,7 +152,7 @@
                             query: {
                                 _token: '{{ csrf_token() }}'
                             },
-                            fileType: ['png', 'jpg', 'jpeg', 'mp4'],
+                            fileType: ['mp4', 'mov'],
                             chunkSize: 10*1024*1024, // default is 1*1024*1024, this should be less than your maximum limit in php.ini
                             headers: {
                                 'Accept': 'application/json'
@@ -202,16 +238,16 @@
                         title: "Update Content",
                         html: '<input type="text" id="content-title" class="mb-2" style="width: 100%; border: 1px solid var(--primary); resize: none" ><textarea id="content-description" type="text" style="width: 100%; border: 1px solid var(--primary); height: 100px; resize: none" class="mb-2" /></textarea>' +
                             "<br>" +
-                            "<input id='content-video' style='border: none;width: 100%;' type='file' />",
+                            "<input type='file' id='content-video' style='border: none;width: 100%;'  />",
                         inputAttributes: {
                             autocapitalize: "off"
                         },
                         showCancelButton: true,
-                        confirmButtonText: "Save",
+                        confirmButtonText: "Update",
                         showLoaderOnConfirm: true,
                         didOpen: function() {
                             const content = document.getElementById("content-video");
-                            console.log(resumable.assignBrowse(content)); 
+                            resumable.assignBrowse(content); 
                         },
 
                         allowOutsideClick: () => !Swal.isLoading(),
@@ -221,21 +257,30 @@
                             const contentList = document.getElementById("core-contents-" + id);
                             
                             const content = document.getElementById("content-video");
-                            const title = document.getElementById("content-title").value;
-                            const description = document.getElementById("content-description").value;
+                            
+                            const title = document.getElementById("content-title");
+                            const description = document.getElementById("content-description");
                             resumable.opts.query = {
                                 ...resumable.opts.query, 
-                                title,
-                                description
+                                title: title.value,
+                                description: description.value
                             }
-                            resumable.opts.target = `/instructor/content/${id}/add`
+                          
+                            resumable.opts.target = `/instructor/content/${id}/update`;
                             const data = new FormData();
-                            data.append("content", content.files[0])
                             data.append("title", title.value);
-                            data.append("description", description);
-                            
-                            resumable.upload();
-
+                            data.append("description", description.value);
+                            if(!resumable.files.length) {
+                                axios.post(resumable.opts.target, data)
+                                    .then(res => {
+                                        location.reload();
+                                    })
+                                    .catch(err => {
+                                        console.log(err);
+                                    })
+                            } else {
+                                resumable.upload();
+                            }
                         }
                     });
                 })

@@ -20,7 +20,7 @@
             <h2 style="font-size: 14px;">{{ $content->title }}</h1>
             <p style="font-size: 12px;">
                 <i class="fa-solid fa-clock mr-1"></i>
-                1:00
+                {{ secondToMinutes($content->duration) }}
             </p>
         </div>
     </div>
