@@ -93,12 +93,7 @@
                                 stars
                             })
                             .then(res => {
-                                console.log(res);
-                                if(res.data === 1) {
-                                    button.classList.add("none");
-                                    const edit = document.getElementById(`edit-review-${id}`);
-                                    edit.classList.remove("none");
-                                }
+                                
                             })
                             .catch(err => {
                                 console.log(err)

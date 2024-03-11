@@ -50,7 +50,7 @@ class ReviewController extends Controller
         $stars = $request->stars;
         $feedback = $request->feedback;
         $reviews = $course?->reviews ?? null;
-        $count = $reviews->count() + 1;
+        $count = count($course->reviews->reviews);
 
         $reviews = ($reviews?->reviews) ?? [];
         
@@ -66,9 +66,10 @@ class ReviewController extends Controller
 
         $user_star = reset($user_review)->stars;
         $current_average = $course->reviews->stars;
-        
+
         $average = ((($current_average * $count) - $user_star) + $stars) / $count;
         
+
         $value = [
             ...$reviews, 
             [
