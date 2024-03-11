@@ -33,7 +33,7 @@
               </ul>
             </div>
             @foreach($categories as $category)
-              <div class="grid grid-cols-4 gap-4 courses none" @if($loop->index > 0) style="display: none" @endif data-content="{{ $category->id }}">
+              <div class="grid grid-cols-4 gap-4 courses" @if($loop->index > 0 ) style="display: none" @endif data-content="{{ $category->id }}">
                     @foreach($category->courses as $course)
                         @if($loop->index > 7) @break @endif
                         @php
@@ -44,16 +44,7 @@
                           }
                         @endphp
                         <x-user.course 
-                            :title="$course->title"
-                            :profile="$course->author->profile->profile_pic ?? ''"
-                            :instructor="$course->author->name"
-                             duration="50"
-                            :description="$course->description"
-                            :price="$course->price"
-                            :rating="$stars"
-                            :stripe="$course->stripe_id"
-                            :slug="$course->slug"
-                            :thumbnail="$course->thumbnail"
+                          :course="$course"
                         />
                         
                     @endforeach
@@ -92,6 +83,8 @@
           </section>
         </main>
     @push("scripts")
+      <script>
+      </script>
       <script>
         function debounce(func, delay) {
         let timerId;

@@ -101,6 +101,7 @@
               <div class="stars">
                 <div class="course-rating flex"> 
                   {!! calculateReviewStars($course?->reviews->stars ?? 0) !!}
+                  <p class="ml-1">({{ round($course?->reviews->stars, 1) ?? "Not rated yet" }})</p>
                 </div>
               </div>
             </div>

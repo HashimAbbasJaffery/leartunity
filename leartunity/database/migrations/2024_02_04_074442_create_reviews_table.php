@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->json("reviews");
             $table->boolean("status");
-            $table->unsignedBigInteger("stars")->default(0);
+            $table->float("stars")->default(0);
             $table->unsignedBigInteger("reviewable_id");
             $table->string("reviewable_type");
             $table->timestamps();

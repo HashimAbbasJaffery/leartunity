@@ -31,7 +31,7 @@
                     </div> 
                     <div class="instructor-detail detail mt-3 flex">
                         <div class="instructor-pic mr-3">
-                            <img src="{{ $course->author->profile->profile_pic ? "/profile/" . $course->author->profile->profile_pic : "https://placehold.co/100x100" }}" jeight="100" width="100" style="border-radius: 50px;"/>
+                            <img src="{{ $course->author->profile?->profile_pic ? "/profile/" . $course->author->profile->profile_pic : "https://placehold.co/100x100" }}" jeight="100" width="100" style="border-radius: 50px;"/>
                         </div>
                         <div class="instructor-detail" style="position: relative;">
                             <h1 style="font-weight: bold; font-size: 20px;">{{ $course->author->name }}</h1>

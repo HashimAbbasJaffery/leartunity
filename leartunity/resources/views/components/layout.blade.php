@@ -55,7 +55,7 @@
         @endif
         <header class="flex top-header  container mx-auto mt-4">
             <div class="logo">
-                <h1>Leartunity.</h1>
+                <a href="{{ route("home") }}"><h1>Leartunity.</h1></a>
             </div>
             <nav>
                 <ul>
@@ -73,9 +73,9 @@
                       <div class="notify none" style="position: absolute; right: 0px;background: #00ff00; width: 12px; height: 12px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
                       <i class="fa-solid fa-bell"></i>
                     </a></li>
-                    <!-- <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative;">
+                    <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative;">
                       <i class="fa-solid fa-power-off"></i>
-                    </a></li> -->
+                    </a></li>
                     
                 </ul>
             </nav>
