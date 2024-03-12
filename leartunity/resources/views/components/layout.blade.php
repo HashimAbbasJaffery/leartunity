@@ -67,8 +67,12 @@
                     @can("teach")
                       <li class="mx-3"><a href="{{ route("instructor") }}" class="bold-600">Instructor</a></li>
                     @endcan
-                    <li class="mx-3 highlighted"><a href="{{ route("login") }}" class="bold-600">{{ !auth()->user() ? "login" : auth()->user()->name }}</a></li>
-                    
+                    @auth
+                      <li class="mx-3 highlighted"><a href="/profile/{{ auth()->user()->id   }}" class="bold-600">{{ !auth()->user() ? "login" : auth()->user()->name }}</a></li>
+                    @endauth
+                    @guest
+                      <li class="mx-3 highlighted"><a href="{{ route("login") }}" class="bold-600">Login</a></li>
+                    @endguest 
                     <li ><a href="#" class="bold-600 text-xl" style="position: relative;">
                       <div class="notify none" style="position: absolute; right: 0px;background: #00ff00; width: 12px; height: 12px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
                       <i class="fa-solid fa-bell"></i>

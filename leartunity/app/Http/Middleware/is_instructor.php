@@ -18,7 +18,8 @@ class is_instructor
         $user = auth()->user();
         if($user && $user->role === "instructor") {
             return $next($request);
+        } else {
+            abort(403);
         }
-        return to_route("home");
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\ContentController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\SectionController;
+use App\Http\Controllers\Instructor\CourseController;
+use App\Http\Controllers\Instructor\SectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", [CourseController::class, "index"])->name("instructor");

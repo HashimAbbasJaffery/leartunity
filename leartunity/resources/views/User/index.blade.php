@@ -51,7 +51,7 @@
               </div>
             @endforeach
           </section>
-          <section id="plans">
+          <!-- <section id="plans">
             <div class="container mx-auto" style="max-width: 900px;">
               <h1 class="text-center" style="color: white; margin-bottom: 10px;">plans</h1>
               <div class="plans grid gap-4 grid-cols-2">
@@ -66,7 +66,7 @@
                 @endforeach
               </div>
             </div>
-          </section>
+          </section> -->
           <section id="apply-for-teaching" class="container mx-auto flex ">
             <div class="side-image">
               <img src="{{ asset("img/sample.jpg") }}" alt="">
@@ -117,7 +117,7 @@
           console.log(directory + imageAttribute);
           const optionalEl = `
             <div class="teacher-pic mr-2">
-                  <img src="${( imageAttribute )? directory + imageAttribute : 'https://placehold.co/50x50'}" style="border-radius: 50px; height: 50px; width: 50px;"/>
+                  <img class="rounded" src="${( imageAttribute )? directory + imageAttribute : 'https://placehold.co/50x50'}" style="height: 50px; width: 60px;"/>
               </div>
           `
           return `
@@ -126,9 +126,6 @@
               ${(column !== "category") ? optionalEl : ""}
               <div class="teacher-detail">
                   <h1 class="mb-0" style="height: 18px;">${data[column]}</h1>
-                  <span style="font-size: 13px;">
-                  {!! calculateReviewStars(4) !!}
-                  </span>
               </div>
               </div>
           </a>

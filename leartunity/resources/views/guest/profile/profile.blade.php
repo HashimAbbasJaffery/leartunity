@@ -50,7 +50,8 @@
                     <p style="font-size: 14px;">No badges have been awarded yet!</p>
                 @endforelse
             </section>
-            <h1 style="font-weight: 600;" class="mb-1 mt-3">Level</h1>
+            
+            <!-- <h1 style="font-weight: 600;" class="mb-1 mt-3">Level</h1>
             <section class="level">
                 <p>Current Level: <span>5</span></p>
             </section>
@@ -63,15 +64,20 @@
             <section class="level">
                 <p>Low Tax</p>
             </section>
-            <h1 style="font-weight: 600;" class="mb-1 mt-3">Overall Reviews</h1>
-            <section class="level">
+            <h1 style="font-weight: 600;" class="mb-1 mt-3">Overall Reviews</h1> -->
+            <!-- <section class="level">
                 {!! calculateReviewStars($avgRating) !!} 
                 @if($count > 0)
                     ({{ $count }})
                 @endif
-            </section>
+            </section> -->
             <section class="level mt-3">
-                <p>Viewings: <span class="views">0</span></p>
+                <p>Watching: <span class="views">0</span></p>
+            </section>
+            
+            <h1 style="font-weight: 600;" class="mb-1 mt-3">Streak</h1>
+            <section style="border: 3px solid grey; width: 27px; height: 27px; font-size: 13px;"  class="rounded-full text-black flex items-center justify-center">
+                {{ $profile->user->streak }}
             </section>
         </aside>
         <section id="other-info" style="width: 100%;">
