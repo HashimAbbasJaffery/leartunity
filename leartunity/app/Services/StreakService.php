@@ -7,7 +7,7 @@ class StreakService {
     public function checkAndUpdate(User $user) {
         $last_login = \Carbon\Carbon::parse((auth()->user()->last_login));
         $diff_login_in_hrs = \Carbon\Carbon::now()->diffInHours($last_login);
-
+        
         // Fillin the attribute of last_login when user logs in after 24 hours
         // Or if the user has never loggedin 
 
@@ -17,17 +17,15 @@ class StreakService {
         }
 
         if(($diff_login_in_hrs >= 24 && $diff_login_in_hrs <= 48)) { // User using in the system after a day
-            $user->update([
-                "last_login" => \Carbon\Carbon::now(),
-                "streak" => $user->streak++
-            ]);
+            $user->streak = $user->streak + 1;
+            $user->last_login = \Carbon\Carbon::now();
+            $user->save();
         }
 
         if($diff_login_in_hrs > 48) { // User Missed the streak
-            $user->update([
-                "last_login" => \Carbon\Carbon::now(),
-                "streak" => 1
-            ]);
+            $user->streak = 1;
+            $user->last_login = \Carbon\Carbon::now();
+            $user->save();
         }
 
     }
