@@ -11,6 +11,9 @@ class Course extends Model
     use HasFactory;
 
     protected $guarded = [];
+    public function purchases() {
+        return $this->hasMany(Purchase::class, "purchase_product_id", "stripe_id");
+    }
     
     public function categories() {
         return $this->belongsToMany(Category::class, "course_category")

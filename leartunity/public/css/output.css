@@ -1696,3 +1696,26 @@ input:checked + .slider:before {
 .has-error {
   border: 1px solid red;
 }
+#admin-header {
+  background: var(--primary);
+  color: white;
+  text-align: center;
+}
+.admin-nav:hover {
+  display: block;
+  background: #494949;
+}
+.header-active {
+  background: #494949;
+}
+.stats-card {
+  background-color: var(--primary);
+  color: white;
+  width: 32.33%;
+}
+.card-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\Points;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Authenticate;
@@ -13,7 +14,7 @@ use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\SearchController;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,7 +39,7 @@ Route::get("certificate", function() {
     return $pdf;
 });
 
-Route::get("poly", function() {
+Route::get("poly", function(Points $points) {
     // $course = Course::first();
     // $value = [
     //     [
@@ -52,34 +53,36 @@ Route::get("poly", function() {
     //     "reviews" => json_encode($value),
     //     "status" => true
     // ]);
-    $array = [
-        "Welcome to this section. This is what you will learn!" => 1,
-        "What is a Vector?" => 1,
-        "Let's create some vectors" => 1,
-        "Using the [] brackets" => 1,
-        "Vectorized operations" => 0,
-        "The power of vectorized operations" => 1,
-        "Functions in R" => 1,
-        "Packages in R" => 1,
-        "Section Recap" => 1,
-        "HOMEWORK: Financial Statement Analysis" => 1,
-        "Fundamentals of R" => 1
-    ];
-    $section = Section::where("id", 3)->first();
-    $loop = 1;
-    foreach($array as $lessonName => $status) {
-        $section->contents()->create([
-            "title" => $lessonName,
-            "status" => 1,
-            "is_paid" => $status,
-            "content" => "dummy.mp4",
-            "duration" => 400,
-            "sequence" => $loop, 
-            "description" => "[Mastering R Basics]: Learn the fundamental concepts and techniques of the R programming language, essential for data analysis and statistical modeling."
-        ]);
-        $loop++;
-    }
-    dd("Created!");
+    // $array = [
+    //     "Welcome to this section. This is what you will learn!" => 1,
+    //     "What is a Vector?" => 1,
+    //     "Let's create some vectors" => 1,
+    //     "Using the [] brackets" => 1,
+    //     "Vectorized operations" => 0,
+    //     "The power of vectorized operations" => 1,
+    //     "Functions in R" => 1,
+    //     "Packages in R" => 1,
+    //     "Section Recap" => 1,
+    //     "HOMEWORK: Financial Statement Analysis" => 1,
+    //     "Fundamentals of R" => 1
+    // ];
+    // $section = Section::where("id", 3)->first();
+    // $loop = 1;
+    // foreach($array as $lessonName => $status) {
+    //     $section->contents()->create([
+    //         "title" => $lessonName,
+    //         "status" => 1,
+    //         "is_paid" => $status,
+    //         "content" => "dummy.mp4",
+    //         "duration" => 400,
+    //         "sequence" => $loop, 
+    //         "description" => "[Mastering R Basics]: Learn the fundamental concepts and techniques of the R programming language, essential for data analysis and statistical modeling."
+    //     ]);
+    //     $loop++;
+    // }
+    // dd("Created!");
+    // $points->add(User::find(auth()->id()), 50);
+    // dd("it must be created");
 });
 
 Route::get("serviceTest", function(LinkedList $list) {

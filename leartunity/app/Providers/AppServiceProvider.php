@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Classes\Points;
 use App\Interfaces\Certificate;
 use App\Interfaces\LinkedList;
 use App\Interfaces\TrackingService;

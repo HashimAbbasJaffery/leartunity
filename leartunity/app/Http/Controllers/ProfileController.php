@@ -20,6 +20,13 @@ class ProfileController extends Controller
     public function index(Request $request) {
         $user = auth()->user();
         $profile = Profile::where("user_id", $request->id)->first();
+
+        if(!$profile) {
+            auth()->user()->profile()->create([
+                "follows" => 0
+            ]);
+        }
+
         $courses = $this->courses->paginate(6);
         $courses->withPath("/get/courses");
         $reviewCourses = $this->courses->whereHas("reviews")->get();

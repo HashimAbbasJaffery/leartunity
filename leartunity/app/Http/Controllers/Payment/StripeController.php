@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Payment;
 
+use App\Classes\Points;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Events\WebhookReceived;
 use Stripe\Stripe;
+use App\Models\User;
 
 
 class StripeController extends Controller
@@ -37,7 +39,7 @@ class StripeController extends Controller
         }
     }
 
-    public function success($id) {
+    public function success($id, Points $points) {
         $checkoutSession = request()->user()->stripe()->checkout->sessions->retrieve(request()->get("session_id"));
         $payment_intent = $checkoutSession->payment_intent;
         $status = $this->verifyPaymentStatus($payment_intent);
@@ -53,6 +55,8 @@ class StripeController extends Controller
             "progress" => 0,
             "status" => 1
         ]);
+
+        $points->add(User::find($user->id), 50);
         
         return redirect()->to(route("home"))->with("flash", "You haved purchased your course!");
     }

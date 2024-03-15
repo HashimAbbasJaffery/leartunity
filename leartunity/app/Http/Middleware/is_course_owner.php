@@ -18,7 +18,7 @@ class is_course_owner
     {
         
         $course = Course::firstWhere("slug", $slug);
-        $is_owner = $course->author()->is(auth()->user());
+        $is_owner = $course->author()?->is(auth()->user()) ?? null;
         if(!$is_owner) abort(403);
 
         return $next($request);

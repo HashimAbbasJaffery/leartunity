@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Instructor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Course;
 use App\Models\Category;
 use Stripe\StripeClient as Stripe;
@@ -17,10 +18,13 @@ class CourseController extends Controller
     ){
         $slug = "";
         try {
-            $slug = $request->route()->parameters()["course"];
+            $course = $request->route()->parameters()["course"];
+            $slug = ($course->slug) ? $course->slug : $course;
         } catch(\Exception $e) {
         
         }
+
+        Log::debug($slug);
         if($slug)
             $this->middleware("is_course_owner:$slug");
     }
@@ -32,10 +36,13 @@ class CourseController extends Controller
         return view("Teaching.index", compact("courses"));
     }
     public function destroy(Course $course) {
+        
+        $this->middleware("is_course_owner:$course->slug");
         $course->delete();
         return redirect()->back();
     }
     public function update(Request $request, Course $course) {
+        $this->middleware("is_course_owner:$course->slug");
         $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
@@ -79,7 +86,7 @@ class CourseController extends Controller
 
         return redirect()->to("/instructor");
     }
-    public function edit(Course $course) {
+    public function edit(Request $request, Course $course) {
         $course["categories_id"] = $course->categories->pluck("id")->toArray();
         $categories = Category::all();
         return view("Teaching.edit", compact("categories", "course"));
@@ -125,6 +132,8 @@ class CourseController extends Controller
     }
 
     public function changeStatus(Request $request, Course $course) {
+        
+        $this->middleware("is_course_owner:$course->slug");
         $course->update([
             "status" => !$course->status
         ]);

@@ -13,6 +13,7 @@
         <div class="profile-pic profile_pic" style="background: url('{{ $profilePic }}');  background-size: cover;">
             @can("change-pic", $profile)
                 <label for="profile_pic">
+                    <img src="/frames/basic_frame.png" />
                     <div class="edit-cover flex" style="top: 0px; width: 25px; height: 25px;">
                         <i class="fa-solid fa-pencil"></i>
                     </div>
