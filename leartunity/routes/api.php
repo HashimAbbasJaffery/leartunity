@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\SearchController;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,8 @@ Route::get("/courses", function() {
 
 
 Route::get("/search", [SearchController::class, "get"])->name("search");
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

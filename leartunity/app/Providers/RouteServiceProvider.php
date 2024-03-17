@@ -33,31 +33,31 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
+            Route::middleware(['web'])
                 ->group(base_path('routes/web.php'));
                 
-            Route::middleware('web')
+            Route::middleware(['web', "auth.banned"])
                 ->group(base_path('routes/payment.php'));   
                 
-            Route::middleware('web')
+            Route::middleware(['web', "auth.banned"])
             ->group(base_path('routes/components.php'));   
             
-            Route::middleware('web')
+            Route::middleware(['web', "auth.banned"])
             ->group(base_path('routes/user.php'));  
 
-            Route::middleware(['web', "auth"])
+            Route::middleware(['web', "auth", "auth.banned"])
                 ->prefix("review")
                 ->group(base_path('routes/review.php'));  
 
-            Route::middleware(['web', 'auth'])
+            Route::middleware(['web', 'auth', "auth.banned"])
                 ->prefix("learn")
                 ->group(base_path('routes/learning.php')); 
             
-            Route::middleware(["web", "auth", "is_teacher"])
+            Route::middleware(["web", "auth", "is_teacher", "auth.banned"])
                 ->prefix("instructor")
                 ->group(base_path('routes/teaching.php'));
 
-            Route::middleware(["web"])
+            Route::middleware(["web", "auth.banned"])
                 ->prefix("admin")
                 ->group(base_path("routes/admin.php"));
         });
