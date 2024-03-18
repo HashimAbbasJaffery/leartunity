@@ -850,7 +850,7 @@ input#q {
 }
 
 *:not(i) {
-  font-family: var(--family) !important;
+  font-family: var(--family);
 }
 
 #q {
@@ -1702,11 +1702,15 @@ input:checked + .slider:before {
   text-align: center;
 }
 .admin-nav:hover {
-  display: block;
-  background: #494949;
+  
+  background-color: var(--primary);
+  color: white;
+  filter: brightness(87%);
 }
 .header-active {
-  background: #494949;
+  background-color: var(--primary);
+  color: white;
+  filter: brightness(87%);
 }
 .stats-card {
   background-color: var(--primary);

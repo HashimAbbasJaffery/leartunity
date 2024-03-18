@@ -1,4 +1,7 @@
 
+@php
+  $settings = config()->get("settings");
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,8 +16,10 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer></script>
     <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-      <link
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
+    <link href="{{ $settings->font_link }}" rel="stylesheet">
+    
+    <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
   />
@@ -22,7 +27,6 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  @vite('resources/js/app.js')
    @php 
-    $settings = config()->get("settings");
     $primary_color = $settings->primary_color;
     $secondary_color = $settings->secondary_color;
     $family = $settings->font_family;
