@@ -13,15 +13,15 @@ class SectionController extends Controller
 {
     protected Course $course;
     public function __construct(Request $request) {
-        $slug = "";
-        try {
-            $slug = $request->route()->parameters()["course"];
-        } catch(Exception $e) {
-            $section = $request->route()->parameters()["section"];
-            $section = Section::find($section);
-            $slug = $section->course->slug; 
-        }
-        $this->middleware("is_course_owner:$slug");
+        // $slug = "";
+        // try {
+        //     $slug = $request->route()->parameters()["course"];
+        // } catch(Exception $e) {
+        //     $section = $request->route()->parameters()["section"];
+        //     $section = Section::find($section);
+        //     $slug = $section->course->slug; 
+        // }
+        // $this->middleware("is_course_owner:$slug");
     }
     public function store(SectionRequest $request, Course $course) {
         

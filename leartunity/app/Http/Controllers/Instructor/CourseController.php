@@ -29,7 +29,7 @@ class CourseController extends Controller
             $this->middleware("is_course_owner:$slug");
     }
     public function index() {
-        $courses = Course::where("author_id", auth()->user()->id)->paginate(6);
+        $courses = Course::withoutGlobalScopes()->where("author_id", auth()->user()->id)->paginate(6);
         
         $courses->withPath("/get/courses/" . "1");
         

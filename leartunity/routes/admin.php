@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\Instructor\CourseController;
@@ -26,3 +27,8 @@ Route::post("/swatch/add", [SwatchController::class, "store"])->name("admin.swat
 Route::put("/font/update", [FontController::class, "update"])->name("admin.font.update");
 Route::put("/color/update", [SettingController::class, "update"])->name("admin.color.update");
 
+Route::get("/categories", [CategoryController::class, "index"])->name("category.index");
+Route::put("/category/{without_scope_category}/status", [CategoryController::class, "editStatus"])->name("admin.category.changeStatus");
+Route::post("/category/create", [CategoryController::class, "store"])->name("admin.category.create");
+Route::put("/category/{without_scope_category}/update", [CategoryController::class, "update"])->name("admin.category.update");
+Route::delete("/category/{without_scope_category}/delete", [CategoryController::class, "destroy"])->name("admin.category.delete");

@@ -9,12 +9,12 @@
                 <span class="slider round"></span>
             </label>
             <div style="position: absolute; bottom: 10px; right: 10px;" class="flex">
-                <form class="mr-2" action="{{ route("course.delete", [ 'course' => $course->slug ?? 'nnull']) }}" method="POST" name="courseDelete" id="courseDelete">
+                <form class="mr-2" action="{{ route("course.delete", [ 'course_slug_o' => $course->slug ?? 'nnull']) }}" method="POST" name="courseDelete" id="courseDelete">
                     {{ method_field("DELETE") }}
                     @csrf
                     <button class="text-white px-2 rounded bg-red-500 hover:bg-red-600">Delete</button>
                 </form>
-                <form action="{{ route("course.edit", [ 'course' => $course->slug ?? 'null' ]) }}" name="courseDelete" id="courseDelete">
+                <form action="{{ route("course.edit", [ 'course_slug_o' => $course->slug ?? 'null' ]) }}" name="courseDelete" id="courseDelete">
                     @csrf
                     <button class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600">Update</button>
                 </form>
@@ -63,7 +63,7 @@
             <a href="{{ route('course', [ 'course' =>  $course->slug ?? 'null']) }}">see details</a>
             
             @if($author === auth()->id())
-                <a href="{{ route('course.show', ["course" => $course->slug ?? 'null']) }}">Manage</a>
+                <a href="{{ route('course.show', ["course_slug_o" => $course->slug ?? 'null']) }}">Manage</a>
             @endif
         </div>
         <div class="course-price flex justify-between">

@@ -1,6 +1,6 @@
 <x-layout>
     <section class="mt-5 create-field container mx-auto" style="width: 100%;">
-        <form enctype="multipart/form-data" style="width: 100%; display: block;" class="py-2" method="POST" action="{{ route('course.update', [ 'course' => $course->slug ]) }}">
+        <form enctype="multipart/form-data" style="width: 100%; display: block;" class="py-2" method="POST" action="{{ route('course.update', [ 'course_slug_o' => $course->slug ]) }}">
         @csrf
         {{ method_field("PUT") }}
             <label for="title" style="display: block; margin-bottom: 20px">

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ActiveScope;
+use App\Models\Scopes\ParentActive;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -64,5 +66,9 @@ class Course extends Model
         });
 
         return $query;
+    }
+    protected static function booted() {
+        static::addGlobalScope(new ParentActive);
+        static::addGlobalScope(new ActiveScope);
     }
 }

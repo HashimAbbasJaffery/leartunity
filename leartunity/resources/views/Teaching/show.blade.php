@@ -129,7 +129,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const section_name = result.value;
-                        axios.post("{{ route('section.create', ['course' => $course->slug]) }}", {
+                        axios.post("{{ route('section.create', ['course_slug_o' => $course->slug]) }}", {
                                 section_name
                             })
                             .then(res => {

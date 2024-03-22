@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Scopes\ActiveScope;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -24,6 +25,17 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Route::bind("without_scope_category", function($id) {
+            return \App\Models\Category::withoutGlobalScope(ActiveScope::class)->findOrFail($id);
+        });
+
+        Route::bind("course_slug_o", function($slug) {
+            return \App\Models\Course::withoutGlobalScopes()->where("slug", $slug)->first();
+        });
+        Route::bind("course_o", function($id) {
+            return \App\Models\Course::withoutGlobalScopes()->find($id);
+        });
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
