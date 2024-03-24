@@ -75,4 +75,8 @@ class User extends Authenticatable implements CanResetPassword
         "status" => 1,
         "reason" => "null"
     ];
+
+    public function receivesBroadcastNotificationsOn(): string {
+        return "notification." . $this->id;
+    }
 }

@@ -5,6 +5,7 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Models\User;
 
 class Layout extends Component
 {
@@ -21,6 +22,8 @@ class Layout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layout');
+        $user = User::find(auth()->user()->id);
+        $notifications = $user->unreadNotifications();
+        return view('components.layout', compact("notifications"));
     }
 }

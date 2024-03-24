@@ -25,6 +25,7 @@
   />
       <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css">
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
  @vite('resources/js/app.js')
    @php 
     $primary_color = $settings->primary_color;
@@ -62,7 +63,7 @@
                 <a href="{{ route("home") }}"><h1>Leartunity.</h1></a>
             </div>
             <nav>
-                <ul>
+                <ul style="position: relative;">
                     <!-- <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li> -->
                     @can("admin")
                       <li ><a href="/admin" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
@@ -90,12 +91,26 @@
                     @endguest 
                     
                     @auth 
-                    <li ><a href="#" style="font-size: 20px;" class="bold-600 text-xl" style="position: relative; display: inline-block;">
-                      <div class="notify none" style="position: absolute; background: #00ff00; width: 10px; height: 10px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
+                    <!-- <li ><a href="#" style="font-size: 20px;" class="bold-600 text-xl" style="position: relative; display: inline-block;">
+                      <div class="notify {{ $notifications->exists() ? "" : "none" }}" style="position: absolute; background: #00ff00; width: 10px; height: 10px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
                       <i class="fa-solid fa-bell"></i>
-                    </a></li>
+                    </a></li> -->
+                    <ul class="notification-drop" style="position: relative;">
+                      <li class="item">
+                        <i class="fa fa-bell-o notification-bell" style="font-size: 20px;" aria-hidden="true"></i>  
+                        <div class="notify {{ $notifications->exists() ? "" : "none" }}" style="top: 8px; right: 8px;position: absolute; background: #00ff00; width: 15px; height: 15px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
+                                          
+                        <ul class="rounded" style="max-height: 300px; overflow: auto; border: 1px solid var(--primary)">
+                          @forelse($notifications->get() as $notification)
+                            <li style="font-size: 12px;">{{ $notification->data["message"] }}</li>
+                          @empty 
+                            <li style="font-size: 12px;" class="px-1">No notifications? Maybe they're at a disco party! 🎉</li>
+                          @endforelse
+                        </ul>
+                      </li>
+                    </ul>
 
-                      <li ><a href="{{ route('logout') }}" style="font-size: 14px;" class="bold-600 text-xl" style="position: relative;">
+                      <li ><a href="{{ route('logout') }}" style="font-size: 20px;" class="bold-600 text-xl" style="position: relative;">
                         <i class="fa-solid fa-power-off"></i>
                       </a></li>
                     @endauth
@@ -150,7 +165,14 @@
         </footer>
     </div>
     <script src="{{ asset("js/transition.js") }}"></script>
-    
+    <script>
+      $(document).ready(function() {
+        $(".notification-drop .item").on('click',function() {
+          {{ \App\Models\User::find(auth()->id())->unreadNotifications->markAsRead() }}
+          $(this).find('ul').toggle();
+        });
+      });
+    </script>
     <script>
         const switches = document.querySelectorAll(".course-switch");
         switches.forEach(switchItems => {
