@@ -1,6 +1,7 @@
 <?php
 
 use App\Classes\Points;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Authenticate;
@@ -85,6 +86,15 @@ Route::get("poly", function(Points $points) {
     // dd("it must be created");
 });
 
+Route::get("withdraw", function() {
+    \Stripe\Stripe::setApiKey(env("STRIPE_SECRET"));
+    \Stripe\Transfer::create([
+        "amount" => 1000,
+        "currency" => "usd",
+        "destination"=> "4242424242424242",
+    ]);
+});
+
 Route::get("serviceTest", function(LinkedList $list) {
     $section = Section::find(13);
     dd($list->get_last($section));
@@ -94,6 +104,8 @@ Route::group([ 'middleware' => ['web', "guest"] ], function() {
     Route::get("login", [SessionController::class, "index"]);
     Route::post("login", [SessionController::class, "create"])
         ->name("login");
+    Route::get("register", [SessionController::class, "register"])->name("register");
+    Route::post("register", [UserController::class, "store"])->name("register");
 });
 Route::group([ "middleware" => "auth" ], function() {
     Route::get("logout", [SessionController::class, "logout"])->name("logout");

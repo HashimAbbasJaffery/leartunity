@@ -69,7 +69,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix("instructor")
                 ->group(base_path('routes/teaching.php'));
 
-            Route::middleware(["web", "auth.banned"])
+            Route::middleware(["web", "auth.banned", "is_admin"])
                 ->prefix("admin")
                 ->group(base_path("routes/admin.php"));
         });

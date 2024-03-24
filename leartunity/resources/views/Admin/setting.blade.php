@@ -1,45 +1,6 @@
 <x-layout>
     <main>
-    <section id="admin-header" class="my-4 container mx-auto rounded mb-2">
-            <ul class="flex justify-center">
-                <li>
-                    <a class="py-3 px-4 block admin-nav" href="#">
-                        <i class="fa-solid fa-gauge"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a class="py-3 px-4 block admin-nav" href="#">
-                        <i class="fa-solid fa-user"></i>
-                        Users
-                    </a>
-                </li>
-                <li>
-                    <a class="py-3 px-4 block admin-nav" href="#">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                        Courses
-                    </a>
-                </li>
-                <li>
-                    <a class="py-3 px-4 block admin-nav" href="#">
-                        <i class="fa-solid fa-money-bill"></i>
-                        Plans
-                    </a>
-                </li>
-                <li>
-                    <a class="py-3 px-4 block admin-nav" href="#">
-                        <i class="fa-solid fa-list"></i>
-                        Categories
-                    </a>
-                </li>
-                <li>
-                    <a class="py-3 px-4 block admin-nav  header-active" href="#">
-                        <i class="fa-solid fa-gear"></i>
-                        Settings
-                    </a>
-                </li>
-            </ul>
-        </section>
+        <x-admin-navbar />
         <section class="container mx-auto">
             <p>Main Color</p>
             <div class="choose-color flex items-center">
@@ -62,14 +23,6 @@
             <input type="submit" class="block mb-4 change-color" value="Change Color" style="cursor: pointer;border-radius: 0px; width: 20%; font-size: 13px; height: 25px;">
         </section>
         <section class="choose-fonts container mx-auto">
-            <h1>Saved Fonts</h1>
-            <div class="font block px-2 py-3 mb-3 rounded flex items-center justify-between" style="font-size: 20px; border: 1px solid black; width: 100%;">
-                <p>The quick brown fox jumps over the lazy dog.</p>
-                <label for="font-1" class="flex">
-                    <input type="radio" id="font-1" name="" class="none">
-                    <button style="font-size: 13px;" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Click to Choose</button>
-                </label>
-            </div>
             <h1>Search Google Fonts</h1>
             <input type="text" class="rounded mb-4" name="search-fonts" id="search-fonts" style="border-radius: 0px; height: 25px;">
             <div class="none searched-result">
@@ -78,7 +31,7 @@
                     <p class="preview-phrase">The quick brown fox jumps over the lazy dog.</p>
                     <label for="font-1" class="flex">
                         <input type="radio" id="font-1" name="" class="none">
-                        <button style="font-size: 13px;" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 mr-2">Add To Saved Fonts</button>
+                        <!-- <button style="font-size: 13px;" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 mr-2">Add To Saved Fonts</button> -->
                         <button style="font-size: 13px;" data-link="" data-name="" class="choose bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Click to Choose</button>
                     </label>
                 </div>

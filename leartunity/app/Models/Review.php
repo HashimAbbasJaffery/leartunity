@@ -16,6 +16,10 @@ class Review extends Model
         return $this->morphTo();
     }
 
+    public static function getUser($id) {
+        return User::find($id);
+    }
+
     protected function reviews(): Attribute {
         return Attribute::make(
             get: fn(string $value) => json_decode($value),

@@ -36,4 +36,7 @@ class SessionController extends Controller
 
         return to_route("login");
     }
+    public function register() {
+        return view("register");
+    }
 }

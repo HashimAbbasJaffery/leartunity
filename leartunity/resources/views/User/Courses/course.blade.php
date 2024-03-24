@@ -106,11 +106,14 @@
               </div>
             </div>
             @foreach($reviews as $review)
+            @php 
+              $user = \App\Models\Review::getUser($review->id);
+            @endphp
               <div class="review">
                 <div>
                   <div class="course-instructor mt-4 flex">
                     <div class="instructor-img">
-                      <img src="https://placehold.co/45x45" class="rounded-full" alt="">
+                      <img width="45" src="{{ $user->profile?->profile_pic ? '/profile/' . $user->profile?->profile_pic : 'https://placehold.co/45x45' }}" class="rounded-full" alt="">
                     </div>
                     <div class="instructor-details flex">
                       <h2>{{ $review?->name ?? "null" }}</h2>

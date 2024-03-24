@@ -24,6 +24,7 @@ class User extends Authenticatable implements CanResetPassword
         'name',
         'email',
         'password',
+        'ip_address'
     ];
 
     /**
@@ -70,4 +71,8 @@ class User extends Authenticatable implements CanResetPassword
     public function certificates() {
         return $this->hasMany(Certificate::class, "certificate_id")->whereStatus(1);
     }
+    protected $attributes = [
+        "status" => 1,
+        "reason" => "null"
+    ];
 }

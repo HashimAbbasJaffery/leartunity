@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NewUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Validator;
 
 class UserController extends Controller
 {
@@ -32,4 +35,19 @@ class UserController extends Controller
 
         return 1;
     }
+    public function store(Request $request) {
+        $validation = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            "name" => ["required"],
+            "password" => [ "required", "confirmed" ],
+            "email" => [ "required", "email" ]
+        ]);
+        $attributes = [
+            ...$validation->validated(),
+            'ip_address' => $request->ip(),
+        ];
+        User::create($attributes);
+
+
+        return to_route("login");
+    } 
 }

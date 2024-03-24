@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 class AdminController extends Controller
 {
     public function index() {
-        $courses_count = Course::count();
-        $categories_count = Category::count();
+        $courses_count = Course::withoutGlobalScopes()->count();
+        $categories_count = Category::withoutGlobalScopes()->count();
         $users_count = User::count();
 
         $counts = [
@@ -22,15 +22,16 @@ class AdminController extends Controller
             "users" => $users_count
         ];
 
-        $categories = Category::whereHas("courses")->withCount("courses")->orderBy("courses_count", "DESC")->limit(5)->get();
+        $categories = Category::withoutGlobalScopes()->whereHas("courses")->withCount("courses")->orderBy("courses_count", "DESC")->limit(5)->get();
         $labels = $categories->pluck("category")->toArray();
         $data = $categories->pluck("courses_count")->toArray();
+        
         $pie_chart = [
             "labels" => $labels,
             "data" => $data
         ];
 
-        $courses = Course::whereHas("purchases")->withCount("purchases")->orderBy("purchases_count", "DESC")->limit(10)->get();
+        $courses = Course::withoutGlobalScopes()->whereHas("purchases")->withCount("purchases")->orderBy("purchases_count", "DESC")->limit(10)->get();
         $courses_labels = $courses->pluck("title")->toArray();
         $courses_data = $courses->pluck("purchases_count")->toArray();
         $bar_graph = [

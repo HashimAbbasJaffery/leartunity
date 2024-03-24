@@ -1,6 +1,6 @@
 <x-layout>
     @php 
-        $is_banned = \App\Models\User::find(auth()->id())->isBanned();
+        $is_banned = \App\Models\User::find(auth()->id())?->isBanned();
     @endphp
     
     @if(!$is_banned)

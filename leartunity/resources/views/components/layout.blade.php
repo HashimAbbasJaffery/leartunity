@@ -64,12 +64,14 @@
             <nav>
                 <ul>
                     <!-- <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li> -->
-                    <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
-                      Admin
-                    </a></li> 
-                    <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
+                    @can("admin")
+                      <li ><a href="/admin" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
+                        Admin
+                      </a></li>
+                    @endcan 
+                    <!-- <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
                       LTS Store
-                    </a></li>
+                    </a></li> -->
                     @auth
                       <li class="mx-3"><a href="{{ route("learn") }}" class="bold-600" style="font-size: 14px;">My Learning</a></li>
                     @endauth
@@ -83,15 +85,20 @@
                       <li class="mx-3 highlighted"><a style="font-size: 14px;" href="/profile/{{ auth()->user()->id   }}" class="bold-600">{{ !auth()->user() ? "login" : auth()->user()->name }}</a></li>
                     @endauth
                     @guest
+                    <li class="mx-3"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">Register</a></li>
                       <li class="mx-3 highlighted"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">Login</a></li>
                     @endguest 
-                    <li ><a href="#" style="font-size: 14px;" class="bold-600 text-xl" style="position: relative;">
-                      <div class="notify none" style="position: absolute; right: 0px;background: #00ff00; width: 12px; height: 12px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
+                    
+                    @auth 
+                    <li ><a href="#" style="font-size: 20px;" class="bold-600 text-xl" style="position: relative; display: inline-block;">
+                      <div class="notify none" style="position: absolute; background: #00ff00; width: 10px; height: 10px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
                       <i class="fa-solid fa-bell"></i>
                     </a></li>
-                    <li ><a href="{{ route('logout') }}" style="font-size: 14px;" class="bold-600 text-xl" style="position: relative;">
-                      <i class="fa-solid fa-power-off"></i>
-                    </a></li>
+
+                      <li ><a href="{{ route('logout') }}" style="font-size: 14px;" class="bold-600 text-xl" style="position: relative;">
+                        <i class="fa-solid fa-power-off"></i>
+                      </a></li>
+                    @endauth
 
                     @auth
                       <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
