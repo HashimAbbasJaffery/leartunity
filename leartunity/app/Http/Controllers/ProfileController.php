@@ -49,6 +49,11 @@ class ProfileController extends Controller
     }
     public function changeProfileImage(ImageUploadingRequest $request, Profile $profile) {
         $data = $request->get("profile_pic");
+        $is_cover = false;
+        if($request->get("cover")) {
+            $data = $request->get("cover");
+            $is_cover = true;
+        }
         list(, $data)      = explode(',', $data);
         $data = base64_decode($data);
 
@@ -60,14 +65,19 @@ class ProfileController extends Controller
         // if(!$validatedData) {
         //     return $this->response("failed", "There is some problem");
         // }
-        
+        $folder = "profile";
+        $column = "profile_pic";
+        if($is_cover) {
+            $folder = "cover";
+            $column = "cover";
+        }
         $image_name = time() . ".png";
-        $path = public_path() . "/profile/" . $image_name;
+        $path = public_path() . "/$folder/" . $image_name;
         file_put_contents($path, $data);
         auth()->user()->profile()->update([
-            "profile_pic" => $image_name
+            $column => $image_name
         ]);
-        return $this->response("success", $image_name);
+        return $this->response("success", [$column, $image_name]);
         
 
         // File Uploading logic

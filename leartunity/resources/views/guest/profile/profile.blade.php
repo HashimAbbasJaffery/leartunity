@@ -7,7 +7,7 @@
 </button>
 
 <!-- Main modal -->
-<div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center max-w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -54,7 +54,7 @@
                     <div class="edit-cover flex" style="top: 0px; width: 25px; height: 25px;">
                         <i class="fa-solid fa-pencil"></i>
                     </div>
-                    <input id="profile_pic" type="file" onchange="changePicture(this)" name="profile_pic" class="none picture" />
+                    <input id="profile_pic" type="file" onchange="changePicture(this, 'profile')" name="profile_pic" class="none picture" />
                 </label>
             @endcan
         </div>
@@ -63,7 +63,7 @@
                 <div class="edit-cover flex">
                     <i class="fa-solid fa-pencil"></i>
                 </div>
-                <input id="cover" type="file" name="cover" onchange="changePicture(this)" class="none picture" />
+                <input id="cover" type="file" name="cover" onchange="changePicture(this, 'cover')" class="none picture" />
             </label>
         @endcan
     </div>
@@ -175,8 +175,7 @@
         })
     </script>
     <script type="text/javascript">
-        const changePicture = element => {
-            $image_crop = $('#cropper').croppie({
+        $image_crop = $('#cropper').croppie({
     enableExif: true,
     viewport: {
       width:134,
@@ -188,6 +187,23 @@
       height:300
     }
   });
+        const changePicture = (element, type) => {
+            if(type === 'cover') {
+                $image_crop.croppie("destroy");
+                $image_crop = $('#cropper').croppie({
+                    enableExif: true,
+                    viewport: {
+                    width:856,
+                    height:300,
+                    type:'square' //circle
+                    },
+                    boundary:{
+                    width:300,
+                    height:300
+                    }
+                });
+            }
+  
     var reader = new FileReader();
     reader.onload = function (event) {
       $image_crop.croppie('bind', {
@@ -218,11 +234,11 @@
                 const isSuccess = data.type;
                 if(isSuccess === "failed") return;
                 console.log(data);
-                const fileType = data.type;
-                const fileName = data.message;
+                const fileType = data.message[0];
+                const fileName = data.message[1];
 
-                const element = document.querySelector(`.profile_pic`);
-                const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/profile/' }${fileName}')`;
+                const element = document.querySelector(`.${fileType === 'profile_pic' ? 'profile_pic' : 'cover'}`);
+                const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/cover/' }${fileName}')`;
                 console.log(url);
                 element.style.backgroundImage = url;
             })
