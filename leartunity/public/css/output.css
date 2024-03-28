@@ -1831,3 +1831,6 @@ ul {
 .notification-text span{
   float: right;
 }
+.cr-boundary {
+  width: 100% !important;
+}

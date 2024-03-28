@@ -26,6 +26,10 @@
       <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css">
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" integrity="sha512-2eMmukTZtvwlfQoG8ztapwAH5fXaQBzaMqdljLopRSA0i6YKM8kBAOrSSykxu9NN9HrtD45lIqfONLII2AFL/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
  @vite('resources/js/app.js')
    @php 
     $primary_color = $settings->primary_color;
@@ -50,6 +54,11 @@
 <body >
 
     <div class="wrapper">
+      
+
+<!-- Modal toggle -->
+
+
           <div class="none notification animate__animated">
               <p class="notification-message"></p>
           </div>
@@ -168,7 +177,7 @@
     <script>
       $(document).ready(function() {
         $(".notification-drop .item").on('click',function() {
-          {{ \App\Models\User::find(auth()->id())->unreadNotifications->markAsRead() }}
+          {{ \App\Models\User::find(auth()?->id())?->unreadNotifications->markAsRead() }}
           $(this).find('ul').toggle();
         });
       });

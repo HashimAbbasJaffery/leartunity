@@ -48,14 +48,27 @@ class ProfileController extends Controller
         return view("guest.profile.profile", compact("count", "avgRating", "profile", "courses", "is_following", "followersCount"));
     }
     public function changeProfileImage(ImageUploadingRequest $request, Profile $profile) {
+        $data = $request->get("profile_pic");
+        list(, $data)      = explode(',', $data);
+        $data = base64_decode($data);
+
         // Authorizing the user
         if(Gate::denies("change-pic", $profile)) {
             abort(405);
         }
-        $validatedData = $request->validated();
-        if(!$validatedData) {
-            return $this->response("failed", "There is some problem");
-        }
+        // $validatedData = $request->validated();
+        // if(!$validatedData) {
+        //     return $this->response("failed", "There is some problem");
+        // }
+        
+        $image_name = time() . ".png";
+        $path = public_path() . "/profile/" . $image_name;
+        file_put_contents($path, $data);
+        auth()->user()->profile()->update([
+            "profile_pic" => $image_name
+        ]);
+        return $this->response("success", $image_name);
+        
 
         // File Uploading logic
         $files = [];
