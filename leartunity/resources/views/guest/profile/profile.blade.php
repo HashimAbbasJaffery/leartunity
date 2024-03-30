@@ -7,7 +7,7 @@
 </button>
 
 <!-- Main modal -->
-<div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center max-w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="default-modal" tabindex="-1" aria-hidden="true" onHide="alert('lol');" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center max-w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -30,7 +30,7 @@
             <!-- Modal footer -->
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <button type="button" id="modal-gateway" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
-                <button data-modal-hide="default-modal" type="button" class="cancel py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+                <button onclick="modal.hide()" data-modal-hide="default-modal" type="button" class="cancel py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
             </div>
         </div>
     </div>
@@ -148,6 +148,7 @@
     @push("scripts")
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/Cropper.js"></script>
     <script>
         const form = document.getElementById("follow");
         const button = document.querySelector(".follow-button");
@@ -175,58 +176,47 @@
         })
     </script>
     <script type="text/javascript">
-        $image_crop = $('#cropper').croppie({
-    enableExif: true,
-    viewport: {
-      width:134,
-      height:134,
-      type:'circle' //circle
-    },
-    boundary:{
-      width:300,
-      height:300
-    }
-  });
-        const changePicture = (element, type) => {
-            if(type === 'cover') {
-                $image_crop.croppie("destroy");
-                $image_crop = $('#cropper').croppie({
-                    enableExif: true,
-                    viewport: {
-                    width:856,
-                    height:300,
-                    type:'square' //circle
-                    },
-                    boundary:{
-                    width:300,
-                    height:300
-                    }
-                });
+        
+            
+        let $target_el = document.getElementById("default-modal");
+        let options = {
+            onHide: () => {
+
+            },
+            onShow: () => {
+
             }
-  
-    var reader = new FileReader();
-    reader.onload = function (event) {
-      $image_crop.croppie('bind', {
-        url: event.target.result
-      }) 
-    }
-    reader.readAsDataURL(element.files[0]);
-    const modal = document.querySelector(".open-modal");
-            modal.click();
+        }
+        let instanceOptions = {
+            id: "default-modal",
+            override: true 
+        }
+        let modal = new Modal($target_el, options, instanceOptions);
+        const changePicture = (element, type) => {
+            let cropper = new Cropper(134, 134, "circle", "#cropper");
+            $image_crop = cropper.get();
+            if(type === 'cover') {
+                cropper.destroy();
+                cropper = new Cropper(856, 300, "square", "#cropper");
+                $image_crop = cropper.get();
+            }
+            cropper.bindPicture(element);
+            modal.show();
+            modal._options.onHide = function() {
+                // $image_crop.unbind();
+                // cropper.destroy();
+            }
   $('#modal-gateway').click(function(event){
-    $image_crop.croppie('result', {
-      type: 'canvas',
-      size: 'viewport'
-    }).then(function(resp){
+    cropper.upload(function(resp) {
         const name = element.getAttribute("name");
         const data = new FormData();
         data.append(name, resp);
-        console.log(resp);
         let parameters = {
             [name]: resp
         }
         axios.post("/user/{{ $profile?->id ?? "null" }}/picture", data)
             .then(res => {
+                
                 const data = res.data;
                 console.log(data);
                 $(".cancel").click();
@@ -239,69 +229,19 @@
 
                 const element = document.querySelector(`.${fileType === 'profile_pic' ? 'profile_pic' : 'cover'}`);
                 const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/cover/' }${fileName}')`;
-                console.log(url);
                 element.style.backgroundImage = url;
+                alert("Done");
+                $image_crop.unbind();
+                cropper.destroy();
             })
+        cropper.clear();
     })
-  });
-            // const $uploadCrop = $('#cropper').croppie({
-            //     enableExif: true,
-            //     viewport: {
-            //         width: 134,
-            //         height: 134,
-            //         type: 'circle'
-            //     },
-            //     boundary: {
-            //         width: 300,
-            //         height: 300
-            //     }
-            // });
-            // const reader = new FileReader();
-            // reader.onload = function(e) {
-            //     $uploadCrop.croppie('bind', {
-            //         url: e.target.result
-            //     }).then(() => {
-            //         console.log("Binding COmpleted")
-            //     })
-            // }
-            // reader.readAsDataURL(element.files[0]);
-         
-           
-            // $("#modal-gateway").click( function(e) {
-            //     $uploadCrop.croppie('result', {
-            //         type: 'canvas',
-            //         size: 'viewport'
-            //     }).then(function(resp) {
-            //         const name = element.getAttribute("name");
-            //         const data = new FormData();
-            //         data.append(name, resp);
-            //         console.log(resp);
-            //         let parameters = {
-            //             [name]: resp
-            //         }
-            //         axios.post("/user/{{ $profile?->id ?? "null" }}/picture", data)
-            //             .then(res => {
-            //                 const data = res.data;
-            //                 console.log(data);
-            //                 data.forEach(data => {
-            //                     const isSuccess = data.type;
-            //                     if(isSuccess === "failed") return;
-            //                     const fileType = data.message.type;
-            //                     const fileName = data.message.file;
-        
-            //                     const element = document.querySelector(`.${fileType}`);
-            //                     const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/cover/' }${fileName}')`;
-            //                     console.log(url);
-            //                     element.style.backgroundImage = url;
-            //                 }) 
-            //             })
-            //             .catch(err => {
-            //                 console.log(err)
-            //             })
-            //     })
-            // })
+    })
         }     
     </script>
+    
+    <script>
+        </script>
     <script>
         window.onload = function() {
             // Follower Channel
