@@ -26,16 +26,10 @@ class Cropper {
     }
     upload(callback) {
         this.$image_crop.croppie('result', {
-            type: 'base64',
+            type: 'canvas',
             size: 'viewport'
         }).then(resp => {
-            console.log(resp);
-            this.destroy();
-            let croppingArea = document.getElementById("cropper");
-            croppingArea.innerHTML = "";
+            callback(resp);
         })
-    }
-    clear() {
-        this.$image_crop.bind(null);
     }
 }

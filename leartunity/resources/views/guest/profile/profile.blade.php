@@ -203,14 +203,15 @@
             cropper.bindPicture(element);
             modal.show();
             modal._options.onHide = function() {
-                // $image_crop.unbind();
-                // cropper.destroy();
+                cropper.destroy();
             }
   $('#modal-gateway').click(function(event){
     cropper.upload(function(resp) {
-    
+        console.log(resp);
     })
-    })
+    cropper.destroy();
+    modal.hide();
+})
         }     
     </script>
     
