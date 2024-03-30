@@ -208,33 +208,7 @@
             }
   $('#modal-gateway').click(function(event){
     cropper.upload(function(resp) {
-        const name = element.getAttribute("name");
-        const data = new FormData();
-        data.append(name, resp);
-        let parameters = {
-            [name]: resp
-        }
-        axios.post("/user/{{ $profile?->id ?? "null" }}/picture", data)
-            .then(res => {
-                
-                const data = res.data;
-                console.log(data);
-                $(".cancel").click();
-                
-                const isSuccess = data.type;
-                if(isSuccess === "failed") return;
-                console.log(data);
-                const fileType = data.message[0];
-                const fileName = data.message[1];
-
-                const element = document.querySelector(`.${fileType === 'profile_pic' ? 'profile_pic' : 'cover'}`);
-                const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/cover/' }${fileName}')`;
-                element.style.backgroundImage = url;
-                alert("Done");
-                $image_crop.unbind();
-                cropper.destroy();
-            })
-        cropper.clear();
+    
     })
     })
         }     
