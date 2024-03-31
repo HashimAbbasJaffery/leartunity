@@ -230,11 +230,9 @@
                 const element = document.querySelector(`.${fileType === 'profile_pic' ? 'profile_pic' : 'cover'}`);
                 const url = `url('${ (fileType === "profile_pic") ? '/profile/' : '/cover/' }${fileName}')`;
                 element.style.backgroundImage = url;
-                alert("Done");
-                $image_crop.unbind();
                 cropper.destroy();
+                $("#modal-gateway").off("click");
             })
-        cropper.clear();
     })
     })
         }     

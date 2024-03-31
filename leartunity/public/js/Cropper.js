@@ -29,10 +29,7 @@ class Cropper {
             type: 'base64',
             size: 'viewport'
         }).then(resp => {
-            console.log(resp);
-            this.destroy();
-            let croppingArea = document.getElementById("cropper");
-            croppingArea.innerHTML = "";
+            callback(resp);
         })
     }
     clear() {
