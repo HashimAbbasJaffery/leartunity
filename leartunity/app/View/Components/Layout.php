@@ -22,8 +22,8 @@ class Layout extends Component
      */
     public function render(): View|Closure|string
     {
-        $user = User::find(auth()->user()->id);
-        $notifications = $user->unreadNotifications();
+        $user = User::find(auth()->user()?->id);
+        $notifications = $user?->unreadNotifications() ?? 0;
         return view('components.layout', compact("notifications"));
     }
 }
