@@ -27,7 +27,8 @@ class CourseRequest extends FormRequest
             "pre_req" => ["required", "min:25", "max:500"],
             "price" => ["required", "integer"],
             "thumbnail" => ["required", "mimes:jpg,jpeg,png"],
-            "categories" => [ "required" ]
+            "categories" => [ "required" ],
+            "base64" => [ "required" ]
         ];
     }
 }

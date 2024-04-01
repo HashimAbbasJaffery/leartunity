@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Course;
 use App\Models\Category;
+use Illuminate\Support\Facades\File;
 use Stripe\StripeClient as Stripe;
 
 class CourseController extends Controller
@@ -45,7 +46,7 @@ class CourseController extends Controller
         $this->middleware("is_course_owner:$course->slug");
         $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
-        $file = $request->file("thumbnail");
+        $file = $request->base64;
         
         $stripe = $this->stripe->products->retrieve($course->stripe_product_id);
         
@@ -61,10 +62,20 @@ class CourseController extends Controller
         $product->name = $request->title;
         $product->default_price_data["unit_amount"] = $request->price;
         $product->save();
+        
         $fileName = $course->thumbnail;
         if($file) {
-            $fileName = time() . $file->getClientOriginalName();
-            $file->move(public_path("course"), $fileName);
+
+            
+            $data = $request->get("base64");
+            list(, $data) = explode(',', $data);
+            $data = base64_decode($data);
+            $fileName = time() . ".png";
+            
+            File::put(public_path("course/$fileName"), $data);
+
+            // $fileName = time() . $file->getClientOriginalName();
+            // $file->move(public_path("course"), $fileName);
         } 
 
         $course->update([
@@ -92,6 +103,7 @@ class CourseController extends Controller
         return view("Teaching.edit", compact("categories", "course"));
     }
     public function store(CourseRequest $request) {
+        
         $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
@@ -107,9 +119,17 @@ class CourseController extends Controller
         $product_id = $stripe->id;
 
         
-        $fileName = time() . $file->getClientOriginalName();
-        $file->move(public_path("course"), $fileName);
+        // $fileName = time() . $file->getClientOriginalName();
+        // $file->move(public_path("course"), $fileName);
 
+        
+        $data = $request->get("base64");
+        list(, $data)      = explode(',', $data);
+        $data = base64_decode($data);
+        $fileName = time() . ".png";
+        
+        File::put(public_path("course/$fileName"), $data);
+       
         $course = Course::create([
             "title" => $request->title,
             "description" => $request->description, 

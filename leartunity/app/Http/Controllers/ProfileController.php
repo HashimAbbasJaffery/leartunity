@@ -61,10 +61,7 @@ class ProfileController extends Controller
         if(Gate::denies("change-pic", $profile)) {
             abort(405);
         }
-        // $validatedData = $request->validated();
-        // if(!$validatedData) {
-        //     return $this->response("failed", "There is some problem");
-        // }
+
         $folder = "profile";
         $column = "profile_pic";
         if($is_cover) {
@@ -73,42 +70,14 @@ class ProfileController extends Controller
         }
         $image_name = time() . ".png";
         $path = public_path() . "/$folder/" . $image_name;
-        file_put_contents($path, $data);
+
+        File::delete(public_path(). "/$folder/" . auth()->user()?->profile?->$column);
+        File::put($path, $data);
+
         auth()->user()->profile()->update([
             $column => $image_name
         ]);
-        return $this->response("success", [$column, $image_name]);
         
-
-        // File Uploading logic
-        $files = [];
-        $responses = [];
-        $cover = $request->file("cover");
-        $profile_pic = $request->file("profile_pic");
-        $user = auth()->user();
-        if($cover) {
-            $files["cover"] = [
-                "file" => $cover,
-                "name" => "cover"
-            ];
-        }
-        if($profile_pic) {
-            $files["profile_pic"] = [
-                "file" => $profile_pic,
-                "name" => "profile"
-            ];
-        }
-
-        foreach($files as $key => $file) {
-            $fileName = time() . $file["file"]->getClientOriginalName();
-            $file["file"]->move($file["name"], $fileName);
-            $old_cover = $user->profile->$key;
-            $user->profile()->update([
-                $key => $fileName,
-            ]);
-            File::delete("$key/$old_cover");  
-            $responses[] = $this->response("success", [ "type" => $key, "file" => $fileName ]);
-        }
-        return $responses;
+        return $this->response("success", [$column, $image_name]);
     }
 }

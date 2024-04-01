@@ -1,6 +1,6 @@
 <x-layout>
     <section class="mt-5 create-field container mx-auto" style="width: 100%;">
-        <form enctype="multipart/form-data" style="width: 100%; display: block;" class="py-2" method="POST" action="{{ route('course.update', [ 'course_slug_o' => $course->slug ]) }}">
+        <form enctype="multipart/form-data" id="update-course" style="width: 100%; display: block;" class="py-2" method="POST" action="{{ route('course.update', [ 'course_slug_o' => $course->slug ]) }}">
         @csrf
         {{ method_field("PUT") }}
             <label for="title" style="display: block; margin-bottom: 20px">
@@ -41,6 +41,7 @@
                 @enderror
                 <input type="file" class="none rounded px-2 @error('thumbnail') has-error @enderror" id="thumbnail" name="thumbnail" style="width: 100%;"/>
             </label>
+            <div id="cropper"></div>
             @error("categories")
                 <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
             @enderror
@@ -53,13 +54,33 @@
                     </label>
                 @endforeach
             </div>
+            <input type="text" name="base64" id="base64">
             <input type="hidden" value="{{ implode(",", $course->categories_id) }}" name="categories" id="categories"/>
             <button type="submut" class="highlighted px-3 preview mb-1" data-for="description">Update</button>
         </form>
     </section>
     @push("scripts")
+        <script src="/js/Cropper.js"></script>
         <script>
-            
+            const thumbnail = document.getElementById("thumbnail");
+            let cropper;
+            thumbnail.addEventListener("change", function() {
+                cropper && cropper.destroy();
+                cropper = new Cropper("480", "270", "square", "#cropper");
+                cropper.bindPicture(this);
+                cropper.upload(function(res) {
+                    console.log(res);
+                })
+            })
+            const update = document.getElementById("update-course");
+            update.addEventListener("submit", function(e) {
+                e.preventDefault();
+                cropper.upload(function(res) {
+                    const base64 = document.getElementById("base64");
+                    base64.value = res;
+                    update.submit();
+                })
+            })
         </script>
         <script>
             const previewButton = document.querySelector(".preview");
