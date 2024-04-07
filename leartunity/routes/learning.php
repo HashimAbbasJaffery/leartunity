@@ -12,7 +12,7 @@ Route::get("course/{course:slug}/{content}", [LearningController::class, "get"])
 Route::post("comment/{course:slug}/{content}/add", [CommentController::class, "create"])->name("create.comment");
 Route::post("course/{content}/updateTracker/{course}", [TrackerControler::class, "update"])->name("update.tracker");
 
-Route::get("certificate/{certificate:certificate_id}", function(Certificate $certificate) {
+Route::get("certificate/{certificate_id}", function(Certificate $certificate) {
     $certificate_path = $certificate->certificate . "/certificate.pdf";
     return response()->download($certificate_path);
 });

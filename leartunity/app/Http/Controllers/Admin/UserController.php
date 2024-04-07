@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewUserRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Validator;
@@ -45,7 +46,8 @@ class UserController extends Controller
             ...$validation->validated(),
             'ip_address' => $request->ip(),
         ];
-        User::create($attributes);
+        $user = User::create($attributes);
+        event(new Registered($user));
 
 
         return to_route("login");

@@ -24,7 +24,7 @@
         </div>
     </section>
     <section id="add-course" class="container mx-auto">
-        <a href="#" class="create-course rounded text-center py-2" style="width:100%; display: inline-block">
+        <a href="/instructor/course/create" class="create-course rounded text-center py-2" style="width:100%; display: inline-block">
             <i class="fa-solid fa-plus p-3 rounded-full" style="background: var(--primary); color: white;"></i>
         </a>
     </section>

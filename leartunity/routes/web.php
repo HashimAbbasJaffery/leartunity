@@ -6,8 +6,12 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Authenticate;
 use App\Interfaces\LinkedList;
+use App\Mail\EmailVerification;
 use App\Models\Course;
 use App\Models\Section;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\HomeController;
@@ -28,6 +32,17 @@ use App\Models\User;
 */
 
 // Testing Routes 
+Route::get("test", function () {
+    Mail::to("habbas2121@outlook.com")->send(new EmailVerification(User::find(1)));
+
+    dd("Sent");
+});
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::get("certificate", function() {
     $customPaper = array(0,0,1056,516);

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\Instructor\CourseController;
 use App\Http\Controllers\Instructor\SectionController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SwatchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
@@ -32,3 +33,5 @@ Route::put("/category/{without_scope_category}/status", [CategoryController::cla
 Route::post("/category/create", [CategoryController::class, "store"])->name("admin.category.create");
 Route::put("/category/{without_scope_category}/update", [CategoryController::class, "update"])->name("admin.category.update");
 Route::delete("/category/{without_scope_category}/delete", [CategoryController::class, "destroy"])->name("admin.category.delete");
+
+Route::put("/change/quote", [QuoteController::class, "update"])->name("quote.rename");

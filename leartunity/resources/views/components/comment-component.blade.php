@@ -19,7 +19,7 @@
                 {!! $comment->comment !!}
                 </p>
             </div>
-            <button class="comment-reply" data-id="{{ $comment->id }}" data-name="{{ $comment->user->name }}">Reply</button>
+            <button class="comment-reply" data-user="{{ $comment->user_id }}" data-id="{{ $comment->id }}" data-name="{{ $comment->user->name }}">Reply</button>
         </div>
     </div>
 </div>

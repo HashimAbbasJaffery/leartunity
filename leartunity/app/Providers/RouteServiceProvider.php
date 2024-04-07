@@ -25,6 +25,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Route::bind("certificate_id", function($id) {
+            return \App\Models\Certificate::where("certificate_id", $id)->where("user_id", auth()->id())->first();
+        });
         Route::bind("without_scope_category", function($id) {
             return \App\Models\Category::withoutGlobalScope(ActiveScope::class)->findOrFail($id);
         });

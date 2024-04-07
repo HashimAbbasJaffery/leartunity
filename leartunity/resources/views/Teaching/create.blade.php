@@ -9,7 +9,6 @@
                 @enderror
                 <input type="text" class="rounded px-2 @error('title') has-error @enderror" value="{{ old("title") }}" id="title" name="title" style="width: 100%;"/>
             </label>
-            <button type="cancel" class="highlighted px-3 preview mb-1" data-for="description">Preview</button>
             <label for="description" style="display: block; margin-bottom: 20px">
                 Description - It supports Github markdown
                 @error("description")
@@ -17,7 +16,6 @@
                 @enderror
                 <textarea id="description" name="description" class="@error('description') has-error @enderror rounded px-2" style="height: 300px;outline: none;resize: none;width: 100%; border: 1px solid var(--primary)">{{ old("description") }}</textarea>
             </label>
-            <div class="description-preview none">fjhdf</div>
             <label for="pre_req" style="display: block; margin-bottom: 20px">
                 Course Pre Requisites - It supports Github markdown
                 @error("pre_req")
@@ -25,7 +23,6 @@
                 @enderror
                 <textarea id="description" name="pre_req" class="rounded px-2" style="height: 300px;outline: none;resize: none;width: 100%; border: 1px solid var(--primary)">{{ old("pre_req") }}</textarea>
             </label>
-            <div class="pre_req-preview none">&nbsp;</div>
             <label for="price" style="display: block; margin-bottom: 20px">
                 Price
                 @error("price")

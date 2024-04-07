@@ -54,7 +54,12 @@
 <body >
 
     <div class="wrapper">
-      
+    @if(!$user?->hasVerifiedEmail())
+    <div id="confirm-email" style="text-align: center;padding: 0px;background: red; color: white;position: fixed; bottom: 0px; z-index: 2; width: 100%; ">
+        <p style="padding: 5px;">We have sent you email at <b>{{ auth()?->user()?->email }}</b>, Please verify email before 60 days. Else account might be deleted (Also check Spam)</p>
+      </div>
+    @endif
+              
 
 <!-- Modal toggle -->
 

@@ -1,8 +1,7 @@
 <x-layout>
-    
         <main>
             <section id="search-area" class="container mx-auto" style="position: relative;">
-                <select class="search-type highlighted p-1 mt-4" style="height: 35px;">
+                <select class="search-type highlighted p-1 mt-4" style="width: 10%;height: 35px;">
                   <option value="categories">Categories</option>
                   <option value="course">Course</option>
                   <option value="teachers">Teachers</option>
@@ -17,7 +16,7 @@
             <div>
             <div id="separator" class="container mx-auto mt-4" style="background: black; height: 2px;">&nbsp;</div>
             <section id="banner" style="background: {{ $quote->bg_color }};" class="text-center">
-              <h1>
+              <h1 id="sliders" oninput="contentChanged(this)" @can('admin') contenteditable="true" @endcan>
                 {{ $quote->quote }}
               </h1>
             </section>
@@ -83,8 +82,7 @@
           </section>
         </main>
     @push("scripts")
-      <script>
-      </script>
+      
       <script>
         function debounce(func, delay) {
         let timerId;
@@ -96,6 +94,19 @@
           }, delay);
         };
       }
+      </script>
+      <script>
+        const contentChanged = el => {
+          axios.put("{{ route('quote.rename') }}", {
+            quote: el.textContent
+          })
+            .then(res => {
+              console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        }
       </script>
       <script>
         const getImage = (data, path) => {

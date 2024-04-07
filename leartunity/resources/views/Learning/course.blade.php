@@ -82,6 +82,7 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" id="replying_to">
         <input type="hidden" id="replies_to" />
         <p></p>
     </section>
@@ -141,9 +142,11 @@
     </script>
     <script>
         const postComment = (userComment, replies_to) => {
+            const to = document.getElementById("replying_to");
             axios.post("{{ route('create.comment', ['course' => $course->slug, 'content' => $current_content->id]) }}", {
                 comment: userComment,
-                replies_to: replies_to 
+                replies_to: replies_to,
+                ...(to.value && { replying_to: to.value })
             })
             .then(res => {
                 console.log(res);
@@ -168,11 +171,14 @@
             reply.addEventListener("click", function() {
                 const comment = document.getElementById("add-comment");
                 const replies = document.getElementById("replies_to");
+               
                 const replies_to = reply.dataset.id;
                 const name = reply.dataset.name;
                 replying_to(name);
+                const replying = document.getElementById("replying_to");
+                replying.value = reply.dataset.user;
+
                 replies.value = replies_to;
-                // postComment(comment.value, replies_to);
                 commentModal.classList.remove("none")
                 commentModal.classList.remove("animate__backOutDown")
                 commentModal.classList.add("animate__backInUp")

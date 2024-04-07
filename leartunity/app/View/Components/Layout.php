@@ -24,6 +24,6 @@ class Layout extends Component
     {
         $user = User::find(auth()->user()?->id);
         $notifications = $user?->unreadNotifications() ?? 0;
-        return view('components.layout', compact("notifications"));
+        return view('components.layout', compact("notifications", "user"));
     }
 }
