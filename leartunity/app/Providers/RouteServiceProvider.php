@@ -75,6 +75,9 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware(["web", "auth.banned", "is_admin"])
                 ->prefix("admin")
                 ->group(base_path("routes/admin.php"));
+
+            Route::middleware(["web", "guest"])
+                ->group(base_path("routes/ResetPassword.php"));
         });
     }
 }

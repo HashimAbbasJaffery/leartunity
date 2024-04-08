@@ -11,9 +11,9 @@
   />
 </head>
 <body>
-    @if(session()->has("error"))
+@if(session()->has("error"))
         <div class="account_not_found animate__animated animate__bounceIn">
-            <p>Your account not found in our database</p>
+            <p>{{ session()->get("error") }}</p>
         </div>
     @endif
     @if(session()->has("success"))
@@ -30,9 +30,8 @@
                 <h1>Leartunity.</h1>
                 <p>Let's learn together</p>
             </div>
-            <form action="{{ route("login") }}" method="POST" style="display: flex; flex-direction: column;">
+            <form action="{{ route("reset-password") }}" method="POST" style="display: flex; flex-direction: column;">
                 @csrf
-
                 @error("email")
                     <p class="err-message">{{ $message }}</p>
                 @enderror
@@ -41,22 +40,37 @@
                     type="email" 
                     class="@error('email') invalid @enderror" 
                     name="email" 
-                    placeholder="Type Email"
+                    placeholder="email"
                     value="{{ old('email') }}"
                 >
                 @error("password")
                     <p class="err-message">{{ $message }}</p>
                 @enderror
                 <input 
+                    id="password" 
                     type="password" 
+                    class="@error('password') invalid @enderror" 
                     name="password" 
-                    placeholder="Password"
-                    class="@error('password') invalid @enderror"
-                    valie="{{ old('password') }}"
+                    placeholder="password"
+                    value="{{ old('password') }}"
                 >
-                <input type="submit" value="Login" style="cursor:pointer;">
+                <input 
+                    id="password_confirmation" 
+                    type="password" 
+                    class="@error('password') invalid @enderror" 
+                    name="password_confirmation" 
+                    placeholder="Confirm Password"
+                    value="{{ old('password_confirmation') }}"
+                >
+                <input 
+                    id="token" 
+                    type="hidden"  
+                    name="token" 
+                    value="{{ $token }}"
+                >
+                <input type="submit" value="Reset Password" style="cursor:pointer;">
             </form>
-            <a href="{{ route('forgot-password') }}"><p>Forgot Password?</p></a>
+            <!-- <a href="#"><p>Forgot Password?</p></a> -->
         </div>
     </div>
     <script>

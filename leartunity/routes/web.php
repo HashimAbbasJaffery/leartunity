@@ -9,6 +9,7 @@ use App\Interfaces\LinkedList;
 use App\Mail\EmailVerification;
 use App\Models\Course;
 use App\Models\Section;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;

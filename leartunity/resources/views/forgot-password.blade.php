@@ -13,7 +13,7 @@
 <body>
     @if(session()->has("error"))
         <div class="account_not_found animate__animated animate__bounceIn">
-            <p>Your account not found in our database</p>
+            <p>{{ session()->get("error") }}</p>
         </div>
     @endif
     @if(session()->has("success"))
@@ -30,9 +30,8 @@
                 <h1>Leartunity.</h1>
                 <p>Let's learn together</p>
             </div>
-            <form action="{{ route("login") }}" method="POST" style="display: flex; flex-direction: column;">
+            <form action="{{ route("forgot-password") }}" method="POST" style="display: flex; flex-direction: column;">
                 @csrf
-
                 @error("email")
                     <p class="err-message">{{ $message }}</p>
                 @enderror
@@ -41,22 +40,12 @@
                     type="email" 
                     class="@error('email') invalid @enderror" 
                     name="email" 
-                    placeholder="Type Email"
+                    placeholder="Email"
                     value="{{ old('email') }}"
                 >
-                @error("password")
-                    <p class="err-message">{{ $message }}</p>
-                @enderror
-                <input 
-                    type="password" 
-                    name="password" 
-                    placeholder="Password"
-                    class="@error('password') invalid @enderror"
-                    valie="{{ old('password') }}"
-                >
-                <input type="submit" value="Login" style="cursor:pointer;">
+                <input type="submit" value="Send Link" style="cursor:pointer;">
             </form>
-            <a href="{{ route('forgot-password') }}"><p>Forgot Password?</p></a>
+            <!-- <a href="#"><p>Forgot Password?</p></a> -->
         </div>
     </div>
     <script>
