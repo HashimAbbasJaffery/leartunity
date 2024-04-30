@@ -10,6 +10,8 @@ use App\Services\ContentService;
 use App\Services\CourseCertificate;
 use App\Services\VideoTrackingService;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
+use Laravel\Cashier\CashierServiceProvider;
 use Stripe\StripeClient;
 
 class AppServiceProvider extends ServiceProvider

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CourseRequest;
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\User;
 use App\Services\FilterService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
@@ -24,6 +25,9 @@ class CourseController extends Controller
     ){}
 
     public function get(Course $course) {
+        $currency = User::find(auth()->id())->currency;
+        $course->price *= round(\App\Helpers\exchange_rate($currency->currency), 2);
+        $course->currency = $currency->unit;
         $course->description = Str::markdown($course->description, [
             "html_input" => "strip"
         ]);

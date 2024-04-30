@@ -77,7 +77,13 @@
                 <a href="{{ route("home") }}"><h1>Leartunity.</h1></a>
             </div>
             <nav>
-                <ul style="position: relative;">
+              
+              <ul style="position: relative; height: 36px;">
+                    <select style="padding-left: 10px;" onchange="changeCurrency(this)">
+                      @foreach($currencies as $currency)
+                        <option @selected($currency->id == auth()->user()->currency_id) value="{{ $currency->id }}">{{ $currency->currency }}</option>
+                      @endforeach
+                    </select>
                     <!-- <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li> -->
                     @can("admin")
                       <li ><a href="/admin" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
@@ -128,10 +134,9 @@
                         <i class="fa-solid fa-power-off"></i>
                       </a></li>
                     @endauth
-
                     @auth
                       <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
-                        {{ (new \App\Classes\Points())->balance(\App\Models\User::find(auth()->id())) }} LTS
+                        {{ $user->balance * App\Helpers\exchange_rate($user->currency->currency) }} {{ $user->currency->unit }}
                       </a></li>
                     @endauth
                     
@@ -179,6 +184,21 @@
         </footer>
     </div>
     <script src="{{ asset("js/transition.js") }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      const changeCurrency = element => {
+        axios.post("/user/{{ auth()->id() }}/changeCurrency", {
+          currency: element.value
+        }).then(res => {
+          if(res.data === 1) {
+            location.reload();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      }
+    </script>
     <script>
       $(document).ready(function() {
         $(".notification-drop .item").on('click',function() {

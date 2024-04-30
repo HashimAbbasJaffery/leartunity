@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class Layout extends Component
 {
@@ -24,6 +25,7 @@ class Layout extends Component
     {
         $user = User::find(auth()->user()?->id);
         $notifications = $user?->unreadNotifications() ?? 0;
-        return view('components.layout', compact("notifications", "user"));
+        $currencies = DB::table("currencies")->get();
+        return view('components.layout', compact("notifications", "user", "currencies"));
     }
 }

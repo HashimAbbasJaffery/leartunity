@@ -50,7 +50,7 @@
           </section>
           <section id="course-content" class="container mx-auto">
             <div class="course-header">
-              <p>${{ $course->price }}</p>
+              <p>{{ $course->currency }}{{ $course->price }}</p>
             </div>
             <div class="course-details">
               {!! $course->description !!}

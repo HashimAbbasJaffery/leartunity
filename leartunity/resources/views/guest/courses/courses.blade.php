@@ -18,14 +18,17 @@
                     </div>
                     <div class="price-range filter mt-3">
                         <h1>Price Range</h1>
+                        @php
+                            $user = \App\Models\User::find(auth()->id())->currency;
+                        @endphp 
                         <div class="range-inputs mt-4"> 
                             <label>
-                                From ($)
+                                From ({{ $user->unit }})
                                 <br />
                                 <input type="number" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                             </label>
                             <label>
-                                To ($)
+                                To ({{ $user->unit }})
                                 <br />
                                 <input type="number" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                             </label>

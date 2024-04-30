@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\SearchController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\User;
+use App\Classes\CurrencyExchanger;
+use function App\Helpers\exchange_rate;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,8 +34,13 @@ use App\Models\User;
 |
 */
 
+
 // Testing Routes 
 Route::get("test", function () {
+
+    dd(exchange_rate("INR"));
+    // $exchanger = new CurrencyExchanger();
+    dd($exchanger->rate("inr"));
     Mail::to("habbas2121@outlook.com")->send(new EmailVerification(User::find(1)));
 
     dd("Sent");

@@ -2,10 +2,12 @@
 
 namespace App\View\Components\User;
 
+use App\Models\Currency;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\Course as CourseInstance;
+use function App\Helpers\exchange_rate;
 
 class Course extends Component
 {
@@ -43,6 +45,8 @@ class Course extends Component
         if($purchases) {
             $is_purchased = true;
         }
-        return view('components.user.course', compact("is_purchased"));
+        $currency = Currency::find(auth()->user()->currency_id);
+        $rate = exchange_rate($currency->currency);
+        return view('components.user.course', compact("is_purchased", "currency", "rate"));
     }
 }

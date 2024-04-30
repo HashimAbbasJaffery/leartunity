@@ -67,7 +67,7 @@
             @endif
         </div>
         <div class="course-price flex justify-between">
-            <p>{{ $course->price }} $</p>
+            <p>{{ round($course->price * $rate) }} {{ $currency->unit }}</p>
             <p>Duration: {{ secondsToHours($course->contents_sum_duration) }}</p>
         </div>
     </div>

@@ -1,6 +1,7 @@
 <?php 
 
 namespace App\Services;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Course;
 
@@ -17,6 +18,7 @@ class FilterService {
         if(request()->price_range) {
             $parameters["price_range"] = request()->price_range;
         }
+        
 
         // Search Filter 
         if(request()->search) {

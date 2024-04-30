@@ -1,3 +1,4 @@
+
 <x-layout>
     <div class="progress {{ $course->tracker->progress >= 100 ? '' : 'none'}} container mx-auto download-certificate py-3 px-2 rounded" style="bottom: 10px; left: 10px;background: #15F5BA; position: fixed; width: 50%; z-index: 2">
         You Have completed this course! Download your certificate from <a href="/learn/certificate/{{ $course->id }}" style="text-decoration: underline;">Here</a>

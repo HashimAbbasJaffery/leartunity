@@ -79,4 +79,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function receivesBroadcastNotificationsOn(): string {
         return "notification." . $this->id;
     }
+    public function currency() {
+        return $this->belongsTo(Currency::class);
+    }
 }

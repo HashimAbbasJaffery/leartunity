@@ -40,7 +40,7 @@ class UserController extends Controller
         $validation = \Illuminate\Support\Facades\Validator::make($request->all(), [
             "name" => ["required"],
             "password" => [ "required", "confirmed" ],
-            "email" => [ "required", "email" ]
+            "email" => [ "required", "email", "unique:users,email" ]
         ]);
         $attributes = [
             ...$validation->validated(),
@@ -52,4 +52,10 @@ class UserController extends Controller
 
         return to_route("login");
     } 
+    public function changeCurrency(User $user) {
+        $currency = request()->get("currency");
+        $user->currency_id = $currency;
+        $user->save();
+        return 1;
+    }
 }
