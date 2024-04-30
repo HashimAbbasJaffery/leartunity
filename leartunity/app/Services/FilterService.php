@@ -14,10 +14,13 @@ class FilterService {
             $parameters["categories"] = request()->categories; 
         }
 
+        $user_currency = (User::find(auth()->id()))->currency;
         // Price Filter
         if(request()->price_range) {
             $parameters["price_range"] = request()->price_range;
         }
+        $parameters["price_range"][0] /= \App\Helpers\exchange_rate($user_currency->currency);
+        $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
         
 
         // Search Filter 
