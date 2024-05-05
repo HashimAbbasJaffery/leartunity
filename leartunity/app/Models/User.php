@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Classes\Balance;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Prunable;
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
@@ -13,7 +17,7 @@ use Mchev\Banhammer\Traits\Bannable;
 
 class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, Billable, Bannable;
+    use HasApiTokens, HasFactory, Notifiable, Billable, Bannable, Balance, Prunable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +51,9 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    public function prunable() {
+        return static::where("created_at", "<", now()->subDays(60))->whereNull("email_verified_at");
+    }
     protected function courses() {
         return $this->hasMany(Course::class, "author_id");
     }

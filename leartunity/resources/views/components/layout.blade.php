@@ -56,7 +56,7 @@
     <div class="wrapper">
     @if($user && !$user?->hasVerifiedEmail())
     <div id="confirm-email" style="text-align: center;padding: 0px;background: red; color: white;position: fixed; bottom: 0px; z-index: 2; width: 100%; ">
-        <p style="padding: 5px;">We have sent you email at <b>{{ auth()?->user()?->email }}</b>, Please verify email before 60 days. Else account might be deleted (Also check Spam)</p>
+        <p style="padding: 5px;">We have sent you email at <b>{{ auth()?->user()?->email }}</b>, Please verify email before {{ \Carbon\Carbon::parse($user->created_at)->diffInDays(now()->subDays(60)) }} days. <a href="#" style="text-decoration: underline;">Send Again!</a> </p>
       </div>
     @endif
               
@@ -136,7 +136,7 @@
                     @endauth
                     @auth
                       <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
-                        {{ $user->balance * App\Helpers\exchange_rate($user->currency->currency) }} {{ $user->currency->unit }}
+                        {{ floor($user->balance * App\Helpers\exchange_rate($user->currency->currency)) }} {{ $user->currency->unit }}
                       </a></li>
                     @endauth
                     

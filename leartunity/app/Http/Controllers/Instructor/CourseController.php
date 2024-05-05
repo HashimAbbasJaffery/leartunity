@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Instructor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Course;
@@ -103,7 +104,6 @@ class CourseController extends Controller
         return view("Teaching.edit", compact("categories", "course"));
     }
     public function store(CourseRequest $request) {
-        
         $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
@@ -117,11 +117,6 @@ class CourseController extends Controller
         ]);
 
         $product_id = $stripe->id;
-
-        
-        // $fileName = time() . $file->getClientOriginalName();
-        // $file->move(public_path("course"), $fileName);
-
         
         $data = $request->get("base64");
         list(, $data)      = explode(',', $data);
@@ -129,12 +124,15 @@ class CourseController extends Controller
         $fileName = time() . ".png";
         
         File::put(public_path("course/$fileName"), $data);
-       
+        
+        $user_preferred_currency = User::find(auth()->id())->currency->currency;
+        $exchange_rate = \App\Helpers\exchange_rate($user_preferred_currency);
+
         $course = Course::create([
             "title" => $request->title,
             "description" => $request->description, 
             "pre_req" => $request->pre_req,
-            "price" => $request->price,
+            "price" => $request->price / $exchange_rate,
             "thumbnail" => $fileName,
             "author_id" => auth()->id(),
             "status" => 0,

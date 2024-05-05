@@ -28,7 +28,10 @@
                 @error("price")
                     <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
                 @enderror
-                <input type="number" class="rounded px-2 @error('price') has-error @enderror" value="{{ old("price") }}" id="price" name="price" style="width: 100%;"/>
+                <div class="flex">
+                    <input type="number" class="rounded px-2 @error('price') has-error @enderror" value="{{ old("price") }}" id="price" name="price" style="width: 95%;"/>
+                    <div class="currency-symbol bg-black text-white items-center justify-center flex text-xl" style="width: 5%">{{ \App\Models\User::find(auth()->id())->currency->unit }}</div>
+                </div>
             </label>
             <label for="thumbnail" style="display: block; margin-bottom: 20px">
                 <span class="highlighted px-3 py-2">Upload Thumbnail</span>
@@ -93,23 +96,7 @@
                 })
             })
 
-            previewButton.addEventListener("click", function(e) {
-                e.preventDefault();
-                const forElement = previewButton.dataset.for;
-                const preview = document.querySelector(`.${forElement}-preview`);
-                const field = document.getElementById(forElement);
-                axios.post(`/preview`, {
-                    value: field.value
-                })
-                    .then(res => {
-                        console.log(res)
-                        preview.innerHTML = res.data;
-                        preview.classList.toggle("none");
-                    })
-                    .catch(err =>{
-                        console.log(err)
-                    })
-            })
+       
         </script>
     @endpush 
 </x-layout>

@@ -13,7 +13,7 @@ function exchange_rate($ratesOf = "EUR") {
         return cache()->get($ratesOf);
     } else {
         $result = Http::get($endpoint)->json("data.$ratesOf");
-        cache()->put($ratesOf, $result, 86400);
+        cache()->put($ratesOf, $result, 100000000);
         return cache()->get($ratesOf);
     }
 }
