@@ -19,6 +19,7 @@ use App\Models\User;
 use Stripe\Checkout\Session;
 use Stripe\StripeClient;
 use Stripe\Transfer;
+use Illuminate\Support\Str;
 
 
 class StripeController extends Controller
@@ -88,6 +89,12 @@ class StripeController extends Controller
             'transfer_group' => 'ORDER_95',
         ]);
         
+        $author->transactions()->create([
+            "transaction_id" => "TX" . Str::upper(Str::random(4)) . time(),
+            "amount" => $price,
+            "transaction_type" => 1
+        ]);
+
         $purchase = $user->purchases()->create([
             "purchase_product_id" => $id  
         ]);

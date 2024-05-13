@@ -61,7 +61,7 @@
                     name="password_confirmation" 
                     placeholder="Confirm Password"
                     value="{{ old('password_confirmation') }}"
-                >
+                >B
                 <input 
                     id="token" 
                     type="hidden"  
