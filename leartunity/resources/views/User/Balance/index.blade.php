@@ -8,13 +8,10 @@
                     <span class="ml-1">{{ number_format($balance, 2, ".", ",") }}</span>
 
                 </div>
-                
-                <div class="profit-loss mt-2" style="font-size: 13px;">
-                    <span>+{{ $profit_percentage }}%</span> than last month 
-                </div>
+              
                 @if(auth()->id() === $user->id)
                     <div class="balance-actions mt-3">
-                        <button style="font-size: 13px;">Add Funds</button>
+                        <a href="{{ route("add.balance") }}" style="font-size: 13px;">Add Funds</a>
                         <button style="font-size: 13px;" class="ml-1 bg-white text-black px-2 py-1 rounded">Withdraw</button>
                     </div>
                 @endif
@@ -46,7 +43,7 @@
         @foreach ($user->transactions as $transaction)
         <tr>
             <td>{{ $transaction->transaction_id }}</td>
-            <td>{{ ($transaction->transaction_type == "1")? "+" : "-" }}{{ abs(number_format($transaction->amount * $exchange_rate, 2, ".", ",")) }} {{ $unit }}</td>
+            <td>{{ ($transaction->transaction_type == "1")? "+" : "-" }}{{ number_format(abs($transaction->amount) * $exchange_rate, 2, ".", ",") }} {{ $unit }}</td>
             <td>{{ $transaction->created_at->format("d-M-Y") }}</td>
         </tr>
         @endforeach

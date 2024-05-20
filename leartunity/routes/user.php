@@ -13,5 +13,10 @@ Route::middleware("auth")->group(function() {
 
     Route::post("user/{user:id}/changeCurrency", [UserController::class, "changeCurrency"]);
 
-    Route::get("balance/{user:id}", [BalanceController::class, "get"]);
+    Route::get("balance/{user:id}", [BalanceController::class, "get"])->name("user.balance");
+
+    Route::get("user/add-funds", [BalanceController::class, "add"])->name("add.balance");
+    Route::post("user/add-funds", [BalanceController::class, "add"])->name("add.balance");
+
+    Route::get("user/add/success", [BalanceController::class, "success_fund_transfer"])->name("user.add-fund.success");
 });

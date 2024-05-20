@@ -8,7 +8,12 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Classes\CurrencyExchanger;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Stripe\Checkout\Session;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
+use Stripe\Transfer;
 
 class BalanceController extends Controller
 {
@@ -20,15 +25,58 @@ class BalanceController extends Controller
         $user->balance *= $exchanger->rate($currency);
         $balance = $user->balance;
 
-        $today = Carbon::now();
-        $lastMonth = $dateCalculator->getDate($today);
-        $last_month_trx = Transaction::whereMonth("created_at", $lastMonth[0])
-                                    ->whereYear("created_at", $lastMonth[1])->sum("amount");
-
-        $this_month_trx = Transaction::whereMonth("created_at", $today->month)
-                                    ->whereYear("created_at", $today->year)->sum("amount");
-        dd(($this_month_trx / $last_month_trx) * 100 - 100);
-        $profit_percentage = number_format(($this_month_trx / $last_month_trx) * 100, 0);
-        return view("User.Balance.index", compact("balance", "unit", "user", "exchange_rate", "profit_percentage"));
+        return view("User.Balance.index", compact("balance", "unit", "user", "exchange_rate"));
     }
+
+    public function add() {
+        if(request()->method() === "POST") {
+            $amount = (int)request()->get("fund-amount");
+            $fee = 3;
+            $currency = (User::find(auth()->id()))->currency->currency;
+            $amount -= (($amount * $fee) / 100);
+            
+            Stripe::setApiKey(env("STRIPE_SECRET"));
+            try {
+
+                $session = Session::create([
+                    'payment_method_types' => ['card'],
+                    'line_items' => [[
+                        'price_data' => [
+                            'currency' => $currency,
+                            'product_data' => [
+                                'name' => 'Wallet Funds',
+                            ],
+                            'unit_amount' => ($amount * 100), // Amount in cents ($20.00)
+                        ],
+                        'quantity' => 1,
+                    ]],
+                    'mode' => 'payment',
+                    'success_url' => route('user.add-fund.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                    'cancel_url' => route('checkout-cancel'),
+                ]);
+
+                return redirect($session->url, 303);
+                
+            } catch(Exception $e) {
+                dd($e);
+            }
+        } else {
+            $unit = (User::find(auth()->id()))->currency->unit;
+            return view("User.Balance.add", compact("unit"));
+        }
+    }
+    public function success_fund_transfer(Request $request) {
+        Stripe::setApiKey(env("STRIPE_SECRET"));
+        $session = Session::retrieve($request->get("session_id"));
+        $amount = ((float)$session->amount_total) / 100;
+        
+        $user = User::find(auth()->id());
+        $currency = \App\Helpers\exchange_rate($user->currency->currency);
+        $usd_amount = $amount / $currency;
+        
+        $user->add($usd_amount);
+
+        return to_route("user.balance", ["user" => auth()->id()]);
+    }
+
 }

@@ -41,7 +41,7 @@ class StripeController extends Controller
                     [
                         'price_data' => [
                             'currency' => $currency->currency, // Change currency as needed
-                            'product_data' => [
+                                'product_data' => [
                                 'name' => 'Product Name',
                             ],
                             'unit_amount' => round($course->price * \App\Helpers\exchange_rate($currency->currency)) * 100, // Amount in cents
