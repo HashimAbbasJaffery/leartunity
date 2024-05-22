@@ -6,9 +6,10 @@
     <title>Leartunity</title>
     <link rel="stylesheet" href="{{ asset('/css/login.css') }}">
       <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <meta name="google-signin-client_id" content="820977587554-bg7nq86t8ugvisd6hp96c9htc231ko01.apps.googleusercontent.com">
 </head>
 <body>
     @if(session()->has("error"))
@@ -55,6 +56,7 @@
                     valie="{{ old('password') }}"
                 >
                 <input type="submit" value="Login" style="cursor:pointer;">
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
             </form>
             <a href="{{ route('forgot-password') }}"><p>Forgot Password?</p></a>
         </div>
@@ -65,6 +67,16 @@
             account_not_found.classList.add("animate__bounceOut");
             account_not_found.classList.remove("animate__bounceIn");
         }, 10000)
+    </script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        }
     </script>
 </body>
 </html>

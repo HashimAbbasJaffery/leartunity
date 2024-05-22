@@ -12,17 +12,17 @@
                 <form class="mr-2" action="{{ route("course.delete", [ 'course_slug_o' => $course->slug ?? 'nnull']) }}" method="POST" name="courseDelete" id="courseDelete">
                     {{ method_field("DELETE") }}
                     @csrf
-                    <button class="text-white px-2 rounded bg-red-500 hover:bg-red-600">Delete</button>
+                    <button class="text-white px-2 rounded bg-red-500 hover:bg-red-600">@lang("Delete")</button>
                 </form>
                 <form action="{{ route("course.edit", [ 'course_slug_o' => $course->slug ?? 'null' ]) }}" name="courseDelete" id="courseDelete">
                     @csrf
-                    <button class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600">Update</button>
+                    <button class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600">@lang("Update")</button>
                 </form>
             </div>
         @endif
         @if($is_purchased)
             <div class="course-pill bg-black text-white px-2 py-1 text-xs" style="position: absolute; right: 10px; top: 10px; border-radius: 10px;">
-                <p>Purchased</p>
+                <p>@lang("Purchased")</p>
             </div>
         @endif
         @if($course->thumbnail)
@@ -56,19 +56,19 @@
         </div>
         <div class="course-options mt-2">
             @if(!$is_purchased)
-                <a href="{{ route("checkout", ['id' => $course->stripe_id ?? 'null' ]) }}">enroll</a>
+                <a href="{{ route("checkout", ['id' => $course->stripe_id ?? 'null' ]) }}">@lang("enroll")</a>
             @else 
             
             @endif
-            <a href="{{ route('course', [ 'course' =>  $course->slug ?? 'null']) }}">see details</a>
+            <a href="{{ route('course', [ 'course' =>  $course->slug ?? 'null']) }}">@lang("see details")</a>
             
             @if($author === auth()->id())
-                <a href="{{ route('course.show', ["course_slug_o" => $course->slug ?? 'null']) }}">Manage</a>
+                <a href="{{ route('course.show', ["course_slug_o" => $course->slug ?? 'null']) }}">@lang("Manage")</a>
             @endif
         </div>
         <div class="course-price flex justify-between">
             <p>{{ round($course->price * $rate) }} {{ $currency->unit }}</p>
-            <p>Duration: {{ secondsToHours($course->contents_sum_duration) }}</p>
+            <p>@lang("Duration"): {{ secondsToHours($course->contents_sum_duration) }}</p>
         </div>
     </div>
 </div>

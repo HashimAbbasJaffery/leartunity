@@ -8,7 +8,7 @@
                         <i class="fa-solid fa-user" style="font-size:70px; opacity: 0.8;"></i>
                     </div>
                     <div class="card-detail text-center" style="width: 50%;">
-                        <h1 style="font-weight: bold; font-size: 21px;">Total Users</h1>
+                        <h1 style="font-weight: bold; font-size: 21px;">@lang("Total Users")</h1>
                         <p style="font-size: 25px;">{{ $counts["users"] }}</p>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                         <i class="fa-solid fa-list" style="font-size:70px; opacity: 0.8;"></i>
                     </div>
                     <div class="card-detail text-center" style="width: 50%;">
-                        <h1 style="font-weight: bold; font-size: 21px;">Total Categories</h1>
+                        <h1 style="font-weight: bold; font-size: 21px;">@lang("Total Categories")</h1>
                         <p style="font-size: 25px;">{{ $counts["categories"] }}</p>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                         <i class="fa-solid fa-person-chalkboard" style="font-size:70px; opacity: 0.8;"></i>
                     </div>
                     <div class="card-detail text-center" style="width: 50%;">
-                        <h1 style="font-weight: bold; font-size: 21px;">Total Courses</h1>
+                        <h1 style="font-weight: bold; font-size: 21px;">@lang("Total Courses")</h1>
                         <p style="font-size: 25px;">{{ $counts["courses"] }}</p>
                     </div>
                 </div>
@@ -35,11 +35,11 @@
         <section id="charts" class="container mx-auto mt-3 mb-3">
             <div class="main-charts flex justify-between">
                 <div class="chart" style="width: 28%;">
-                    <h1 class="font-bold">Most Categories Used</h1>
+                    <h1 class="font-bold">@lang("Most Categories Used")</h1>
                     <canvas class="pie-chart" id="pie-chart"></canvas>
                 </div>
                 <div class="chart" style="width: 68%;">
-                    <h1 class="font-bold">Most Purchased Courses</h1>
+                    <h1 class="font-bold">@lang("Most Purchased Courses")</h1>
                     <canvas class="pie-chart" id="pie-chart2"></canvas>
                 </div>
             </div>
@@ -55,7 +55,7 @@
             data: {
                 labels: @json($pie_chart["labels"]),
                 datasets: [{
-                label: 'Total Courses',
+                label: '@lang("Total Courses")',
                 data: @json($pie_chart["data"]),
                 borderWidth: 1
                 }]
@@ -76,7 +76,7 @@
             data: {
                 labels: @json($bar_graph["labels"]),
                 datasets: [{
-                label: 'Most Purchased courses',
+                label: '@lang("Most Purchased courses")',
                 data: @json($bar_graph["data"]),
                 borderWidth: 1
                 }]

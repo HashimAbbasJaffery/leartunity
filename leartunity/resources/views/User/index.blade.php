@@ -2,11 +2,11 @@
         <main>
             <section id="search-area" class="container mx-auto" style="position: relative;">
                 <select class="search-type highlighted p-1 mt-4" style="width: 10%;height: 35px;">
-                  <option value="categories">Categories</option>
-                  <option value="course">Course</option>
-                  <option value="teachers">Teachers</option>
+                  <option value="categories">@lang("Categories")</option>
+                  <option value="course">@lang("Course")</option>
+                  <option value="teachers">@lang("Teachers")</option>
                 </select>
-                <input type="text" placeholder="Search for anything!" style="border-radius: 0px; border: 1px solid #424242;" id="q" name="" />
+                <input type="text" placeholder="@lang('Search for anything!')" style="border-radius: 0px; border: 1px solid #424242;" id="q" name="" />
                 <div class="results none" style="overflow: auto;max-height: 300px;border-radius: 5px;border: 1px solid black;right: 0px;position: absolute; background: white; width: 89%; top: 115%; padding-left: 10px;">
                   <div class="teachers results py-2">
                     &nbsp;
@@ -17,13 +17,13 @@
             <div id="separator" class="container mx-auto mt-4" style="background: black; height: 2px;">&nbsp;</div>
             <section id="banner" style="background: {{ $quote->bg_color }};" class="text-center">
               <h1 id="sliders" oninput="contentChanged(this)" @can('admin') contenteditable="true" @endcan>
-                {{ $quote->quote }}
+                @lang($quote->quote)
               </h1>
             </section>
           </div>
 
           <section id="courses" class="container mx-auto">
-            <h1 class="text-center">top courses</h1>
+            <h1 class="text-center">@lang("top courses")</h1>
             <div class="tabs mt-5">
               <ul class="flex">
                 @foreach($categories as $category)
@@ -72,12 +72,10 @@
             </div>
             <div class="apply">
               <h1>
-                become 
-                <br>
-                teacher?
+                @lang("become teacher?") 
               </h1>
-              <p>Start teaching right away, and arrange live sessions</p>
-              <button>apply</button>
+              <p>@lang("Start teaching right away, and arrange live sessions")</p>
+              <button>@lang("apply")</button>
             </div>
           </section>
         </main>

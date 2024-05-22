@@ -14,7 +14,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Crop Image
+                    @lang('Crop Image')
                 </h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -29,8 +29,8 @@
             </div>
             <!-- Modal footer -->
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button type="button" id="modal-gateway" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
-                <button onclick="modal.hide()" data-modal-hide="default-modal" type="button" class="cancel py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+                <button type="button" id="modal-gateway" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">@lang('Crop')</button>
+                <button onclick="modal.hide()" data-modal-hide="default-modal" type="button" class="cancel py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">@lang('Decline')</button>
             </div>
         </div>
     </div>
@@ -74,18 +74,18 @@
                 <section id="follows" class="flex mb-3">
                     <form method="POST" id="follow">
                         @csrf 
-                        <p class="mr-2"><span id="follower-count">{{ $followersCount }}</span> Followers</p>
-                        <button style="background: var(--primary);" type="submit" class="follow-button highlighted px-2">{{ ($is_following ? 'Unfollow' : "Follow") }}</button>
+                        <p class="mr-2"><span id="follower-count">{{ $followersCount }}</span> @lang('Followers')</p>
+                        <button style="background: var(--primary);" type="submit" class="follow-button highlighted px-2">{{ ($is_following ? __("Unfollow") : __('Follow')) }}</button>
                     </form>
                 </section>
             @endauth
-            <h1 style="font-weight: 600;" class="mb-1">Achievments</h1>
+            <h1 style="font-weight: 600;" class="mb-1">@lang('Achievments')</h1>
             <section class="achievements flex">
                 @forelse($profile->user->achievements as $achievement)
                     @if($loop->index >= 3) @break @endif
                     <img src="/badges/{{ $achievement->achievement_image }}" class="mr-2" style="border-radius: 50px;" height="50" width="50"/>
                 @empty 
-                    <p style="font-size: 14px;">No badges have been awarded yet!</p>
+                    <p style="font-size: 14px;">@lang('No badges have been awarded yet!')</p>
                 @endforelse
             </section>
             
@@ -110,10 +110,10 @@
                 @endif
             </section> -->
             <section class="level mt-3">
-                <p>Watching: <span class="views">0</span></p>
+                <p>@lang('Watching'): <span class="views">0</span></p>
             </section>
             
-            <h1 style="font-weight: 600;" class="mb-1 mt-3">Streak</h1>
+            <h1 style="font-weight: 600;" class="mb-1 mt-3">@lang('Streak')</h1>
             <section style="border: 3px solid grey; width: 27px; height: 27px; font-size: 13px;"  class="rounded-full text-black flex items-center justify-center">
                 {{ $profile->user->streak }}
             </section>
@@ -138,10 +138,10 @@
             </div>
             
                 <div class="load-more_section">
-                    <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif" data-url="{{ $courses->nextPageUrl() }}">Load More</button>
+                    <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif" data-url="{{ $courses->nextPageUrl() }}">@lang('Load More')</button>
                 </div>
             @else
-                <div class="text-white p-2 rounded" style="width: 100%; background: var(--primary)">No Courses Found!</div>
+                <div class="text-white p-2 rounded" style="width: 100%; background: var(--primary)">@lang('No Courses Found!')</div>
             @endforelse
         </section>
     </div>
@@ -154,7 +154,7 @@
         const button = document.querySelector(".follow-button");
         const countElement = document.getElementById("follower-count");
         form.addEventListener("submit", function(e) {
-        button.textContent = "Processing...";
+        button.textContent = "@lang('Processing')...";
         button.setAttribute("disabled", "");
             e.preventDefault();
             axios.post("/user/{{ $profile?->id ?? "null" }}/follow")
@@ -163,9 +163,9 @@
                     const count = data.message;
                     const status = +data.type;
                     if(!status) {
-                        button.textContent = "Unfollow";
+                        button.textContent = "@lang('Unfollow')";
                     } else {
-                        button.textContent = "follow";
+                        button.textContent = "@lang('follow')";
                     }
                     countElement.textContent = count;
                     button.removeAttribute("disabled");

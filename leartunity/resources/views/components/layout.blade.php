@@ -58,7 +58,7 @@
     <div class="wrapper">
     @if($user && !$user?->hasVerifiedEmail())
     <div id="confirm-email" style="text-align: center;padding: 0px;background: red; color: white;position: fixed; bottom: 0px; z-index: 2; width: 100%; ">
-        <p style="padding: 5px;">We have sent you email at <b>{{ auth()?->user()?->email }}</b>, Please verify email before {{ \Carbon\Carbon::parse($user->created_at)->diffInDays(now()->subDays(60)) }} days. <a href="#" style="text-decoration: underline;">Send Again!</a> </p>
+        <p style="padding: 5px;">@lang("We have sent you email at") <b>{{ auth()?->user()?->email }}</b>, @lang("Please verify email before") {{ \Carbon\Carbon::parse($user->created_at)->diffInDays(now()->subDays(60)) }} @lang("days"). <a href="#" style="text-decoration: underline;">Send Again!</a> </p>
       </div>
     @endif
               
@@ -89,27 +89,27 @@
                     <!-- <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li> -->
                     @can("admin")
                       <li ><a href="/admin" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
-                        Admin
+                        @lang("Admin")
                       </a></li>
                     @endcan 
                     <!-- <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
                       LTS Store
                     </a></li> -->
                     @auth
-                      <li class="mx-3"><a href="{{ route("learn") }}" class="bold-600" style="font-size: 14px;">My Learning</a></li>
+                      <li class="mx-3"><a href="{{ route("learn") }}" class="bold-600" style="font-size: 14px;">@lang("My Learning")</a></li>
                     @endauth
                     <!-- <li class="mx-3"><a href="#" class="bold-600">Plans</a></li> -->
-                    <li class="mx-3"><a href="{{ route('courseList') }}" style="font-size: 14px;" class="bold-600">Courses</a></li>
+                    <li class="mx-3"><a href="{{ route('courseList') }}" style="font-size: 14px;" class="bold-600">@lang("courses")</a></li>
                     <!-- <li class="mx-3"><a href="#" class="bold-600">Privacy Policy</a></li> -->
                     @can("teach")
-                      <li class="mx-3"><a href="{{ route("instructor") }}" style="font-size: 14px;" class="bold-600">Instructor</a></li>
+                      <li class="mx-3"><a href="{{ route("instructor") }}" style="font-size: 14px;" class="bold-600">@lang("Instructor")</a></li>
                     @endcan
                     @auth
                       <li class="mx-3 highlighted"><a style="font-size: 14px;" href="/profile/{{ auth()->user()->id   }}" class="bold-600">{{ !auth()->user() ? "login" : auth()->user()->name }}</a></li>
                     @endauth
                     @guest
-                    <li class="mx-3"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">Register</a></li>
-                      <li class="mx-3 highlighted"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">Login</a></li>
+                    <li class="mx-3"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">@lang("Register")</a></li>
+                      <li class="mx-3 highlighted"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">@lang("Login")</a></li>
                     @endguest 
                     
                     @auth 
@@ -126,7 +126,7 @@
                           @forelse($notifications->get() as $notification)
                             <li style="font-size: 12px;">{{ $notification->data["message"] }}</li>
                           @empty 
-                            <li style="font-size: 12px;" class="px-1">No notifications? Maybe they're at a disco party! 🎉</li>
+                            <li style="font-size: 12px;" class="px-1">@lang("No notifications? Maybe they're at a disco party!") 🎉</li>
                           @endforelse
                         </ul>
                       </li>
@@ -147,42 +147,42 @@
         </header>
 
         {{ $slot }}
-
         <footer>
-          <div class="container mx-auto flex justify-around">
-          <div class="first-column column">
-            <h1>Learning Materials</h1>
-            <nav>
-              <ul>
-                <li>courses</li>
-                <li>books</li>
-                <li>live sessions</li>
-                <li>teachers</li>
-              </ul>
-            </nav>
-          </div>
-          <div class="second-column column">
-            <h1>Website Information</h1>
-            <nav>
-              <ul>
-                <li>privacy policy</li>
-                <li>contact us</li>
-                <li>feedbacks</li>
-              </ul>
-            </nav>
-          </div>
-          <div class="fourth-column column">
-            <h1>Newsletter</h1>
-            <div class="newsletter">
-              <input type="text" />
-              <button>Subscribe</button>
-            </div>
-          </div>
-          
-          <div class="third-column column">
-            <h1>Leartunity.</h1>
-          </div>
-        </div>
+  <div class="container mx-auto flex justify-around">
+    <div class="first-column column">
+      <h1>@lang('Learning Materials')</h1>
+      <nav>
+        <ul>
+          <li>@lang('Courses')</li>
+          <li>@lang('Books')</li>
+          <li>@lang('Live Sessions')</li>
+          <li>@lang('Teachers')</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="second-column column">
+      <h1>@lang('Website Information')</h1>
+      <nav>
+        <ul>
+          <li>@lang('Privacy Policy')</li>
+          <li>@lang('Contact Us')</li>
+          <li>@lang('Feedbacks')</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="fourth-column column">
+      <h1>@lang('Newsletter')</h1>
+      <div class="newsletter">
+        <input type="text" placeholder="@lang('Enter your email')" />
+        <button>@lang('Subscribe')</button>
+      </div>
+    </div>
+    <div class="third-column column">
+      <h1>Leartunity.</h1>
+    </div>
+  </div>
+</footer>
+
         </footer>
     </div>
     <script src="{{ asset("js/transition.js") }}"></script>

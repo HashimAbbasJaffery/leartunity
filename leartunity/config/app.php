@@ -1,5 +1,6 @@
 <?php
 
+use Devaslanphp\AutoTranslate\AutoTranslateProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -83,7 +84,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'zh_CN',
 
     /*
     |--------------------------------------------------------------------------
@@ -163,6 +164,7 @@ return [
         /*
          * Application Service Providers...
          */
+        
         App\Providers\WebGeneralSettingProvider::class,
         App\Providers\HelperServiceProvider::class,
         App\Providers\AppServiceProvider::class,
@@ -172,6 +174,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
+        AutoTranslateProvider::class
     ])->toArray(),
 
     /*

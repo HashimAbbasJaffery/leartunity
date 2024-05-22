@@ -8,29 +8,29 @@
     
     <div class="search flex justify-end mr-3">
         <form name="q" id="q">
-            <input type="text" value="{{ $keyword }}" name="keyword" id="search" style="border-radius: 0px; width: 20%; height: 25px; font-size: 14px; padding-left: 10px;" placeholder="Enter Category">
-            <input type="submit" value="Search" style="border-radius: 0px; width: 5%; font-size: 12px; height: 25px; padding: 0px;">
+            <input type="text" value="{{ $keyword }}" name="keyword" id="search" style="border-radius: 0px; width: 20%; height: 25px; font-size: 14px; padding-left: 10px;" placeholder="@lang('Enter Category')">
+            <input type="submit" value="@lang('Search')" style="border-radius: 0px; width: 5%; font-size: 12px; height: 25px; padding: 0px;">
         </form>
     </div>
-    <button type="button" data-context="1" class="create-new status text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 ml-2 mt-2">Create</button>
+    <button type="button" data-context="1" class="create-new status text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 ml-2 mt-2">@lang('Create')</button>
         
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    Category
+                    @lang("Category")
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Courses
+                    @lang("Courses")
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Since
+                    @lang("Since")
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Status
+                    @lang("Status")
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Action
+                    @lang("Action")
                 </th>
             </tr>
         </thead>
@@ -41,12 +41,12 @@
                 <td class="px-6 py-4">{{ $category->courses()->count() }}</td>
                 <td class="px-6 py-4">{{ $category->created_at?->diffForHumans() ?? "null" }}</td>
                 <td class="px-6 py-4">
-                    <button type="button" data-id="{{ $category->id }}" data-context="0" class="status-active-{{ $category->id }}  active {{ !$category->status ? 'none' : '' }} status text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Active</button>
-                    <button type="button" data-id="{{ $category->id }}" data-context="1" class="status-inactive-{{ $category->id }}  inactive {{ $category->status ? 'none' : '' }} status text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Inactive</button>
+                    <button type="button" data-id="{{ $category->id }}" data-context="0" class="status-active-{{ $category->id }}  active {{ !$category->status ? 'none' : '' }} status text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">@lang("Active")</button>
+                    <button type="button" data-id="{{ $category->id }}" data-context="1" class="status-inactive-{{ $category->id }}  inactive {{ $category->status ? 'none' : '' }} status text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">@lang("Inactive")</button>
                 </td>
                 <td class="px-6 py-4">
-                    <button type="button" data-id="{{ $category->id }}" data-context="1" class="update-category focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">Update</button>
-                    <button type="button" data-id="{{ $category->id }}" data-context="0" class="delete-category focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+                    <button type="button" data-id="{{ $category->id }}" data-context="1" class="update-category focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">@lang("Update")</button>
+                    <button type="button" data-id="{{ $category->id }}" data-context="0" class="delete-category focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">@lang("Delete")</button>
                 </td>
             </tr>
             @endforeach
@@ -98,13 +98,14 @@
             update.addEventListener("click", function() {
                 const id = update.dataset.id;
                 Swal.fire({
-  title: "Category Name",
+  title: "@lang('Category Name')",
   input: "text",
   inputAttributes: {
     autocapitalize: "off"
   },
   showCancelButton: true,
-  confirmButtonText: "Create",
+  confirmButtonText: "@lang('Create')",
+  cancelButtonText: '@lang('Cancel')',
   showLoaderOnConfirm: true,
   allowOutsideClick: () => !Swal.isLoading()
 }).then((result) => {

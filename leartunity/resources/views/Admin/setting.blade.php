@@ -2,12 +2,12 @@
     <main>
         <x-admin-navbar />
         <section class="container mx-auto">
-            <p>Main Color</p>
+            <p>@lang('Main Color')</p>
             <div class="choose-color flex items-center">
                 <form class="inline flex items-center" method="POST" action="{{ route('admin.swatch.create') }}">
                     @csrf
                     <input type="color" id="color-picker" name="hexColor" style="border: none; width: 90%;" value="{{ $setting->primary_color }}">
-                    <input type="submit" value="Add To Swatch" style="cursor: pointer;border-radius: 0px; width: 10%; font-size: 13px; height: 25px;">
+                    <input type="submit" value="@lang('Add To Swatch')" style="cursor: pointer;border-radius: 0px; width: 10%; font-size: 13px; height: 25px;">
                 </form>
             </div>
             <div class="swatches flex mt-3 flex-wrap" style="width: 40%;">
@@ -20,19 +20,19 @@
                 @endforeach
                 
             </div>
-            <input type="submit" class="block mb-4 change-color" value="Change Color" style="cursor: pointer;border-radius: 0px; width: 20%; font-size: 13px; height: 25px;">
+            <input type="submit" class="block mb-4 change-color" value="@lang('Change Color')" style="cursor: pointer;border-radius: 0px; width: 20%; font-size: 13px; height: 25px;">
         </section>
         <section class="choose-fonts container mx-auto">
-            <h1>Search Google Fonts</h1>
+            <h1>@lang('Search Google Fonts')</h1>
             <input type="text" class="rounded mb-4" name="search-fonts" id="search-fonts" style="border-radius: 0px; height: 25px;">
             <div class="none searched-result">
-                <h1>Font</h1>
+                <h1>@lang('Font')</h1>
                 <div class="font block px-2 py-3 mb-3 rounded flex items-center justify-between" style="font-size: 20px; border: 1px solid black; width: 100%;">
-                    <p class="preview-phrase">The quick brown fox jumps over the lazy dog.</p>
+                    <p class="preview-phrase">@lang('The quick brown fox jumps over the lazy dog.')</p>
                     <label for="font-1" class="flex">
                         <input type="radio" id="font-1" name="" class="none">
                         <!-- <button style="font-size: 13px;" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 mr-2">Add To Saved Fonts</button> -->
-                        <button style="font-size: 13px;" data-link="" data-name="" class="choose bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Click to Choose</button>
+                        <button style="font-size: 13px;" data-link="" data-name="" class="choose bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">@lang('Click to Choose')</button>
                     </label>
                 </div>
             </div>

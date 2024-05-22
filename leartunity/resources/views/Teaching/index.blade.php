@@ -19,7 +19,7 @@
                     @endforeach
             </div>
             <div class="load-more_section">
-                <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif" data-url="{{ $courses->nextPageUrl() }}">Load More</button>
+                <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif" data-url="{{ $courses->nextPageUrl() }}">@lang('Load More')</button>
             </div>
         </div>
     </section>

@@ -54,7 +54,7 @@
             </div>
             <div class="course-details">
               {!! $course->description !!}
-              <h1>Pre-Requisites</h1>
+              <h1>@lang("Pre-Requisites")</h1>
               {!! $course->pre_req !!}
               <div class="option">  
                 @php 
@@ -62,8 +62,8 @@
                   $is_purchased = auth()->user()?->purchases()->where("purchase_product_id", $course_stripe)->exists();
                 @endphp
                 @if(!$is_purchased)
-                  <a class="highlighted course-highlighted" href="{{ route("checkout", ['id' => $course->stripe_id ]) }}">Enroll</a>
-                  <button class="highlighted course-highlighted">Financial-Aid</button>
+                  <a class="highlighted course-highlighted" href="{{ route("checkout", ['id' => $course->stripe_id ]) }}">@lang("Enroll")</a>
+                  <button class="highlighted course-highlighted">@lang("Financial-Aid")</button>
                 @endif
               </div>
             </div>
@@ -82,14 +82,14 @@
               </div>
               <div class="instructor-details flex">
                 <h2>{{ $course->author->name }}</h2>
-                <p>Courses: {{ $course->author->courses->count() }}</p>
+                <p>@lang("Courses"): {{ $course->author->courses->count() }}</p>
               </div>
             </div>
             <div class="instructor-info">
               <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quam, iusto omnis. Id unde eligendi optio voluptatibus? Fuga repellendus hic fugiat iure, consequatur non, explicabo excepturi exercitationem repudiandae placeat quo harum?</p>
               <div class="option">  
-                <button class="highlighted course-highlighted">Contact Me</button>
-                <button class="highlighted course-highlighted">Profile</button>
+                <button class="highlighted course-highlighted">@lang("Contact Me")</button>
+                <button class="highlighted course-highlighted">@lang("Profile")</button>
               </div>
             </div>
           </section>
@@ -97,11 +97,11 @@
             @if($reviews)
           <section id="reviews" class="container mx-auto">
             <div class="review-header">
-              <h1>Reviews</h1>
+              <h1>@lang("Reviews")</h1>
               <div class="stars">
                 <div class="course-rating flex"> 
                   {!! calculateReviewStars($course?->reviews->stars ?? 0) !!}
-                  <p class="ml-1">({{ round($course?->reviews->stars, 1) ?? "Not rated yet" }})</p>
+                  <p class="ml-1">({{ round($course?->reviews->stars, 1) ?? __("Not rated yet") }})</p>
                 </div>
               </div>
             </div>
@@ -129,7 +129,7 @@
             {{ $reviews->links() }}
           </section>
           @else 
-            <p class="container mx-auto mb-2">No Reviews yet!</p>
+            <p class="container mx-auto mb-2">@lang("No Reviews yet")!</p>
           @endif
           @php 
             $eligibilty = eligibleForReview();
