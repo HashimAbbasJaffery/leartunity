@@ -21,6 +21,11 @@
             <img src="{{ asset('/img/login-img.png') }}" height="450"  class="login-cover" alt="">
         </div>
         <div class="login-form">
+            @if($user)
+                <div style="font-family: 'Montserrat', sans-serif; margin-bottom: 20px;" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                You are being referred by <span class="font-medium">{{ $user->name }}</span>
+                </div>
+            @endif
             <div class="logo text-center">
                 <h1>Leartunity.</h1>
                 <p>Let's learn together</p>
@@ -30,6 +35,7 @@
                 @error("name")
                     <p class="err-message">{{ $message }}</p>
                 @enderror
+                <input type="hidden" value="{{ $user?->id ?? "" }}" name="referral_id">
                 <input 
                     id="name" 
                     type="text" 

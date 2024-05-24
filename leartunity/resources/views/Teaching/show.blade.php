@@ -4,7 +4,7 @@
         <div class="progress-bar none" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="--value:5"></div>
     </div>
     <section id="add-section" class="container mx-auto mt-3">
-        <h1 style="font-size: 25px; font-weight: 500;">Add Section</h1>
+        <h1 style="font-size: 25px; font-weight: 500;">@lang("Add Section")</h1>
         <div class="course-sections mb-3">
             @foreach ($sections as $section)
                 <div class="section flex justify-between mb-3" id="{{ $section->id }}">
@@ -13,12 +13,12 @@
                         <form method="POST" name="deleteCourse" action="{{ route('section.delete', [ 'section' => $section ]) }}" class="flex" id="deleteCourse">
                             @csrf 
                             {{ method_field("DELETE") }}
-                            <p class="mr-2">{{ $section->contents->count() }} Videos</p>
+                            <p class="mr-2">{{ $section->contents->count() }} @lang("Videos")</p>
                             <p class="mr-2">|</p> 
-                            <button class="text-red-400 mr-2">Delete</button>
+                            <button class="text-red-400 mr-2">@lang("Delete")</button>
                             <p class="mr-2">|</p>
                         </form>
-                        <button class="text-blue-400 update-section" data-id="{{ $section->id }}">Update</button>
+                        <button class="text-blue-400 update-section" data-id="{{ $section->id }}">@lang("Update")</button>
                     </div>
                 </div>
                 <div class="none contents" id="content-{{ $section->id }}">
@@ -36,7 +36,7 @@
                                         </button>
                                     </form>
                                     <button class="content-update" id="content-{{ $content->id }}" class="bg-blue-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
-                                        Update
+                                        @lang("Update")
                                     </button>
                                 </div>
                             </a>
@@ -63,7 +63,7 @@
                 updateButton.addEventListener("click", function() {
                     const id = updateButton.dataset.id;
                     Swal.fire({
-                    title: "Enter Section name",
+                    title: "@lang('Enter Section name')",
                     input: "text",
                     inputAttributes: {
                         autocapitalize: "off"
@@ -187,10 +187,10 @@
                 createContent.addEventListener("click", function() {
                     const id = createContent.id.split("-")[1];
                     Swal.fire({
-                        title: "Add Content",
+                        title: "@lang('Add Content')",
                         html: '<input type="text" id="content-title" class="mb-2" style="width: 100%; border: 1px solid var(--primary); resize: none" ><textarea id="content-description" type="text" style="width: 100%; border: 1px solid var(--primary); height: 100px; resize: none" class="mb-2" /></textarea>' +
                             "<br>" +
-                            "<input id='content-video' style='border: none;width: 100%;' type='file' />",
+                            "<input id='content-video' style='border: none;width: 100%;' type='file' value='@lang('Choose Files')'/>",
                         inputAttributes: {
                             autocapitalize: "off"
                         },

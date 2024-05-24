@@ -37,6 +37,11 @@ class SessionController extends Controller
         return to_route("login");
     }
     public function register() {
-        return view("register");
+        $referral_id = request()->get("id");
+        $user = "";
+        if($referral_id)
+            $user = User::select("name", "id")->find($referral_id);
+    
+        return view("register", compact("user"));
     }
 }

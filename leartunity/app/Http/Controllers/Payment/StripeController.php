@@ -2,24 +2,12 @@
 
 namespace App\Http\Controllers\Payment;
 
-use App\Classes\Points;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Laravel\Cashier\Cashier;
-use Laravel\Cashier\Events\WebhookReceived;
-use Stripe\Account;
-use Stripe\BaseStripeClient;
-use Stripe\Charge;
 use Stripe\Price;
 use Stripe\Product;
 use Stripe\Stripe;
 use App\Models\User;
-use Stripe\Checkout\Session;
-use Stripe\StripeClient;
-use Stripe\Transfer;
-use Illuminate\Support\Str;
 
 
 class StripeController extends Controller
@@ -80,24 +68,11 @@ class StripeController extends Controller
         $course = Course::firstWhere("stripe_id", $id);
         $author = User::find($course->author->id);
         $price = $course->price;
-        $author->add($price);
         
-        Transfer::create([
-            'amount' => $course->price * 100,
-            'currency' => 'usd',
-            'destination' => $author->stripe_account_id,
-            'transfer_group' => 'ORDER_95',
-        ]);
-        
-        $author->transactions()->create([
-            "transaction_id" => "TX" . Str::upper(Str::random(4)) . time(),
-            "amount" => $price,
-            "transaction_type" => 1
-        ]);
-
         $purchase = $user->purchases()->create([
             "purchase_product_id" => $id  
         ]);
+        $author->add(User::find($user->id), $price);
         $purchase->course->tracker()->create([
             "tracking" => "[]",
             "user_id" => $user->id,

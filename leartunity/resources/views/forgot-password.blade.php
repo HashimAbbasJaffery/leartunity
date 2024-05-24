@@ -28,7 +28,7 @@
         <div class="login-form">
             <div class="logo text-center">
                 <h1>Leartunity.</h1>
-                <p>Let's learn together</p>
+                <p>@lang("Let's learn together")</p>
             </div>
             <form action="{{ route("forgot-password") }}" method="POST" style="display: flex; flex-direction: column;">
                 @csrf
@@ -40,10 +40,10 @@
                     type="email" 
                     class="@error('email') invalid @enderror" 
                     name="email" 
-                    placeholder="Email"
+                    placeholder="@lang('Email')"
                     value="{{ old('email') }}"
                 >
-                <input type="submit" value="Send Link" style="cursor:pointer;">
+                <input type="submit" value="@lang('Send Link')" style="cursor:pointer;">
             </form>
             <!-- <a href="#"><p>Forgot Password?</p></a> -->
         </div>

@@ -166,8 +166,8 @@
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">Hello, {{ $user->name }}</p>
-            <p>Please Confirm your email by pressing the button below to start learning and crack many secrets of the world :D</p>
+              <p style="margin: 0;">@lang("Hello"), {{ $user->name }}</p>
+            <p>@lang("Please Confirm your email by pressing the button below to start learning and crack many secrets of the world") :D</p>
             </td>
           </tr>
           <!-- end copy -->
@@ -181,7 +181,7 @@
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                          <a href="https://www.blogdesire.com" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Verify</a>
+                          <a href="https://www.blogdesire.com" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">@lang("Verify")</a>
                         </td>
                       </tr>
                     </table>
@@ -200,7 +200,7 @@
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-              <p style="margin: 0;">Cheers,<br> Leartunity.</p>
+              <p style="margin: 0;">@lang("Cheers"),<br> Leartunity.</p>
             </td>
           </tr>
           <!-- end copy -->

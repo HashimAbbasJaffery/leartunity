@@ -28,7 +28,7 @@
         <div class="login-form">
             <div class="logo text-center">
                 <h1>Leartunity.</h1>
-                <p>Let's learn together</p>
+                <p>@lang("Let's learn together")</p>
             </div>
             <form action="{{ route("reset-password") }}" method="POST" style="display: flex; flex-direction: column;">
                 @csrf
@@ -40,7 +40,7 @@
                     type="email" 
                     class="@error('email') invalid @enderror" 
                     name="email" 
-                    placeholder="email"
+                    placeholder="@lang('email')"
                     value="{{ old('email') }}"
                 >
                 @error("password")
@@ -51,7 +51,7 @@
                     type="password" 
                     class="@error('password') invalid @enderror" 
                     name="password" 
-                    placeholder="password"
+                    placeholder="@lang('password')"
                     value="{{ old('password') }}"
                 >
                 <input 
@@ -59,16 +59,16 @@
                     type="password" 
                     class="@error('password') invalid @enderror" 
                     name="password_confirmation" 
-                    placeholder="Confirm Password"
+                    placeholder="@lang('Confirm Password')"
                     value="{{ old('password_confirmation') }}"
-                >B
+                >
                 <input 
                     id="token" 
                     type="hidden"  
                     name="token" 
                     value="{{ $token }}"
                 >
-                <input type="submit" value="Reset Password" style="cursor:pointer;">
+                <input type="submit" value="@lang('Reset Password')" style="cursor:pointer;">
             </form>
             <!-- <a href="#"><p>Forgot Password?</p></a> -->
         </div>

@@ -10,11 +10,12 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
     <meta name="google-signin-client_id" content="820977587554-bg7nq86t8ugvisd6hp96c9htc231ko01.apps.googleusercontent.com">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 </head>
 <body>
     @if(session()->has("error"))
         <div class="account_not_found animate__animated animate__bounceIn">
-            <p>Your account not found in our database</p>
+            <p>@lang("Your account not found in our database")</p>
         </div>
     @endif
     @if(session()->has("success"))
@@ -26,10 +27,11 @@
         <div class="vector-art">
             <img src="{{ asset('/img/login-img.png') }}" height="450"  class="login-cover" alt="">
         </div>
+        
         <div class="login-form">
             <div class="logo text-center">
                 <h1>Leartunity.</h1>
-                <p>Let's learn together</p>
+                <p>@lang("Let's learn together")</p>
             </div>
             <form action="{{ route("login") }}" method="POST" style="display: flex; flex-direction: column;">
                 @csrf
@@ -42,7 +44,7 @@
                     type="email" 
                     class="@error('email') invalid @enderror" 
                     name="email" 
-                    placeholder="Type Email"
+                    placeholder="@lang('Type Email')"
                     value="{{ old('email') }}"
                 >
                 @error("password")
@@ -51,14 +53,14 @@
                 <input 
                     type="password" 
                     name="password" 
-                    placeholder="Password"
+                    placeholder="@lang('Password')"
                     class="@error('password') invalid @enderror"
                     valie="{{ old('password') }}"
                 >
-                <input type="submit" value="Login" style="cursor:pointer;">
+                <input type="submit" value="@lang('Login')" style="cursor:pointer;">
                 <div class="g-signin2" data-onsuccess="onSignIn"></div>
             </form>
-            <a href="{{ route('forgot-password') }}"><p>Forgot Password?</p></a>
+            <a href="{{ route('forgot-password') }}"><p>@lang("Forgot Password?")</p></a>
         </div>
     </div>
     <script>

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classes\StripeAccountCreate;
+use App\Events\NotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewUserRequest;
 use App\Models\User;
+use App\Notifications\MessageNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,19 +39,33 @@ class UserController extends Controller
 
         return 1;
     }
-    public function store(Request $request) {
+    public function store(Request $request, StripeAccountCreate $stripeAccount) {
+        $referral_id = null;
+        $referred_by = User::find($request->referral_id);
+        $referral_exists = $referred_by?->exists();
+        if($request->referral_id && $referral_exists) {
+            $referral_id = $request->referral_id;
+        }
         $validation = \Illuminate\Support\Facades\Validator::make($request->all(), [
             "name" => ["required"],
             "password" => [ "required", "confirmed" ],
             "email" => [ "required", "email", "unique:users,email" ]
         ]);
+        $stripe_account_id = $stripeAccount->create();
         $attributes = [
             ...$validation->validated(),
             'ip_address' => $request->ip(),
+            "referred_by" => $referral_id,
+            "stripe_account_id" => $stripe_account_id
         ];
         $user = User::create($attributes);
         event(new Registered($user));
+        $message = __("Ding, ding, ding! ") . $user->name . __(" is your new referral!");
 
+        if($referral_id) {
+            $referred_by->notify(new MessageNotification($message));
+            NotificationEvent::dispatch($referred_by->id, $message);
+        }
 
         return to_route("login");
     } 

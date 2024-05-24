@@ -4,28 +4,16 @@ use App\Classes\Points;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Middleware\Authenticate;
 use App\Interfaces\LinkedList;
-use App\Mail\EmailVerification;
-use App\Models\Course;
 use App\Models\Section;
-use Illuminate\Auth\Events\PasswordReset;
+use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CourseController;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\SearchController;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\User;
-use App\Classes\CurrencyExchanger;
 use Stripe\Stripe;
-use function App\Helpers\exchange_rate;
-use App\Models\Currency;
-use Stripe\Account;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,108 +28,8 @@ use Stripe\Account;
 
 // Testing Routes 
 Route::get("test", function () {
-    $stripe = Stripe::setApiKey(env("STRIPE_SECRET"));
 
-
-// User information (replace with actual values)
-$userData = [
-    'email' => 'user@example.com',
-    'country' => 'US',
-];
-
-try {
-    // Create the Stripe Connect account
-    $account = Account::create([
-        'country' => 'US',
-        'controller' => [
-          'losses' => ['payments' => 'application'],
-          'fees' => ['payer' => 'application'],
-          'stripe_dashboard' => ['type' => 'none'],
-          'requirement_collection' => 'application',
-        ],
-        'business_type' => 'company',
-        'capabilities' => [
-          'card_payments' => ['requested' => true],
-          'transfers' => ['requested' => true],
-        ],
-        'external_account' => 'btok_us',
-        'tos_acceptance' => [
-          'date' => 1547923073,
-          'ip' => '172.18.80.19',
-        ],
-      ]);
-
-    // Store the account ID for further use
-    $accountId = $account;
-    $account = Account::update($account->id, [
-        'business_profile' => [
-          'mcc' => '5045',
-          'url' => 'https://bestcookieco.com',
-        ],
-        'company' => [
-          'address' => [
-            'city' => 'Schenectady',
-            'line1' => '123 State St',
-            'postal_code' => '12345',
-            'state' => 'NY',
-          ],
-          'tax_id' => '000000000',
-          'name' => 'The Best Cookie Co',
-          'phone' => '8888675309',
-        ],
-    ]);
-    $person = Account::createPerson($accountId->id, [
-        'first_name' => 'Jenny',
-        'last_name' => 'Rosen',
-        'relationship' => [
-          'representative' => true,
-          'title' => 'CEO',
-        ],
-    ]);
-    Account::updatePerson($accountId->id, $person->id, [
-        
-    'address' => [
-        'city' => 'Schenectady',
-        'line1' => '123 State St',
-        'postal_code' => '12345',
-        'state' => 'NY',
-      ],
-      'dob' => [
-        'day' => 01,
-        'month' => 01,
-        'year' => 1902,
-      ],
-      'ssn_last_4' => '0000',
-      'phone' => '8888675309',
-      'email' => 'jenny@bestcookieco.com',
-      'relationship' => ['executive' => true],
-    ]);
-
-    $accountPerson = Account::updatePerson($accountId->id, $person->id, [
-        [
-            'first_name' => 'Kathleen',
-            'last_name' => 'Banks',
-            'email' => 'kathleen@bestcookieco.com',
-            'relationship' => [
-              'owner' => true,
-              'percent_ownership' => 80,
-            ],
-          ]
-        ]);
-    $testingAccount = Account::update($account->id, 
-    ['company' => ['owners_provided' => true]]);
-    
-    dd($accountId);
-    // ... (Handle successful account creation)
-
-} catch (\Exception $e) {
-    // Handle potential errors during account creation
-    dd($e->getMessage());
-
-    // ... (Handle error and provide feedback to the user)
-}
-
-    // $user = User::first();
+    $user = User::find(48);
     // dd(exchange_rate("INR"));
     // // $exchanger = new CurrencyExchanger();
     // dd($exchanger->rate("inr"));
@@ -228,7 +116,7 @@ Route::get("serviceTest", function(LinkedList $list) {
 });
 
 Route::group([ 'middleware' => ['web', "guest"] ], function() {
-    Route::get("login", [SessionController::class, "index"]);
+    Route::get("login", [SessionController::class, "index"])->name("login");
     Route::post("login", [SessionController::class, "create"])
         ->name("login");
     Route::get("register", [SessionController::class, "register"])->name("register");
@@ -254,5 +142,14 @@ Route::post("/preview", function() {
     return Str::markdown(request()->get("value"), [
         "html_input" => 'strip'
     ]);
+});
+
+Route::post("/changeLocale", function() {
+  $locale = request()->get("locale");
+  if (! in_array($locale, ['en', 'ur', 'sv', 'fa-IR', "sd"])) {
+      abort(400);
+  }
+  
+  session()->put("locale", $locale);
 });
 

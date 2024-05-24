@@ -3,28 +3,28 @@
         <form enctype="multipart/form-data" id="create-course" style="width: 100%; display: block;" class="py-2" method="POST" action="{{ route('course.create') }}">
             @csrf
             <label for="title" style="display: block; margin-bottom: 20px">
-                Course Title
+                @lang("Course Title")
                 @error("title")
                     <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
                 @enderror
                 <input type="text" class="rounded px-2 @error('title') has-error @enderror" value="{{ old("title") }}" id="title" name="title" style="width: 100%;"/>
             </label>
             <label for="description" style="display: block; margin-bottom: 20px">
-                Description - It supports Github markdown
+                @lang("Description - It supports Github markdown")
                 @error("description")
                     <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
                 @enderror
                 <textarea id="description" name="description" class="@error('description') has-error @enderror rounded px-2" style="height: 300px;outline: none;resize: none;width: 100%; border: 1px solid var(--primary)">{{ old("description") }}</textarea>
             </label>
             <label for="pre_req" style="display: block; margin-bottom: 20px">
-                Course Pre Requisites - It supports Github markdown
+                @lang("Course Pre Requisites - It supports Github markdown")
                 @error("pre_req")
                     <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
                 @enderror
                 <textarea id="description" name="pre_req" class="rounded px-2" style="height: 300px;outline: none;resize: none;width: 100%; border: 1px solid var(--primary)">{{ old("pre_req") }}</textarea>
             </label>
             <label for="price" style="display: block; margin-bottom: 20px">
-                Price
+                @lang("Price")
                 @error("price")
                     <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
                 @enderror
@@ -34,7 +34,7 @@
                 </div>
             </label>
             <label for="thumbnail" style="display: block; margin-bottom: 20px">
-                <span class="highlighted px-3 py-2">Upload Thumbnail</span>
+                <span class="highlighted px-3 py-2">@lang("Upload Thumbnail")</span>
                 @error("thumbnail")
                     <p class="text-red-600 mt-2" style="font-size: 13px;">{{ $message }}</p>
                 @enderror
@@ -55,7 +55,7 @@
             </div>
             <input type="text" name="base64" id="base64">
             <input type="hidden" name="categories" id="categories"/>
-            <button type="submut" class="highlighted px-3 preview mb-1" data-for="description">Create</button>
+            <button type="submut" class="highlighted px-3 preview mb-1" data-for="description">@lang("Create")</button>
         </form>
     </section>
     @push("scripts")

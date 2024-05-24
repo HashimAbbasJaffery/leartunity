@@ -12,10 +12,10 @@ return [
      */
     'locales' => [
         'en',
+        'fa-IR',
         'sv',
         'ur',
-        'zh_CN',
-        'ar'
+        'sd'
     ],
 
     /*

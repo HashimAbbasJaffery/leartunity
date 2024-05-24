@@ -28,7 +28,9 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'name',
         'email',
         'password',
-        'ip_address'
+        'ip_address',
+        "referred_by",
+        "stripe_account_id"
     ];
 
     /**
@@ -77,6 +79,12 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     }
     public function certificates() {
         return $this->hasMany(Certificate::class, "certificate_id")->whereStatus(1);
+    }
+    public function referrals() {
+        return $this->hasMany(User::class, "referred_by");
+    }
+    public function referrer() {
+        return $this->belongsTo(User::class, "referred_by");
     }
     protected $attributes = [
         "status" => 1,

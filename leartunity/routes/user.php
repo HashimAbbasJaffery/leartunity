@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\User\BalanceController;
 use App\Http\Controllers\User\FollowCOntroller;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +20,8 @@ Route::middleware("auth")->group(function() {
     Route::post("user/add-funds", [BalanceController::class, "add"])->name("add.balance");
 
     Route::get("user/add/success", [BalanceController::class, "success_fund_transfer"])->name("user.add-fund.success");
+
+    // Referral's routes
+
+    Route::get("referrals", [ReferralController::class, "index"])->name("user.refer");
 });

@@ -81,6 +81,13 @@
             <nav>
               
               <ul style="position: relative; height: 36px;">
+                    <select style="padding-left: 10px; width: 150px;" class="mr-3" onchange="changeLocale(this)">
+                      <option value="en" @selected(app()->getLocale() === "en")>English</option>
+                      <option value="sv" @selected(app()->getLocale() === "sv")>Swedish</option>
+                      <option value="ur" @selected(app()->getLocale() === "ur")>Urdu</option>
+                      <option value="fa-IR" @selected(app()->getLocale() === "fa-IR")>Farsi</option>
+                      <option value="sd" @selected(app()->getLocale() === "sd")>Sindhi</option>
+                    </select>
                     <select style="padding-left: 10px;" onchange="changeCurrency(this)">
                       @foreach($currencies as $currency)
                         <option @selected($currency->id == auth()->user()->currency_id) value="{{ $currency->id }}">{{ $currency->currency }}</option>
@@ -104,6 +111,7 @@
                     @can("teach")
                       <li class="mx-3"><a href="{{ route("instructor") }}" style="font-size: 14px;" class="bold-600">@lang("Instructor")</a></li>
                     @endcan
+                    <li class="mx-3"><a href="{{ route("instructor") }}" style="font-size: 14px;" class="bold-600">@lang("referrals")</a></li>
                     @auth
                       <li class="mx-3 highlighted"><a style="font-size: 14px;" href="/profile/{{ auth()->user()->id   }}" class="bold-600">{{ !auth()->user() ? "login" : auth()->user()->name }}</a></li>
                     @endauth
@@ -187,6 +195,19 @@
     </div>
     <script src="{{ asset("js/transition.js") }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      const changeLocale = el => {
+        axios.post("/changeLocale", {
+          locale: el.value
+        })
+          .then(res => {
+            location.reload();
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    </script>
     <script>
       const changeCurrency = element => {
         axios.post("/user/{{ auth()->id() }}/changeCurrency", {
