@@ -86,6 +86,9 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function referrer() {
         return $this->belongsTo(User::class, "referred_by");
     }
+    public function application() {
+        return $this->hasOne(Application::class, "user_id");
+    }
     protected $attributes = [
         "status" => 1,
         "reason" => "null"

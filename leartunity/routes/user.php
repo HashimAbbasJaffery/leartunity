@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\User\ApplicationController;
 use App\Http\Controllers\User\BalanceController;
 use App\Http\Controllers\User\FollowCOntroller;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,12 @@ Route::middleware("auth")->group(function() {
     // Referral's routes
 
     Route::get("referrals", [ReferralController::class, "index"])->name("user.refer");
+
+
+    // User Application Routes
+
+    // Route::get("teacher/learn-more", [ApplicationController::class, "index"])->name("apply.learn-more");
+    Route::view("teacher/learn-more", "User.Application.learn-more")->name("apply.learn-more");
+    Route::get("apply", [ApplicationController::class, "index"])->name("apply");
+    Route::post("apply", [ApplicationController::class, "store"])->name("apply");
 });

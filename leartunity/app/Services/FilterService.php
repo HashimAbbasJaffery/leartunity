@@ -19,9 +19,11 @@ class FilterService {
         if(request()->price_range) {
             $parameters["price_range"] = request()->price_range;
         }
-        $parameters["price_range"][0] /= \App\Helpers\exchange_rate($user_currency->currency);
-        $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
-        
+
+        if(isset($parameters["price_range"])) {
+            $parameters["price_range"][0] /= \App\Helpers\exchange_rate($user_currency->currency);
+            $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
+        }
 
         // Search Filter 
         if(request()->search) {

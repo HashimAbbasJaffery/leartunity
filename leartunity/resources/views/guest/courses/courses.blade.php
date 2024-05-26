@@ -19,16 +19,16 @@
                     <div class="price-range filter mt-3">
                         <h1>@lang("Price Range")</h1>
                         @php
-                            $user = \App\Models\User::find(auth()->id())->currency;
+                            $user = \App\Models\User::find(auth()->id())?->currency;
                         @endphp 
                         <div class="range-inputs mt-4"> 
                             <label>
-                                @lang("From") ({{ $user->unit }})
+                                @lang("From") ({{ $user?->unit ?? "$"}})
                                 <br />
                                 <input type="number" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                             </label>
                             <label>
-                                @lang("To") ({{ $user->unit }})
+                                @lang("To") ({{ $user?->unit ?? "$" }})
                                 <br />
                                 <input type="number" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                             </label>

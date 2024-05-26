@@ -88,12 +88,14 @@
                       <option value="fa-IR" @selected(app()->getLocale() === "fa-IR")>Farsi</option>
                       <option value="sd" @selected(app()->getLocale() === "sd")>Sindhi</option>
                     </select>
-                    <select style="padding-left: 10px;" onchange="changeCurrency(this)">
-                      @foreach($currencies as $currency)
-                        <option @selected($currency->id == auth()->user()->currency_id) value="{{ $currency->id }}">{{ $currency->currency }}</option>
-                      @endforeach
-                    </select>
-                    <!-- <li class="mx-3"><a href="#" class="bold-600">Contact Us</a></li> -->
+                    @auth
+                      <select style="padding-left: 10px;" onchange="changeCurrency(this)">
+                        @foreach($currencies as $currency)
+                          <option @selected($currency?->id == auth()->user()?->currency_id) value="{{ $currency?->id }}">{{ $currency?->currency }}</option>
+                        @endforeach
+                      </select>
+                    @endauth
+                    <!--relse<liendlass="mx-3"><a href="#" class="bold-600">Contact Us</a></li> -->
                     @can("admin")
                       <li ><a href="/admin" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
                         @lang("Admin")
@@ -111,7 +113,11 @@
                     @can("teach")
                       <li class="mx-3"><a href="{{ route("instructor") }}" style="font-size: 14px;" class="bold-600">@lang("Instructor")</a></li>
                     @endcan
-                    <li class="mx-3"><a href="{{ route("instructor") }}" style="font-size: 14px;" class="bold-600">@lang("referrals")</a></li>
+
+                    @auth
+                      <li class="mx-3"><a href="{{ route("instructor") }}" style="font-size: 14px;" class="bold-600">@lang("referrals")</a></li>
+                    @endauth
+
                     @auth
                       <li class="mx-3 highlighted"><a style="font-size: 14px;" href="/profile/{{ auth()->user()->id   }}" class="bold-600">{{ !auth()->user() ? "login" : auth()->user()->name }}</a></li>
                     @endauth

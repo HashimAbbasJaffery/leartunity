@@ -20,6 +20,12 @@ trait Balance {
             $referrer->balance += $referral_share;
             $referrer->save();
            
+            $trx = new Transaction();
+            $trx->amount = $referral_share;
+            $trx->transaction_type = 1;
+            $trx->transaction_id = "TX" . Str::upper(Str::random(4)) . time();
+            $trx->user_id = $referrer->id;
+            $trx->save();
             Transfer::create([
                 'amount' => $referral_share * 100,
                 'currency' => 'usd',

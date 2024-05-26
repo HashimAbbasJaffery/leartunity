@@ -75,7 +75,10 @@
                 @lang("become teacher?") 
               </h1>
               <p>@lang("Start teaching right away, and arrange live sessions")</p>
-              <button>@lang("apply")</button>
+              <div class="flex">
+                <button onclick="window.location.href = '{{ route('apply') }}'" class="mr-1">@lang("apply")</button>
+                <button onclick="window.location.href = '{{ route('apply.learn-more') }}'" style="background: transparent; color: black; border: 1px solid var(--primary)">@lang("Learn More")</button>
+              </div>
             </div>
           </section>
         </main>

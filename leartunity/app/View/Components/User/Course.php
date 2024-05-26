@@ -45,8 +45,13 @@ class Course extends Component
         if($purchases) {
             $is_purchased = true;
         }
-        $currency = Currency::find(auth()->user()->currency_id);
-        $rate = exchange_rate($currency->currency);
+        $currency = Currency::find(auth()->user()?->currency_id);
+
+        if($currency) {
+            $rate = exchange_rate($currency->currency);
+        } else {
+            $rate = 1;
+        }
         return view('components.user.course', compact("is_purchased", "currency", "rate"));
     }
 }
