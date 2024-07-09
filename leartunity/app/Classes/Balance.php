@@ -13,7 +13,7 @@ trait Balance {
         $referrer = $user->referrer;
         $referral_share = 0;
         
-        if($purchases_count === 1 && $referrer->exists()) {
+        if($purchases_count === 1 && $referrer?->exists()) {
             $amount--;
             $referral_share++;
 

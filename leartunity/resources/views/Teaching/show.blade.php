@@ -42,12 +42,20 @@
                             </a>
                         @endforeach
                     </div>
-                    <a href="#" id="contents-{{ $section->id }}"
-                        class="create-content create-course rounded text-center py-2"
-                        style="width:100%; display: inline-block">
-                        <i class="fa-solid fa-plus p-3 rounded-full"
-                            style="background: var(--primary); color: white;"></i>
-                    </a>
+                    <div class="options" style="display: flex;">
+                        <a href="#" id="contents-{{ $section->id }}"
+                            class="create-content create-course rounded text-center py-2"
+                            style="width:100%; display: inline-block">
+                            <i class="fa-solid fa-plus p-3 rounded-full"
+                                style="background: var(--primary); color: white;"></i>
+                        </a>
+                        <a href="#" id="contents-{{ $section->id }}"
+                            style="width: 10%; margin-left: 1%; display: flex; align-items: center; justify-content: center; border-color: #9370DB; color: #9370DB;"
+                            class="create-content create-course rounded text-center py-2"
+                            style="width:100%; display: inline-block">
+                            Add Quiz
+                        </a>
+                    </div>
                 </div>
             @endforeach
         </div>

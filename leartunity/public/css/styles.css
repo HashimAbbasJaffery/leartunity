@@ -584,3 +584,8 @@ section.intro-video {
     margin-bottom: 10px;
     cursor: pointer;
 }
+.hide-extra {
+}
+.hide-extra {
+    background: green;
+}

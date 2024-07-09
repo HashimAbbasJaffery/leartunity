@@ -136,7 +136,7 @@ Route::post("get/courses/{status?}", [CourseController::class, "getData"])->name
 
 Route::get("ajaxCourses", [CourseController::class, "ajax"]);
 
-Route::get("/profile/{id}", [ProfileController::class, "index"]);
+Route::get("/profile/{id}", [ProfileController::class, "index"])->name("user.profile");
 
 Route::post("/preview", function() {
     return Str::markdown(request()->get("value"), [

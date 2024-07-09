@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\Instructor\CourseController;
 use App\Http\Controllers\Instructor\SectionController;
+use App\Http\Controllers\QuizController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", [CourseController::class, "index"])->name("instructor");
@@ -14,6 +15,7 @@ Route::put("/section/{section}/update", [SectionController::class, "update"])->n
 Route::post("/content/{section}/add", [ContentController::class, "store"])->name("content.store");
 Route::delete("/content/{content}/delete", [ContentController::class, "destroy"])->name("content.delete");
 Route::post("/content/{content}/update", [ContentController::class, "update"]);
+Route::get("/content/{section}/quiz/add", [QuizController::class, "create"])->name("quiz.get");
 
 Route::get("/course/create", [CourseController::class, "create"]);
 Route::put("/course/{course_o}/status", [CourseController::class, "changeStatus"])->name("course.changeStatus");

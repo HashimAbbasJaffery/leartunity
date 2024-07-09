@@ -151,7 +151,7 @@
                       </a></li>
                     @endauth
                     @auth
-                      <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
+                      <li ><a href="{{ route('user.balance', [ "user" => auth()->user() ]) }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
                         {{ floor($user->balance * App\Helpers\exchange_rate($user->currency->currency)) }} {{ $user->currency->unit }}
                       </a></li>
                     @endauth

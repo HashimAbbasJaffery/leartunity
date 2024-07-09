@@ -48,14 +48,16 @@
               </div>
             </div>
           </section>
-          <section id="course-content" class="container mx-auto">
+          <section id="course-content" class="container mx-auto" style="position: relative;">
             <div class="course-header">
               <p>{{ $course->currency }}{{ $course->price }}</p>
             </div>
             <div class="course-details">
-              {!! $course->description !!}
-              <h1>@lang("Pre-Requisites")</h1>
-              {!! $course->pre_req !!}
+              <div class="course-desc">
+                {!! str()->limit($course->description, 1500) !!}
+                <h1>@lang("Pre-Requisites")</h1>
+                {!! str()->limit($course->pre_req, 1500) !!}
+              </div>
               <div class="option">  
                 @php 
                   $course_stripe = $course->stripe_id;
@@ -66,8 +68,18 @@
                   <button class="highlighted course-highlighted">@lang("Financial-Aid")</button>
                 @endif
               </div>
+              @if(strlen($course->description) > 1500 || strlen($course->pre_req) > 1500)
+                                <div class="hide-extra" style="display: flex; align-items:center; justify-content: center;position: absolute; width: 100%; bottom: 0px; background: rgb(2,0,36);
+                  background: -moz-linear-gradient(180deg, rgba(2,0,36,0) 0%, rgba(249,249,249,1) 35%, rgba(255,255,255,1) 100%);
+                  background: -webkit-linear-gradient(180deg, rgba(2,0,36,0) 0%, rgba(249,249,249,1) 35%, rgba(255,255,255,1) 100%);
+                  background: linear-gradient(180deg, rgba(2,0,36,0) 0%, rgba(249,249,249,1) 35%, rgba(255,255,255,1) 100%);
+                  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#020024',endColorstr='#ffffff',GradientType=1); height: 200px; width: 105%; right: 5px">
+                    <p class="read-more-description" style="background: var(--primary); color: white; padding: 5px; border-radius: 4px; cursor: pointer;">Show More...</p>
+                  </div>
+              @endif
             </div>
           </section>
+          
           <section id="instructor" class="course-instruction container mx-auto">
             <div class="course-instructor course-section mt-4 flex">
               <div class="instructor-img">
@@ -88,8 +100,8 @@
             <div class="instructor-info">
               <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quam, iusto omnis. Id unde eligendi optio voluptatibus? Fuga repellendus hic fugiat iure, consequatur non, explicabo excepturi exercitationem repudiandae placeat quo harum?</p>
               <div class="option">  
-                <button class="highlighted course-highlighted">@lang("Contact Me")</button>
-                <button class="highlighted course-highlighted">@lang("Profile")</button>
+                <a class="highlighted course-highlighted">@lang("Contact Me")</a>
+                <a href="{{ route("user.profile", ["id" => $course->author->id]) }}" style="background: transparent; color: black; border: 1px solid black;" class="highlighted course-highlighted">@lang("Profile")</a>
               </div>
             </div>
           </section>
@@ -101,6 +113,7 @@
               <div class="stars">
                 <div class="course-rating flex"> 
                   {!! calculateReviewStars($course?->reviews->stars ?? 0) !!}
+                  
                   <p class="ml-1">({{ round($course?->reviews->stars, 1) ?? __("Not rated yet") }})</p>
                 </div>
               </div>
@@ -165,6 +178,15 @@
           <script src="{{ asset('js/feedback.js') }}"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
           <script src="{{ asset("js/changeVideoSource.js") }}"></script>
+          <script>
+            const readMore = document.querySelector(".read-more-description");
+            readMore.addEventListener("click", function() {
+              const courseDesc = document.querySelector(".course-desc");
+              courseDesc.innerHTML = `{!! $course->description !!} <h1>Pre Requisites</h1> {!! $course->pre_req !!}`;
+              const hideExtra = document.querySelector(".hide-extra");
+              hideExtra.style.display = "none"
+            })
+          </script>
           <script>
             const player = new Plyr("#player");
             player.source = {

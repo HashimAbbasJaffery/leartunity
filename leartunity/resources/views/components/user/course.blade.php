@@ -31,21 +31,23 @@
             <img src="https://placehold.co/600x400" height="600" width="400" alt="">
         @endif 
     </div>
-    <div class="course-instructor mt-4 flex">
-        <div class="instructor-img">
-            @if($course->author?->profile)
-                <img src="/profile/{{ $course->author->profile->profile_pic }}" height="45" width="45"  class="rounded-full" alt="">
-            @else 
-                <img src="https://placehold.co/45x45" height="45" width="45"  class="rounded-full" alt="">
-            @endif 
-        </div>
-        <div class="instructor-details flex">
-            <h2>{{ $course->author?->name }}</h2>
-            <div class="course-rating flex">
-                {!! calculateReviewStars($course->reviews?->stars) !!}
+    <a href="{{ route("user.profile", ["id" => $course->author?->id ?? 1]) }}">
+        <div class="course-instructor mt-4 flex">
+            <div class="instructor-img">
+                @if($course->author?->profile)
+                    <img src="/profile/{{ $course->author->profile->profile_pic }}" height="45" width="45"  class="rounded-full" alt="">
+                @else 
+                    <img src="https://placehold.co/45x45" height="45" width="45"  class="rounded-full" alt="">
+                @endif 
+            </div>
+            <div class="instructor-details flex">
+                <h2>{{ $course->author?->name }}</h2>
+                <div class="course-rating flex">
+                    {!! calculateReviewStars($course->reviews?->stars) !!}
+                </div>
             </div>
         </div>
-    </div>
+    </a>
 
     <div class="course-detail mt-4">
         <div class="course-description">
