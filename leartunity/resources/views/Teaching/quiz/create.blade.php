@@ -2,6 +2,10 @@
     <div class="container mx-auto mt-8">
         <form method="POST" name="addQuestion" id="addQuestion" style="display: inline-block;">
             @csrf
+            <div class="title m-4">
+                <p>Quiz Title</p>
+                <input type="text" name="title" id="title">
+            </div>
             <div class="questions" id="questions"></div>
 
             <div class="add-question flex items-center" x-data="{ name: 'Add Question', isOpen: false }" >

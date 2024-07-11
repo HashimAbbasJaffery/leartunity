@@ -27,7 +27,12 @@
                             <a href="#" style="margin-bottom: 5px" class="content flex justify-between block">
                                 <p style="text-decoration: underline; margin-bottom: 8px;">{{ $content->title }}</p>
                                 <div class="right-side-info flex items-center">
-                                    <p class="mr-2">{{ secondToMinutes($content->duration) }}</p>
+                                    @if($content->content_type == 1)
+                                        <p class="mr-2">{{ secondToMinutes($content->duration) }}</p>
+                                    @else
+                                        <div class="mr-2">
+                                        <p><span class="mr-1">{{ count((array)json_decode($content->content)) - 1 }}</span>Question(s)</p></div>
+                                    @endif  
                                     <form method="POST" action="{{ route('content.delete', [ 'content' => $content->id ]) }}">
                                         @csrf
                                         {{ method_field("DELETE") }}
