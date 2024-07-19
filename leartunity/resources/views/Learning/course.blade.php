@@ -37,33 +37,37 @@
                         </div>
                     </div>
                     <div class="questions">
+                        <form method="POST" name="submitQuiz" style="display: inline-block;" id="submitQuiz" action="{{ route("quiz.submit", [ 'content' => $current_content ]) }}">
+                        @csrf    
                         @foreach($questions as $key => $question)   
-                            @if($key == "min-score") @break @endif
+                                @if($key == "min-score") @break @endif
 
-                            <h1 class="text-xl font-bold mb-2">Question No. {{ $loop->iteration }}</h1>
+                                <h1 class="text-xl font-bold mb-2">Question No. {{ $loop->iteration }}</h1>
 
-                            @if($question->isBoolean)
-                                <div class="question mb-8">
-                                    <p>{{ $question->question }}</p>
-                                    <ul class="mt-3">
-                                        <li><input class="mr-2" type="radio" name="{{ $key }}">True</li>
-                                        <li><input class="mr-2" type="radio" name="{{ $key }}">False</li>
-                                    </ul>
-                                </div>
-                            @else 
+                                @if($question->isBoolean)
+                                    <div class="question mb-8">
+                                        <p>{{ $question->question }}</p>
+                                        <ul class="mt-3">
+                                            <li><input class="mr-2" type="radio" name="{{ $key }}" value="0">True</li>
+                                            <li><input class="mr-2" type="radio" name="{{ $key }}" value="1">False</li>
+                                        </ul>
+                                    </div>
+                                @else 
 
-                                <div class="question mb-8">
-                                    
-                                    <p>{{ $question->question }} {{ (array_count_values($question->keys)["on"] > 1) ? "Select All that apply" : ""}}</p>
-                                    <ul class="mt-3">
-                                        @foreach($question->options as $option)
-                                            <li><input class="mr-2" type="{{ (array_count_values($question->keys)["on"] > 1) ? 'checkbox' : 'radio' }}" name="{{ $key }}">{{ $option }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif 
-                        @endforeach 
-                        <input type="submit" value="Submit" style="border-radius: 0px; width: 20%; cursor: pointer;">
+                                    <div class="question mb-8">
+                                        
+                                        <p>{{ $question->question }} {{ (array_count_values($question->keys)["on"] > 1) ? "Select All that apply" : ""}}</p>
+                                        <ul class="mt-3">
+                                            @foreach($question->options as $option)
+                                                
+                                                <li><input class="mr-2" value="{{ $loop->index }}" type="{{ App\Helpers\is_radio_option(array_count_values($question->keys)["on"], 'radio', 'checkbox') }}" name="{{ $key . App\Helpers\is_radio_option(array_count_values($question->keys)["on"], '', "_$loop->index")}}">{{ $option }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif 
+                                @endforeach 
+                                <input type="submit" value="Submit" style="border-radius: 0px; width: 20%; cursor: pointer;">
+                            </form>
                         
                     </div>
                 @endif

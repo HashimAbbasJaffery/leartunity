@@ -17,3 +17,11 @@ function exchange_rate($ratesOf = "EUR") {
         return cache()->get($ratesOf);
     }
 }
+
+function is_radio_option($question, $yes, $no) {
+    if($question > 1) {
+        return $no;
+    } else {
+        return $yes;
+    }
+}
