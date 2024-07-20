@@ -32,12 +32,23 @@
                         @php  
                             $questions = json_decode($current_content->content);
                         @endphp 
+                        @if(session()->has("quiz") && (session()->get("quiz")[0] === 1))
+                            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                                <span class="font-medium">That's fantastic! Your score of {{ session()->get("quiz")[1] }}% on the quiz shows you've mastered the material. 
+                            </div>
+                        @elseif(session()->has("quiz") && (session()->get("quiz")[0] !== 1))
+                            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                <span class="font-medium">{{ session()->get("quiz")[1] }}% isn't the end! Keep practicing, you've got this!
+                            </div>
+                        @endif 
+                        @unless(session()->has("quiz") && (session()->get("quiz")[0] === 1))
                         <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                             <span class="font-medium">You need to score {{ ((array)$questions)["min-score"] }}% in order to be eligible for certification...
                         </div>
+                        @endunless
                     </div>
                     <div class="questions">
-                        <form method="POST" name="submitQuiz" style="display: inline-block;" id="submitQuiz" action="{{ route("quiz.submit", [ 'content' => $current_content ]) }}">
+                        <form method="POST"  name="submitQuiz" style="display: inline-block;" id="submitQuiz" action="{{ route("quiz.submit", [ 'content' => $current_content ]) }}">
                         @csrf    
                         @foreach($questions as $key => $question)   
                                 @if($key == "min-score") @break @endif
@@ -134,6 +145,7 @@
     </section>
     @push("scripts")
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    @if(session()->has("quiz") && (session()->get("quiz")[0] === 1))
     <script>
         const count = 200,
   defaults = {
@@ -174,6 +186,9 @@ function fire(particleRatio, opts) {
         spread: 120,
         startVelocity: 45,
         });
+    </script>
+    @endif
+    <script>
     </script>
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>

@@ -40,7 +40,6 @@ class QuizController extends Controller
     public function submit(Request $request, Content $content) {
         
         $quiz = (new Quiz)->evaluate($content, $request->all());
-        
-        return $quiz;
+        return back()->with("quiz", $quiz);
     }
 }
