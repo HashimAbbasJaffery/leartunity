@@ -38,32 +38,9 @@ class QuizController extends Controller
        
     }
     public function submit(Request $request, Content $content) {
-        // dd(json_decode($content->content));
-
-        $correct = 0;
-        $questions = json_decode($content->content);
-        $answers = $request->all();
-        foreach($answers as $key => $answer) {
-            if($key === "_token" || $key === "min-score") continue;
-            $key_array = explode("_", $key);
-            $key = $key_array[0];
-            $keys = ((array)$questions)[$key]?->keys ?? false;
-
-
-            if(((array)$questions)[$key]->isBoolean && ((array)$questions)[$key]->key == $answer) {
-                $correct++;
-            } else if($keys && $keys[$answer] === "on" && count($key_array) == 1) {
-                $correct++;
-            } else if(count($key_array) > 1) {
-                
-            }
-        }
-
-        $result_percentage = ($correct / (count((array)$questions) - 1)) * 100;
-        if($result_percentage >= ((array)$questions)["min-score"]) {
-            return "Passed " . " with $result_percentage% accuracy";
-        } else {
-            return "Failed, Please Try again. You got $result_percentage% correct";
-        }
+        
+        $quiz = (new Quiz)->evaluate($content, $request->all());
+        
+        return $quiz;
     }
 }

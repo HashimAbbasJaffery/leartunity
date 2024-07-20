@@ -48,8 +48,8 @@
                                     <div class="question mb-8">
                                         <p>{{ $question->question }}</p>
                                         <ul class="mt-3">
-                                            <li><input class="mr-2" type="radio" name="{{ $key }}" value="0">True</li>
-                                            <li><input class="mr-2" type="radio" name="{{ $key }}" value="1">False</li>
+                                            <li><input class="mr-2" type="radio" name="{{ $key }}" value="1">True</li>
+                                            <li><input class="mr-2" type="radio" name="{{ $key }}" value="0">False</li>
                                         </ul>
                                     </div>
                                 @else 
@@ -133,6 +133,48 @@
         <p></p>
     </section>
     @push("scripts")
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script>
+        const count = 200,
+  defaults = {
+    origin: { y: 0.7 },
+  };
+
+function fire(particleRatio, opts) {
+        confetti(
+            Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio),
+            })
+        );
+        }
+
+        fire(0.25, {
+        spread: 26,
+        startVelocity: 55,
+        });
+
+        fire(0.2, {
+        spread: 60,
+        });
+
+        fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8,
+        });
+
+        fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2,
+        });
+
+        fire(0.1, {
+        spread: 120,
+        startVelocity: 45,
+        });
+    </script>
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         const replying_to = replying_to => {
