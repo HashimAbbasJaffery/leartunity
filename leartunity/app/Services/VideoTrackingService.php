@@ -34,6 +34,7 @@ class VideoTrackingService implements TrackingService {
 
         if($is_already_tracked) return [ round($progress, 2), -1 ];
 
+        
         return [ round($progress, 2), $tracking_track ];
     }
 }

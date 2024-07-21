@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\TrackingService;
+use App\Models\Certificate;
 use App\Models\Content;
 use App\Models\Section;
 use App\Services\Quiz;
@@ -10,6 +12,10 @@ use Illuminate\Http\Request;
 
 class QuizController extends Controller
 {
+    public function __construct( 
+        protected TrackingService $service,
+        protected Certificate $certificate
+    ) {}
     public function create() {
         return view("Teaching.quiz.create");   
     }
@@ -38,8 +44,26 @@ class QuizController extends Controller
        
     }
     public function submit(Request $request, Content $content) {
-        
         $quiz = (new Quiz)->evaluate($content, $request->all());
+        
+        $course = $content->section->course;
+        
+        $service = $this->service->track($content, $course);
+        [ $progress, $tracking_track ] = $service;
+
+        if($progress >= 100) {
+            $this->certificate->generateAndStore($course);
+        }
+
+        if($tracking_track === -1) return $progress;
+
+        $course->tracker()->update([
+            "tracking" => json_encode($tracking_track),
+            "user_id" => auth()->user()->id,
+            "progress" => $progress,
+            "status" => 1
+        ]);
+
         return back()->with("quiz", $quiz);
     }
 }
