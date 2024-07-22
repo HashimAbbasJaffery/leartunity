@@ -26,6 +26,7 @@ class CourseCertificate implements Certificate {
         // Validate if certificate exists or not
 
         $is_awarded = auth()->user()->certificates()->where("certificate", $path)->exists();
+        
 
         if($is_awarded) return;
 
@@ -35,6 +36,7 @@ class CourseCertificate implements Certificate {
             "certificate" => $path, 
             "status" => 1
         ]);
+        
         
         File::put($path . "/certificate.pdf", $certificate->output());
     }

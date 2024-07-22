@@ -15,14 +15,12 @@ class TrackerControler extends Controller
 {
     public function __construct(
         protected TrackingService $service,
-        // protected CourseCertificate $certificate
         protected Certificate $certificate
     ) {}
 
     public function update(Content $content, Course $course) {
         $service = $this->service->track($content, $course);
         [ $progress, $tracking_track ] = $service;
-        
         if($progress >= 100) {
             $this->certificate->generateAndStore($course);
         }

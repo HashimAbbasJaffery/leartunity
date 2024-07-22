@@ -6,6 +6,7 @@ use App\Interfaces\TrackingService;
 use App\Models\Certificate;
 use App\Models\Content;
 use App\Models\Section;
+use App\Services\CourseCertificate;
 use App\Services\Quiz;
 use Hamcrest\Type\IsBoolean;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class QuizController extends Controller
 {
     public function __construct( 
         protected TrackingService $service,
-        protected Certificate $certificate
+        protected CourseCertificate $certificate
     ) {}
     public function create() {
         return view("Teaching.quiz.create");   
@@ -45,24 +46,55 @@ class QuizController extends Controller
     }
     public function submit(Request $request, Content $content) {
         $quiz = (new Quiz)->evaluate($content, $request->all());
-        
-        $course = $content->section->course;
-        
-        $service = $this->service->track($content, $course);
-        [ $progress, $tracking_track ] = $service;
+        [ $is_passed, $score ] = $quiz;
+        if($is_passed) {
+            $course = $content->section->course;
+            $quiz_tracker = json_decode($course->tracker->quiz_tracker);
+            $quiz_tracker = array_filter($quiz_tracker, function($q) use ($content){
+                return $q->id === $content->id;
+            });
+            $service = $this->service->track($content, $course);
+            [ $progress, $tracking_track ] = $service;
+    
+            if($progress >= 100) {
+                $this->certificate->generateAndStore($course);
+            }
+    
+            // tracking_track === 1 tells that user is again repeating the quiz, or the video
+            
+            $quiz_content = [
+                [
+                    "id" => $content->id,
+                    "score" => $score,
+                    "answers" => $request->except("_token")
+                ]
+            ];
+           
+            $q_tracker = null;
+            if(count($quiz_tracker) && $score <= reset($quiz_tracker)->score) {
+                $q_tracker = $course->tracker->quiz_tracker;
+            } else if(count($quiz_tracker) && $score > reset($quiz_tracker)->score) {
+                $old_tracker = array_filter(json_decode($course->tracker->quiz_tracker), function($q) use ($content){
+                    return $q->id !== $content->id;
+                });
+                reset($quiz_tracker)->score = $score;
+                reset($quiz_tracker)->answers = $request->except("_token");
+                $q_tracker = json_encode([...$quiz_tracker, ...$old_tracker]);
+            } else {
+                $q_tracker =  json_encode([ ...json_decode($course->tracker->quiz_tracker), ...$quiz_content ]);
+            }
 
-        if($progress >= 100) {
-            $this->certificate->generateAndStore($course);
+            // It will select user's associated tracker, the WHERE clause is written
+            // at Course.php relationship method 
+            $course->tracker()->update([
+                "tracking" => ($tracking_track === -1) ? $course->tracker->tracking : json_encode($tracking_track) ,
+                "user_id" => auth()->user()->id,
+                "progress" => $progress,
+                "status" => 1,
+                "quiz_tracker" => $q_tracker
+            ]);
+            
         }
-
-        if($tracking_track === -1) return $progress;
-
-        $course->tracker()->update([
-            "tracking" => json_encode($tracking_track),
-            "user_id" => auth()->user()->id,
-            "progress" => $progress,
-            "status" => 1
-        ]);
 
         return back()->with("quiz", $quiz);
     }

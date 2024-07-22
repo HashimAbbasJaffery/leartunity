@@ -41,11 +41,17 @@
                                 <span class="font-medium">{{ session()->get("quiz")[1] }}% isn't the end! Keep practicing, you've got this!
                             </div>
                         @endif 
-                        @unless(session()->has("quiz") && (session()->get("quiz")[0] === 1))
-                        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                            <span class="font-medium">You need to score {{ ((array)$questions)["min-score"] }}% in order to be eligible for certification...
-                        </div>
-                        @endunless
+                        @if(isset($instance_tracker) && !count((array)$instance_tracker) && $instance_tracker->status === "completed")
+                            @unless(session()->has("quiz") && (session()->get("quiz")[0] === 1))
+                                <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                    <span class="font-medium">You need to score {{ ((array)$questions)["min-score"] }}% in order to be eligible for certification...
+                                </div>
+                            @endunless
+                        @else 
+                            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                                <span class="font-medium">You have Passed the Exam with score of {{ $quiz_tracker->score }}%
+                            </div>
+                        @endif
                     </div>
                     <div class="questions">
                         <form method="POST"  name="submitQuiz" style="display: inline-block;" id="submitQuiz" action="{{ route("quiz.submit", [ 'content' => $current_content ]) }}">
@@ -294,6 +300,7 @@ function fire(particleRatio, opts) {
             
             axios.post("{{ route('update.tracker', ['content' => $current_content, 'course' => $course]) }}")
                 .then(res => {
+                    console.log(res);
                     const progress = res.data;
                     const progressDiv = document.querySelector(".progress");
                     if(progress >= 100){

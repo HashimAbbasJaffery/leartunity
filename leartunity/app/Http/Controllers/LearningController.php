@@ -34,7 +34,21 @@ class LearningController extends Controller
         $comments = $course->comments()->where("content_id", $content->id)->whereNull("replies_to")->get();
         abort_if(!$does_own_course, 403); 
         $next_content = $this->sectionService->next_content($content);
+
+        $instance_tracker = json_decode($content->section->course->tracker->tracking);
+        $quiz_tracker = json_decode($content->section->course->tracker->quiz_tracker);
+
+        $instance_tracker = array_filter($instance_tracker, function($track) use($content) {
+            return $track->id == $content->id;
+        });
+        $quiz_tracker = array_filter($quiz_tracker, function($track) use($content) {
+            return $track->id == $content->id;
+        });
+        
+        $instance_tracker = !count($instance_tracker) ? $instance_tracker : reset($instance_tracker);
+        $quiz_tracker = !count($quiz_tracker) ? $quiz_tracker : reset($quiz_tracker);
+        
         $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
-        return view("Learning.course", compact("course", "comments", "current_content", "next_content", "tracker"));
+        return view("Learning.course", compact("course", "comments", "current_content", "next_content", "tracker", "instance_tracker", "quiz_tracker"));
     }
 }
