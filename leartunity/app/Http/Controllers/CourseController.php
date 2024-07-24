@@ -29,7 +29,7 @@ class CourseController extends Controller
 
         if($currency)
             $course->price *= round(\App\Helpers\exchange_rate($currency->currency), 2);
-        
+
         $course->currency = $currency?->unit ?? "$";
         $course->description = Str::markdown($course->description, [
             "html_input" => "strip"
@@ -53,13 +53,14 @@ class CourseController extends Controller
     public function getCourses() {
         $courses = Course::withSum("contents", "duration")->whereStatus(1)->paginate(6);
         $courses->withPath("get/courses");
-        
+
         $categories = Category::whereHas("courses")->get();
         return view("guest.courses.courses", compact("courses", "categories"));
     }
 
     public function getData(Request $request, FilterService $service, $status = null) {
         $courses = $service->filter($request, $status);
+
         return $courses;
     }
 
@@ -67,5 +68,5 @@ class CourseController extends Controller
         $courses = Course::whereStatus(1)->paginate(6);
         return $courses;
     }
-    
+
 }

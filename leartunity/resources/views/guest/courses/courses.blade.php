@@ -20,8 +20,8 @@
                         <h1>@lang("Price Range")</h1>
                         @php
                             $user = \App\Models\User::find(auth()->id())?->currency;
-                        @endphp 
-                        <div class="range-inputs mt-4"> 
+                        @endphp
+                        <div class="range-inputs mt-4">
                             <label>
                                 @lang("From") ({{ $user?->unit ?? "$"}})
                                 <br />
@@ -60,7 +60,7 @@
                             }
                             $profile = $course->author->profile;
                             @endphp
-                            <!-- <x-user.course 
+                            <!-- <x-user.course
                                 :title="$course->title"
                                 :instructor="$course->author->name"
                                 duration="50"
@@ -73,10 +73,10 @@
                                 :thumbnail="$course->thumbnail"
                                 :status="true"
                             /> -->
-                            <x-user.course 
+                            <x-user.course
                                 :course="$course"
                             />
-                            
+
                         @endforeach
                 </div>
                 <div class="load-more_section">
@@ -95,7 +95,7 @@
             form.addEventListener("submit", function(e) {
                 e.preventDefault();
                 const checkboxes = document.querySelectorAll(".category-checkbox:checked");
-                
+
                 // Categories Data gathering
                 let checkedIds = [];
                 checkboxes.forEach(checkbox => {
@@ -106,24 +106,24 @@
                 // Price Range Data gathering
                 let priceRange = [];
                 let prices = document.querySelectorAll(".price_range");
-                
-                // Converting nodelist into an array 
+
+                // Converting nodelist into an array
 
                 prices = Array.from(prices);
                 console.log(prices);
-                
+
                 const flag = prices.every(price => {
                     return price.value !== "" && price.value >= 0;
                 })
 
-                // Checking if from < to or not 
+                // Checking if from < to or not
 
                 if(flag === true && (+prices[0].value <= +prices[1].value)) {
                     priceRange.push(prices[0].value);
                     priceRange.push(prices[1].value);
                 }
 
-                // Getting the searched keyword from use 
+                // Getting the searched keyword from use
                 let search = [];
                 const keyword = document.getElementById("q");
                 const type = document.getElementById("type");
@@ -149,12 +149,12 @@
                         const next_page_url = res.data.next_page_url;
                         console.log(next_page_url);
 
-                        // Loadmore pagination visibility 
+                        // Loadmore pagination visibility
 
                         const loadmore = document.querySelector(".load-more");
                         if(loadmore && !next_page_url) {
                             loadmore.style.display = "none";
-                        } else { 
+                        } else {
                             if(loadmore) {
                                 loadmore.style.display = "block";
                                 loadmore.setAttribute("data-url", next_page_url);
@@ -164,8 +164,8 @@
                         const store = document.querySelector(".store-cards");
                         store.innerHTML = "";
                         courses.forEach(data => {
-                            console.log(data);
-                            store.innerHTML += course(data);
+                            const unit = "{{ App\Models\Currency::find(auth()->user()?->currency_id)->unit }}"
+                            store.innerHTML += course(data, '{{ auth()->id() }}', '{{ App\Helpers\exchange_rate(App\Models\Currency::find(auth()->user()?->currency_id)->currency) }}', unit);
                         })
                         if(courses.length < 1) {
                             store.innerHTML = '<div><p>No course was found!</p></div>';
@@ -193,7 +193,7 @@
             });
         </script>
         <script type="module">
-            
+
             import course from "./js/templates/course.js";
             const loadmore = document.querySelector(".load-more");
             loadmore.addEventListener("click", function() {
@@ -202,22 +202,23 @@
                 if(window.parameters) {
                     parameters = window.parameters;
                 }
+                console.log(url);
                 axios.post(url, parameters)
                     .then(res =>{
+                        console.log(res);
                         const next_page_url = res.data.next_page_url;
-                        
-                        // Loadmore pagination visibility 
+
+                        // Loadmore pagination visibility
 
                         const loadmore = document.querySelector(".load-more");
                         if(loadmore && !next_page_url) {
                             loadmore.style.display = "none";
-                        } else { 
+                        } else {
                             loadmore.style.display = "block";
                             loadmore.setAttribute("data-url", next_page_url);
                         }
 
                         const courses = res.data.data;
-                        console.log(courses);
                         const store = document.querySelector(".store-cards");
                         courses.forEach(data => {
                             console.log(data);
@@ -232,5 +233,5 @@
                     })
             })
         </script>
-    @endpush 
+    @endpush
 </x-layout>

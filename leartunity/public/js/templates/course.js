@@ -1,21 +1,23 @@
 import calculateReviewStars from "../helpers/stars.js";
-const course = data => {
-    const 
-    { 
-        author, 
+const course = (data, user_id = null, rate = 1, currency = "$") => {
+    const
+    {
+        author,
         title,
         description,
         price,
         is_purchased,
         slug,
         stripe_id,
-        thumbnail
+        thumbnail,
+        status,
+        id
      } = data;
     const { name } = author;
     const { reviews } = data;
     const { stars } = data;
     const { profile } = author;
-    // {!! substr($description, 0, 80) !!}...
+    console.log(rate);
     return `
     <div class="course">
     <div class="course-header" style="position: relative">
@@ -33,7 +35,7 @@ const course = data => {
         <div class="instructor-details flex">
             <h2>${name}</h2>
             <div class="course-rating flex">
-                ${ calculateReviewStars(stars ?? 0) }
+                ${ calculateReviewStars(reviews?.stars ?? 0) }
             </div>
         </div>
     </div>
@@ -43,22 +45,22 @@ const course = data => {
             <h1 style="font-size: 15px; font-weight: bold; margin-bottom: 5px;">
                 ${title}
             </h1>
-            
+
             ${description.substr(0, 80)}...
         </div>
         <div class="course-options mt-2">
             ${ ( !is_purchased )
-                ? 
-                    '<a href="checkout/' + stripe_id + '">enroll</a>' 
+                ?
+                    '<a href="checkout/' + stripe_id + '">enroll</a>'
                 :
-                    "<a href=''>Go to Course</a>" 
+                    "<a href=''>Go to Course</a>"
             }
             <a href="/course/${slug}">see details</a>
             <a href="/instructor/course/${slug}">Manage</a>
-        
+
         </div>
         <div class="course-price flex justify-between">
-            <p>${price} $</p>
+            <p>${ Math.round(price * (rate)) } ${currency}</p>
             <p>50 Hour Course</p>
         </div>
     </div>

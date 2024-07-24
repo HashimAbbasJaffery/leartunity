@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 use App\Models\User;
@@ -11,8 +11,9 @@ class FilterService {
 
         // Category Filter
         if(request()->categories) {
-            $parameters["categories"] = request()->categories; 
+            $parameters["categories"] = request()->categories;
         }
+
 
         $user_currency = (User::find(auth()->id()))->currency;
         // Price Filter
@@ -25,11 +26,11 @@ class FilterService {
             $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
         }
 
-        // Search Filter 
+        // Search Filter
         if(request()->search) {
             $parameters["search"] = json_decode(request()->search);
         }
-        
+
         if(!$status) {
             $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->paginate(6);
         } else {

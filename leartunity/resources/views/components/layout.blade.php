@@ -12,14 +12,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset("css/output.css") }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.1.0/resumable.min.js"></script>
-        
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-   
+
     <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
     <link href="{{ $settings->font_link }}" rel="stylesheet">
-    
+
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -34,7 +34,7 @@
       <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
       <script src="http://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
  @vite('resources/js/app.js')
-   @php 
+   @php
     $primary_color = $settings->primary_color;
     $secondary_color = $settings->secondary_color;
     $family = $settings->font_family;
@@ -62,7 +62,7 @@
         <p style="padding: 5px;">@lang("We have sent you email at") <b>{{ auth()?->user()?->email }}</b>, @lang("Please verify email before") {{ \Carbon\Carbon::parse($user->created_at)->diffInDays(now()->subDays(60)) }} @lang("days"). <a href="#" style="text-decoration: underline;">Send Again!</a> </p>
       </div>
     @endif
-              
+
 
 <!-- Modal toggle -->
 
@@ -80,7 +80,7 @@
                 <a href="{{ route("home") }}"><h1>Leartunity.</h1></a>
             </div>
             <nav>
-              
+
               <ul style="position: relative; height: 36px;">
                     <select style="padding-left: 10px; width: 150px;" class="mr-3" onchange="changeLocale(this)">
                       <option value="en" @selected(app()->getLocale() === "en")>English</option>
@@ -101,7 +101,7 @@
                       <li ><a href="/admin" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
                         @lang("Admin")
                       </a></li>
-                    @endcan 
+                    @endcan
                     <!-- <li ><a href="{{ route('logout') }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
                       LTS Store
                     </a></li> -->
@@ -125,22 +125,22 @@
                     @guest
                     <li class="mx-3"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">@lang("Register")</a></li>
                       <li class="mx-3 highlighted"><a href="{{ route("login") }}" class="bold-600" style="font-size: 14px;">@lang("Login")</a></li>
-                    @endguest 
-                    
-                    @auth 
+                    @endguest
+
+                    @auth
                     <!-- <li ><a href="#" style="font-size: 20px;" class="bold-600 text-xl" style="position: relative; display: inline-block;">
                       <div class="notify {{ $notifications->exists() ? "" : "none" }}" style="position: absolute; background: #00ff00; width: 10px; height: 10px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
                       <i class="fa-solid fa-bell"></i>
                     </a></li> -->
                     <ul class="notification-drop" style="position: relative;">
                       <li class="item">
-                        <i class="fa fa-bell-o notification-bell" style="font-size: 20px;" aria-hidden="true"></i>  
+                        <i class="fa fa-bell-o notification-bell" style="font-size: 20px;" aria-hidden="true"></i>
                         <div class="notify {{ $notifications->exists() ? "" : "none" }}" style="top: 8px; right: 8px;position: absolute; background: #00ff00; width: 15px; height: 15px; border-radius: 50px; border: 3px solid white;">&nbsp;</div>
-                                          
+
                         <ul class="rounded" style="max-height: 300px; overflow: auto; border: 1px solid var(--primary)">
                           @forelse($notifications->get() as $notification)
                             <li style="font-size: 12px;">{{ $notification->data["message"] }}</li>
-                          @empty 
+                          @empty
                             <li style="font-size: 12px;" class="px-1">@lang("No notifications? Maybe they're at a disco party!") 🎉</li>
                           @endforelse
                         </ul>
@@ -156,7 +156,7 @@
                         {{ floor($user->balance * App\Helpers\exchange_rate($user->currency->currency)) }} {{ $user->currency->unit }}
                       </a></li>
                     @endauth
-                    
+
                 </ul>
             </nav>
         </header>
@@ -254,7 +254,17 @@
 
           })
         })
-        // switches.forEach()
+        const changeVisibility = element => {
+            const id = element.id.split("-")[1];
+            console.log(id);
+            axios.put(`/instructor/course/${id}/status`)
+              .then(res => {
+                console.log(res)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+        }
       </script>
     <script>
       const messageAppearence = (message, time) => {
@@ -262,7 +272,7 @@
         messageEl.textContent = message;
         const notification = document.querySelector(".notification");
         notification.classList.remove("none");
-        notification.classList.add("animate__bounceIn"); 
+        notification.classList.add("animate__bounceIn");
         setTimeout(() =>{
             notification.classList?.add("animate__bounceOut");
             notification.classList?.remove("animate__bounceIn");
@@ -277,9 +287,9 @@
             account_not_found.classList.add("animate__bounceOut");
             account_not_found.classList.remove("animate__bounceIn");
         }, 10000);
-        
+
     </script>
-    @auth 
+    @auth
       <script>
         window.addEventListener("load", function() {
           Echo.private(`notification.{{ auth()->user()->id }}`)
