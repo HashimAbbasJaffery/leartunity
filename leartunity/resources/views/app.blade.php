@@ -1,10 +1,10 @@
-
-@php
-  $settings = config()->get("settings");
-@endphp
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    @vite('resources/js/app.js')
+    @vite('resources/css/app.css')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -18,7 +18,6 @@
     <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
-    <link href="{{ $settings->font_link }}" rel="stylesheet">
 
     <link
     rel="stylesheet"
@@ -35,6 +34,8 @@
       <script src="http://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
  @vite('resources/js/app.js')
    @php
+
+   $settings = \App\Models\Setting::first();
     $primary_color = $settings->primary_color;
     $secondary_color = $settings->secondary_color;
     $family = $settings->font_family;
@@ -47,78 +48,18 @@
         --primary: {{ $primary_color }};
       }
       :root {
-        --family: {!! $family !!}}
+        --family: {!! $family !!}
       }
       :root {
         --secondary: {{ $secondary_color }}
       }
     </style>
-</head>
-<body >
-
-    <div class="wrapper">
-    @if($user && !$user?->hasVerifiedEmail())
-    <div id="confirm-email" style="text-align: center;padding: 0px;background: red; color: white;position: fixed; bottom: 0px; z-index: 2; width: 100%; ">
-        <p style="padding: 5px;">@lang("We have sent you email at") <b>{{ auth()?->user()?->email }}</b>, @lang("Please verify email before") {{ \Carbon\Carbon::parse($user->created_at)->diffInDays(now()->subDays(60)) }} @lang("days"). <a href="#" style="text-decoration: underline;">Send Again!</a> </p>
-      </div>
-    @endif
+    <!-- @inertiaHead -->
+  </head>
+  <body>
+    @inertia
 
 
-<!-- Modal toggle -->
-
-
-          <div class="none notification animate__animated">
-              <p class="notification-message"></p>
-          </div>
-        @if(session()->has("flash"))
-          <div class="account_not_found animate__animated animate__bounceIn">
-              <p>{{ session()->get("flash") }}</p>
-          </div>
-        @endif
-        <header class="flex top-header  container mx-auto mt-4">
-            <div class="logo">
-                <a href="{{ route("home") }}"><h1>Leartunity.</h1></a>
-            </div>
-        </header>
-        <div x-data>
-          {{ $slot }}
-        </div>
-        <footer>
-  <div class="container mx-auto flex justify-around">
-    <div class="first-column column">
-      <h1>@lang('Learning Materials')</h1>
-      <nav>
-        <ul>
-          <li>@lang('Courses')</li>
-          <li>@lang('Books')</li>
-          <li>@lang('Live Sessions')</li>
-          <li>@lang('Teachers')</li>
-        </ul>
-      </nav>
-    </div>
-    <div class="second-column column">
-      <h1>@lang('Website Information')</h1>
-      <nav>
-        <ul>
-          <li>@lang('Privacy Policy')</li>
-          <li>@lang('Contact Us')</li>
-          <li>@lang('Feedbacks')</li>
-        </ul>
-      </nav>
-    </div>
-    <div class="fourth-column column">
-      <h1>@lang('Newsletter')</h1>
-      <div class="newsletter">
-        <input type="text" placeholder="@lang('Enter your email')" />
-        <button>@lang('Subscribe')</button>
-      </div>
-    </div>
-    <div class="third-column column">
-      <h1>Leartunity.</h1>
-    </div>
-  </div>
-</footer>
-    </div>
     <script src="{{ asset("js/transition.js") }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
@@ -221,5 +162,5 @@
 
     @endauth
     @stack("scripts")
-</body>
+  </body>
 </html>

@@ -12,6 +12,7 @@ use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use App\Classes\Pagination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Inertia\Inertia;
 use Stripe\StripeClient as Stripe;
 use App\Http\Helpers\Helpers;
 use Illuminate\Support\Str;
@@ -51,11 +52,13 @@ class CourseController extends Controller
     }
 
     public function getCourses() {
-        $courses = Course::withSum("contents", "duration")->whereStatus(1)->paginate(6);
-        $courses->withPath("get/courses");
-
+        $courses = Course::withSum("contents", "duration")->whereStatus(1)->get();
         $categories = Category::whereHas("courses")->get();
-        return view("guest.courses.courses", compact("courses", "categories"));
+        // return view("guest.courses.courses", compact("courses", "categories"));
+        return Inertia::render("Courses/Courses", [
+            "categories" => $categories,
+            "courses" => $courses
+        ]);
     }
 
     public function getData(Request $request, FilterService $service, $status = null) {

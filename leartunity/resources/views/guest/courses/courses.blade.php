@@ -50,34 +50,85 @@
             </aside>
             <div class="store-section">
                 <div class="grid grid-cols-3 gap-4 store-cards">
-                    @foreach($courses as $course)
-                            @if($loop->index > 7) @break @endif
-                            @php
-                            $stars = 0;
-                            $reviews = $course->reviews;
-                            if(isset($reviews->stars)) {
-                                $stars = $reviews->stars;
-                            }
-                            $profile = $course->author->profile;
-                            @endphp
-                            <!-- <x-user.course
-                                :title="$course->title"
-                                :instructor="$course->author->name"
-                                duration="50"
-                                :description="$course->description"
-                                :profile="$profile->profile_pic ?? ''"
-                                :price="$course->price"
-                                :rating="$stars"
-                                :stripe="$course->stripe_id"
-                                :slug="$course->slug"
-                                :thumbnail="$course->thumbnail"
-                                :status="true"
-                            /> -->
-                            <x-user.course
-                                :course="$course"
-                            />
+                <div class="course">
+    <div class="course-header" style="position: relative;">
+        @php
+            $author = $course->author->id ?? "null";
+        @endphp
+        @if($author === auth()->id())
+        @if(request()->routeIs("instructor"))
+                <label class="switch" style="position: absolute; left: 13px; top: 10px;">
+                    <input type="checkbox" @checked($course->status) class="course-switch" id="course-{{ $course->id }}">
+                    <span class="slider round"></span>
+                </label>
+                <div style="position: absolute; bottom: 10px; right: 10px;" class="flex">
+                    <form class="mr-2" action="{{ route("course.delete", [ 'course_slug_o' => $course->slug ?? 'nnull']) }}" method="POST" name="courseDelete" id="courseDelete">
+                        {{ method_field("DELETE") }}
+                        @csrf
+                        <button class="text-white px-2 rounded bg-red-500 hover:bg-red-600">@lang("Delete")</button>
+                    </form>
+                    <form action="{{ route("course.edit", [ 'course_slug_o' => $course->slug ?? 'null' ]) }}" name="courseDelete" id="courseDelete">
+                        @csrf
+                        <button class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600">@lang("Update")</button>
+                    </form>
+                </div>
+            @endif
+        @endif
+        @if($is_purchased)
+            <div class="course-pill bg-black text-white px-2 py-1 text-xs" style="position: absolute; right: 10px; top: 10px; border-radius: 10px;">
+                <p>@lang("Purchased")</p>
+            </div>
+        @endif
+        @if($course->thumbnail)
+            <img src="/course/{{ $course->thumbnail }}" style="border-radius: 10px;" height="600" width="400" alt="">
+        @else
+            <img src="https://placehold.co/600x400" height="600" width="400" alt="">
+        @endif
+    </div>
+    <a href="{{ route("user.profile", ["id" => $course->author?->id ?? 1]) }}">
+        <div class="course-instructor mt-4 flex">
+            <div class="instructor-img">
+                @if($course->author?->profile)
+                    <img src="/profile/{{ $course->author->profile->profile_pic }}" height="45" width="45"  class="rounded-full" alt="">
+                @else
+                    <img src="https://placehold.co/45x45" height="45" width="45"  class="rounded-full" alt="">
+                @endif
+            </div>
+            <div class="instructor-details flex">
+                <h2>{{ $course->author?->name }}</h2>
+                <div class="course-rating flex">
+                    {!! calculateReviewStars($course->reviews?->stars) !!}
+                </div>
+            </div>
+        </div>
+    </a>
 
-                        @endforeach
+    <div class="course-detail mt-4">
+        <div class="course-description">
+            <h1 style="font-size: 15px; font-weight: bold; margin-bottom: 5px;">
+                {{ $course->title }}
+            </h1>
+            {!! substr($course->description, 0, 80) !!}...
+        </div>
+        <div class="course-options mt-2">
+            @if(!$is_purchased)
+                <a href="{{ route("checkout", ['id' => $course->stripe_id ?? 'null' ]) }}">@lang("enroll")</a>
+            @else
+
+            @endif
+            <a href="{{ route('course', [ 'course' =>  $course->slug ?? 'null']) }}">@lang("see details")</a>
+
+            @if($author === auth()->id())
+                <a href="{{ route('course.show', ["course_slug_o" => $course->slug ?? 'null']) }}">@lang("Manage")</a>
+            @endif
+        </div>
+        <div class="course-price flex justify-between">
+            <p>{{ round($course->price * ($rate ?? 1)) }} {{ $currency?->unit ?? "$" }}</p>
+            <p>@lang("Duration"): {{ secondsToHours($course->contents_sum_duration) }}</p>
+        </div>
+    </div>
+</div>
+
                 </div>
                 <div class="load-more_section">
                     <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif" data-url="{{ $courses->nextPageUrl() }}">Load More</button>
@@ -164,8 +215,8 @@
                         const store = document.querySelector(".store-cards");
                         store.innerHTML = "";
                         courses.forEach(data => {
-                            const unit = "{{ App\Models\Currency::find(auth()->user()?->currency_id)->unit }}"
-                            store.innerHTML += course(data, '{{ auth()->id() }}', '{{ App\Helpers\exchange_rate(App\Models\Currency::find(auth()->user()?->currency_id)->currency) }}', unit);
+                            const unit = "{{ App\Models\Currency::find(auth()->user()?->currency_id)?->unit ?? false }}"
+                            store.innerHTML += course(data, '{{ auth()->id() }}', '{{ App\Helpers\exchange_rate(App\Models\Currency::find(auth()->user()?->currency_id)?->currency ?? false) }}', unit);
                         })
                         if(courses.length < 1) {
                             store.innerHTML = '<div><p>No course was found!</p></div>';

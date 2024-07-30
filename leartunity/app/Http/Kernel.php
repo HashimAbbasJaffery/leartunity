@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -38,6 +39,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            HandleInertiaRequests::class
         ],
 
         'api' => [
@@ -68,6 +70,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'is_teacher' => \App\Http\Middleware\is_instructor::class,
         "is_course_owner" => \App\Http\Middleware\is_course_owner::class,
-        "is_admin" => \App\Http\Middleware\is_admin::class 
+        "is_admin" => \App\Http\Middleware\is_admin::class
     ];
 }
