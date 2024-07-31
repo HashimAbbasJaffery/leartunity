@@ -10,37 +10,49 @@ class FilterService {
         $parameters = [];
 
         // Category Filter
-        if(request()->categories) {
-            $parameters["categories"] = request()->categories;
+        if(request()->categoryList) {
+            $parameters["categories"] = request()->categoryList;
         }
 
 
-        $user_currency = (User::find(auth()->id()))->currency;
+        // $user_currency = (User::find(auth()->id()))->currency;
+        $user_currency = "USD";
+        $price_range = [ request()->from, request()->to ];
         // Price Filter
-        if(request()->price_range) {
-            $parameters["price_range"] = request()->price_range;
+        if(isset(request()->from) && isset(request()->to)) {
+            $parameters["price_range"] = $price_range;
         }
+
 
         if(isset($parameters["price_range"])) {
-            $parameters["price_range"][0] /= \App\Helpers\exchange_rate($user_currency->currency);
-            $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
+            // $parameters["price_range"][0] /= \App\Helpers\exchange_rate($user_currency->currency);
+            // $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
+
         }
 
         // Search Filter
         if(request()->search) {
-            $parameters["search"] = json_decode(request()->search);
+            $parameters["search"] = request()->search;
         }
 
+        if(request()->type) {
+            $parameters["type"] = request()->type;
+        }
+
+
+
         if(!$status) {
-            $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->paginate(6);
+
+            $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->get();
         } else {
             $courses = Course::with("author.profile", "author", "reviews")->whereStatus($status)->filter($parameters)->paginate(6);
         }
-        $courses->map(function($course) {
-            $stripe_id = $course->stripe_id;
-            $is_purchased = auth()->user()?->purchases()->where("purchase_product_id", $stripe_id)->exists();
-            $course["is_purchased"] = $is_purchased;
-        });
+        // $courses->map(function($course) {
+        //     $stripe_id = $course->stripe_id;
+        //     $is_purchased = auth()->user()?->purchases()->where("purchase_product_id", $stripe_id)->exists();
+        //     $course["is_purchased"] = $is_purchased;
+        // });
+
         return $courses;
     }
 }

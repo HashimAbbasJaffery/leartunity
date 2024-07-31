@@ -1,12 +1,59 @@
 <script setup>
 import Layout from "../../Shared/Layout.vue";
 import Course from "../../Components/Course.vue";
-import {defineProps, onMounted} from "vue"
+import {defineProps, reactive, ref, provide} from "vue"
+import Filter from "../../Components/Category/Filter.vue"
+import Buttons from "../../Components/Essentials/Buttons.vue";
+import Category from "../../Components/Category/Category.vue";
+import axios from "axios";
 
-defineProps({
+import {router} from "@inertiajs/vue3"
+
+
+let props = defineProps({
     categories: Array,
     courses: Array
 })
+
+let courses = ref(props.courses);
+let loading = ref(false)
+
+
+let clear = ref(false);
+provide("clear", clear);
+
+let filters = reactive({
+    categoryList: [],
+    from: null,
+    to: null,
+    type: "Title",
+    search: ""
+})
+
+async function submit() {
+    loading.value = true;
+    try {
+        let data = await axios.post("get/courses", filters);
+        courses.value = data.data
+    } catch(e) {
+        console.log(e)
+    }
+    loading.value = false
+}
+
+
+function clearFilter() {
+    clear.value = true;
+    filters.categoryList = [];
+    filters.from = ""
+    filters.to = "";
+    filters.type = "Title"
+    filters.search = ""
+
+    setTimeout(() => {
+        clear.value = false
+    }, 0)
+}
 
 
 </script>
@@ -16,53 +63,56 @@ defineProps({
     <main>
             <section class="store container mx-auto">
                 <aside class="filter-bar">
-                    <form action="/api/courses" id="submitFilter" style="display: block;">
-                        <div class="category-filter filter">
-                            <h1>Categories</h1>
+                    <form @submit.prevent="submit" id="submitFilter" style="display: block;">
+                        <Filter :title="'Categories'" class="category-filter filter">
                             <ul class="mt-4">
-                                <li v-for="category in categories" :key="category.id">
-                                    <label :for="'category-'+category.id">
-                                        <input type="checkbox" id="'category-'+category.id" :data-id="category.id" class="category-checkbox mr-2" style="height: 13px; width: 13px;" />
-                                        {{ category.category }}
-                                    </label>
-                                </li>
+                                <Category v-model="filters.categoryList" v-for="category in categories" :key="category.id" :category="category" />
                             </ul>
-                        </div>
-                        <div class="price-range filter mt-3">
-                            <h1>Price Range</h1>
+                        </Filter>
+                        <Filter class="price-range filter mt-3" title="Price Range">
                             <div class="range-inputs mt-4">
                                 <label>
                                     From ($)
                                     <br />
-                                    <input type="number" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
+                                    <input type="number" v-model="filters.from" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                                 </label>
                                 <label>
                                     To ($)
                                     <br />
-                                    <input type="number" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
+                                    <input type="number" v-model="filters.to" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                                 </label>
                             </div>
-                        </div>
-                        <div class="search-filter filter mt-3">
-                            <h1>Search</h1>
+                        </Filter>
+                        <Filter title="Search" class="search-filter filter mt-3">
                             <div class="search-bar mt-4 flex">
-                                <select id="type" class="search-type highlighted p-1 " style="height: 35px; outline: none; width: 30%; font-size: 14px;">
+                                <select id="type" v-model="filters.type" class="search-type highlighted p-1 " style="height: 35px; outline: none; width: 30%; font-size: 14px;">
                                     <option>Title</option>
                                     <option>Description</option>
                                 </select>
-                                <input id="q" type="text" style="border-radius: 0px; outline: none; padding-left: 10px; width: 70%;"/>
+                                <input id="q" type="text" v-model="filters.search" style="border-radius: 0px; outline: none; padding-left: 10px; width: 70%;"/>
                             </div>
-                        </div>
-                        <input type="submit" value="Apply Filters" class="mt-3"  style="cursor: pointer;width: 100%; border-radius: 5px; font-size: 14px;"/>
+                        </Filter>
+
+                        <Buttons class="disabled:bg-black/60" :disabled="loading" :value="loading ? 'Fetching...' : 'Search'" v-model="filters.search" />
                     </form>
-                    <input style="background: transparent; color: black;font-size: 14px; cursor: pointer;text-align: center;width: 100%; border-radius: 5px; padding-left: 10px;" type="submit" value="Clear Filters" class="mt-3" id="clear-filter"/>
+                    <Buttons value="Clear Filters" @click="clearFilter" lighted/>
                 </aside>
-                <div class="store-section">
-                    <div class="grid grid-cols-3 gap-4 store-cards">
+                <div class="store-section relative mb-40">
+                    <Transition
+                    >
+                        <div v-if="loading" class="course-finding bg-white flex flex-col justify-center items-center absolute z-10 w-full h-full rounded">
+                            <div class="lds-dual-ring"></div>
+                            <p class="mt-3">Fetching...</p>
+                        </div>
+                    </Transition>
+                    <div class="grid grid-cols-3 gap-4 store-cards" v-if="courses.length">
                         <Course v-for="course in courses" :key="course.id" :course="course" class="course" />
                     </div>
+                    <div v-if="!courses.length" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                        <span class="font-medium">No Course found by matching with your filter</span>
+                    </div>
                     <div class="load-more_section">
-                        <button class="highlighted load-more">Load More</button>
+                        <Buttons value="Load More" class="highlighted load-more" />
                     </div>
                 </div>
             </section>
@@ -70,3 +120,37 @@ defineProps({
 </Layout>
 
 </template>
+
+<style scoped>
+
+.lds-dual-ring,
+.lds-dual-ring:after {
+  box-sizing: border-box;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6.4px solid currentColor;
+  border-color: currentColor transparent currentColor transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+</style>
