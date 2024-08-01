@@ -45,7 +45,7 @@
             @error("categories")
                 <p class="text-red-600" style="font-size: 13px;">{{ $message }}</p>
             @enderror
-            
+
             <div class="categories rounded mb-3 flex items-start flex-wrap" style="overflow: auto;border: 1px solid black; height: 100px;">
                 @foreach($categories as $category)
                     <label class="flex items-center px-2" for="category-{{ $category->id }}">
@@ -115,5 +115,5 @@
                     })
             })
         </script>
-    @endpush 
+    @endpush
 </x-layout>

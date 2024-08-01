@@ -6,6 +6,7 @@ import Filter from "../../Components/Category/Filter.vue"
 import Buttons from "../../Components/Essentials/Buttons.vue";
 import Category from "../../Components/Category/Category.vue";
 import axios from "axios";
+import Loading from "../../Components/Essentials/Loading.vue";
 
 import {router} from "@inertiajs/vue3"
 
@@ -98,13 +99,9 @@ function clearFilter() {
                     <Buttons value="Clear Filters" @click="clearFilter" lighted/>
                 </aside>
                 <div class="store-section relative mb-40">
-                    <Transition
-                    >
-                        <div v-if="loading" class="course-finding bg-white flex flex-col justify-center items-center absolute z-10 w-full h-full rounded">
-                            <div class="lds-dual-ring"></div>
-                            <p class="mt-3">Fetching...</p>
-                        </div>
-                    </Transition>
+                    <Loading :active="loading">
+                        <p class="mt-3">Fetching...</p>
+                    </Loading>
                     <div class="grid grid-cols-3 gap-4 store-cards" v-if="courses.length">
                         <Course v-for="course in courses" :key="course.id" :course="course" class="course" />
                     </div>
@@ -121,36 +118,3 @@ function clearFilter() {
 
 </template>
 
-<style scoped>
-
-.lds-dual-ring,
-.lds-dual-ring:after {
-  box-sizing: border-box;
-}
-.lds-dual-ring {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
-}
-.lds-dual-ring:after {
-  content: " ";
-  display: block;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border-radius: 50%;
-  border: 6.4px solid currentColor;
-  border-color: currentColor transparent currentColor transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
-}
-@keyframes lds-dual-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-
-</style>

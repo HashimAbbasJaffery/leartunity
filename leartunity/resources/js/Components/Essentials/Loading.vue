@@ -1,0 +1,47 @@
+<template>
+<div v-if="active" class="course-finding bg-white flex flex-col justify-center items-center absolute z-10 w-full h-full rounded">
+    <div class="lds-dual-ring"></div>
+    <slot></slot>
+</div>
+</template>
+
+<script setup>
+
+let props = defineProps({
+    active: Boolean
+});
+
+</script>
+
+<style scoped>
+
+.lds-dual-ring,
+.lds-dual-ring:after {
+  box-sizing: border-box;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6.4px solid currentColor;
+  border-color: currentColor transparent currentColor transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
+

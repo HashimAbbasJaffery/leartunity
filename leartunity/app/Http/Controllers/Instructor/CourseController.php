@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Course;
 use App\Models\Category;
 use Illuminate\Support\Facades\File;
+use Inertia\Inertia;
 use Stripe\StripeClient as Stripe;
 
 class CourseController extends Controller
@@ -23,7 +24,7 @@ class CourseController extends Controller
             $course = $request->route()->parameters()["course"];
             $slug = ($course->slug) ? $course->slug : $course;
         } catch(\Exception $e) {
-        
+
         }
 
         Log::debug($slug);
@@ -31,26 +32,34 @@ class CourseController extends Controller
             $this->middleware("is_course_owner:$slug");
     }
     public function index() {
-        $courses = Course::withoutGlobalScopes()->where("author_id", auth()->user()->id)->paginate(6);
-        
-        $courses->withPath("/get/courses/" . "1");
-        
-        return view("Teaching.index", compact("courses"));
+        $courses = Course::withoutGlobalScopes()->where("author_id", auth()->user()->id)->get();
+
+
+        return Inertia::render("Instructor/index", [
+            "courses" => $courses
+        ]);
     }
     public function destroy(Course $course) {
-        
+
         $this->middleware("is_course_owner:$course->slug");
         $course->delete();
         return redirect()->back();
     }
     public function update(Request $request, Course $course) {
         $this->middleware("is_course_owner:$course->slug");
-        $categories = explode(",", $request->categories);
+        $validated = $request->validate([
+            "title" => ["required", "min:4", "max:50"],
+            "description" => ["required", "min:25", "max:1000"],
+            "pre_req" => ["required", "min:25", "max:1000"],
+            "price" => ["required"],
+            "categories" => ["required"]
+        ]);
+        $categories = $request->categories;
         $slug = str($request->title)->slug("-");
-        $file = $request->base64;
-        
+        $file = $request->image;
+
         $stripe = $this->stripe->products->retrieve($course->stripe_product_id);
-        
+
 
         $stripe = $this->stripe->products->create([
             'name' => $request->title,
@@ -63,25 +72,23 @@ class CourseController extends Controller
         $product->name = $request->title;
         $product->default_price_data["unit_amount"] = $request->price;
         $product->save();
-        
+
         $fileName = $course->thumbnail;
         if($file) {
-
-            
-            $data = $request->get("base64");
+            $data = $request->get("image");
             list(, $data) = explode(',', $data);
             $data = base64_decode($data);
             $fileName = time() . ".png";
-            
+
             File::put(public_path("course/$fileName"), $data);
 
             // $fileName = time() . $file->getClientOriginalName();
             // $file->move(public_path("course"), $fileName);
-        } 
+        }
 
         $course->update([
             "title" => $request->title,
-            "description" => $request->description, 
+            "description" => $request->description,
             "pre_req" => $request->pre_req,
             "price" => $request->price,
             "thumbnail" => $fileName,
@@ -93,21 +100,22 @@ class CourseController extends Controller
 
 
         $course->categories()->sync($categories);
-
-        
-
-        return redirect()->to("/instructor");
+        $courses = Course::all();
+        return redirect()->to("/courses")->with(compact("courses"));
     }
     public function edit(Request $request, Course $course) {
-        $course["categories_id"] = $course->categories->pluck("id")->toArray();
         $categories = Category::all();
-        return view("Teaching.edit", compact("categories", "course"));
+        return Inertia::render("Courses/Edit", [
+            "categories" => $categories,
+            "course" => $course
+        ]);
     }
     public function store(CourseRequest $request) {
+
         $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
-        
+
         $stripe = $this->stripe->products->create([
             'name' => $request->title,
             'default_price_data' => [
@@ -117,20 +125,20 @@ class CourseController extends Controller
         ]);
 
         $product_id = $stripe->id;
-        
+
         $data = $request->get("base64");
         list(, $data)      = explode(',', $data);
         $data = base64_decode($data);
         $fileName = time() . ".png";
-        
+
         File::put(public_path("course/$fileName"), $data);
-        
+
         $user_preferred_currency = User::find(auth()->id())->currency->currency;
         $exchange_rate = \App\Helpers\exchange_rate($user_preferred_currency);
 
         $course = Course::create([
             "title" => $request->title,
-            "description" => $request->description, 
+            "description" => $request->description,
             "pre_req" => $request->pre_req,
             "price" => $request->price / $exchange_rate,
             "thumbnail" => $fileName,
@@ -150,7 +158,7 @@ class CourseController extends Controller
     }
 
     public function changeStatus(Request $request, Course $course) {
-        
+
         $this->middleware("is_course_owner:$course->slug");
         $course->update([
             "status" => !$course->status
@@ -160,6 +168,8 @@ class CourseController extends Controller
     }
     public function create() {
         $categories = Category::all();
-        return view("Teaching.create", compact("categories"));
+        return Inertia::render("Courses/Add", [
+            "categories" => $categories
+        ]);
     }
 }
