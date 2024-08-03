@@ -13,6 +13,7 @@ use App\Services\VideoDescription;
 use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Inertia\Inertia;
 
 
 class ContentController extends Controller
@@ -34,14 +35,14 @@ class ContentController extends Controller
         return $this->response("success", $successResponse);
     }
     public function get(Content $content) {
-        
+
         $course = Course::find(request()->get("course_id"));
         $video = $content->content;
-        
+
         $content = $this->checkContentEligibility($content, $video);
-        
+
         return $content;
-    
+
     }
     public function store(ContentRequest $request, Section $section, LinkedList $list, ResumableJS $jws, VideoDescription $videoService) {
         $title = $request->title;
@@ -52,7 +53,7 @@ class ContentController extends Controller
             $count = $section->contents->count();
             $previous_content = $list->get_last($section);
             $duration = $videoService->getDuration($fileName);;
-            
+
             $new_content = $section->contents()->create([
                 "title" => $title,
                 "status" => 1,
@@ -67,17 +68,17 @@ class ContentController extends Controller
                 "next_video" => $new_content->id
             ]);
 
-            
+
 
         });
-        
+
         return $progress;
 
     }
     public function update(ContentUpdateRequest $request, Content $content, LinkedList $list, ResumableJS $jws) {
         $title = $request->title;
         $description = $request->description;
-        
+
         $progress = $jws->upload($request, function($fileName) use($content, $title, $description) {
             File::delete(public_path("uploads/" . $content->content));
             $content->update([
@@ -98,6 +99,7 @@ class ContentController extends Controller
     }
     public function destroy(Content $content, LinkedList $list) {
         $list->remove($content);
-        return redirect()->back();
+        $contents = $content->section->contents;
+        return $contents;
     }
 }

@@ -11,7 +11,6 @@ defineProps({
 let radioButton = ref();
 
 async function changed() {
-    alert(radioButton.value.id)
     const status = await axios.put(`/instructor/course/${radioButton.value.id}/status`);
 }
 

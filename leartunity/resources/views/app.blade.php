@@ -32,6 +32,8 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
       <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
       <script src="http://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+
+        <meta name="csrf-token" content="{{ csrf_token() }}">
  @vite('resources/js/app.js')
    @php
 
@@ -59,6 +61,8 @@
   <body>
     @inertia
 
+
+    <script src="{{ asset('js/accordion.js') }}"></script>
 
     <script src="{{ asset("js/transition.js") }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

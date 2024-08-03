@@ -48,7 +48,14 @@ class CourseController extends Controller
         $reviews = $course?->reviews->reviews ?? "";
         if($reviews)
             $reviews = (new Pagination($reviews, request()))->manualPaginate();
-        return view("user.courses.course", compact("sections", "course", "reviews", "introduction"));
+        $courses_count = $course->author->courses->count();;
+        return Inertia::render("Courses/Course", [
+            "sections" => $sections,
+            "course" => $course,
+            "reviews" => $reviews,
+            "courses_count" => $courses_count,
+            "introduction" => $introduction
+        ]);
     }
 
     public function getCourses() {

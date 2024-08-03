@@ -1,5 +1,5 @@
 <x-layout>
-     
+
     <div class="progression" style="padding: 10px;position: fixed; margin: 0 auto; top: 10px; right: 10px;">
         <div class="progress-bar none" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="--value:5"></div>
     </div>
@@ -11,10 +11,10 @@
                     <p id="section-title-{{ $section->id }}">{{ $section->section_name }}</p>
                     <div class="flex">
                         <form method="POST" name="deleteCourse" action="{{ route('section.delete', [ 'section' => $section ]) }}" class="flex" id="deleteCourse">
-                            @csrf 
+                            @csrf
                             {{ method_field("DELETE") }}
                             <p class="mr-2">{{ $section->contents->count() }} @lang("Videos")</p>
-                            <p class="mr-2">|</p> 
+                            <p class="mr-2">|</p>
                             <button class="text-red-400 mr-2">@lang("Delete")</button>
                             <p class="mr-2">|</p>
                         </form>
@@ -32,7 +32,7 @@
                                     @else
                                         <div class="mr-2">
                                         <p><span class="mr-1">{{ count((array)json_decode($content->content)) - 1 }}</span>Question(s)</p></div>
-                                    @endif  
+                                    @endif
                                     <form method="POST" action="{{ route('content.delete', [ 'content' => $content->id ]) }}">
                                         @csrf
                                         {{ method_field("DELETE") }}
@@ -173,11 +173,11 @@
                             testChunks: false,
                             throttleProgressCallbacks: 1,
                         });
-                    
+
                         resumable.on("fileAdded", function(file) {
                             console.log("start")
                         })
-                           
+
                         resumable.on("fileProgress", function(file) {
                             const progressBar = document.querySelector(".progress-bar");
                             const progressStyle = progressBar.style;
@@ -212,20 +212,20 @@
                         showLoaderOnConfirm: true,
                         didOpen: function() {
                             const content = document.getElementById("content-video");
-                            console.log(resumable.assignBrowse(content)); 
+                            console.log(resumable.assignBrowse(content));
                         },
 
                         allowOutsideClick: () => !Swal.isLoading(),
                     }).then((result) => {
-                     
+
                         if (result.isConfirmed) {
                             const contentList = document.getElementById("core-contents-" + id);
-                            
+
                             const content = document.getElementById("content-video");
                             const title = document.getElementById("content-title").value;
                             const description = document.getElementById("content-description").value;
                             resumable.opts.query = {
-                                ...resumable.opts.query, 
+                                ...resumable.opts.query,
                                 title,
                                 description
                             }
@@ -234,7 +234,7 @@
                             data.append("content", content.files[0])
                             data.append("title", title.value);
                             data.append("description", description);
-                            
+
                             resumable.upload();
 
                         }
@@ -260,25 +260,25 @@
                         showLoaderOnConfirm: true,
                         didOpen: function() {
                             const content = document.getElementById("content-video");
-                            resumable.assignBrowse(content); 
+                            resumable.assignBrowse(content);
                         },
 
                         allowOutsideClick: () => !Swal.isLoading(),
                     }).then((result) => {
-                     
+
                         if (result.isConfirmed) {
                             const contentList = document.getElementById("core-contents-" + id);
-                            
+
                             const content = document.getElementById("content-video");
-                            
+
                             const title = document.getElementById("content-title");
                             const description = document.getElementById("content-description");
                             resumable.opts.query = {
-                                ...resumable.opts.query, 
+                                ...resumable.opts.query,
                                 title: title.value,
                                 description: description.value
                             }
-                          
+
                             resumable.opts.target = `/instructor/content/${id}/update`;
                             const data = new FormData();
                             data.append("title", title.value);

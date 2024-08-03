@@ -9,6 +9,7 @@
 <script setup>
 
 import CourseForm from "../../Components/Essentials/Forms/CourseForm.vue";
+import Layout from "../../Shared/Layout.vue"
 
 let props = defineProps({
     course: Array,

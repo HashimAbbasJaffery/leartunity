@@ -22,7 +22,7 @@ Route::post("/content/{section}/quiz/add", [QuizController::class, "store"])->na
 Route::get("/course/create", [CourseController::class, "create"]);
 Route::put("/course/{course_o}/status", [CourseController::class, "changeStatus"])->name("course.changeStatus");
 Route::get("/course/{course_slug_o}", [CourseController::class, "show"])->name("course.show");
-Route::post("/course/create", [CourseController::class, "store"])->name("course.create");
+Route::post("/course/store", [CourseController::class, "store"])->name("course.create");
 Route::get("/course/{course_slug_o}/edit", [CourseController::class, "edit"])->name("course.edit");
 Route::put("/course/{course_slug_o}/create", [CourseController::class, "update"])->name("course.update");
 Route::delete("/course/{course_slug_o}/delete", [CourseController::class, "destroy"])->name("course.delete");

@@ -19,21 +19,21 @@ class SectionController extends Controller
         // } catch(Exception $e) {
         //     $section = $request->route()->parameters()["section"];
         //     $section = Section::find($section);
-        //     $slug = $section->course->slug; 
+        //     $slug = $section->course->slug;
         // }
-        // $this->middleware("is_course_owner:$slug");
+        // $this->middleware("is_course_owner:$strslug");stor
     }
     public function store(SectionRequest $request, Course $course) {
-        
+
         $section_name = $request->section_name;
         $count = $course->sections->count();
-        $course->sections()->create([
+        $section =$course->sections()->create([
             "section_name" => $section_name,
             "status" => 1,
             "sequence" => $count + 1
         ]);
 
-        return 1;
+        return Section::all();
     }
 
     public function destroy(Section $section) {
@@ -46,7 +46,7 @@ class SectionController extends Controller
         $section->update([
             "section_name" => $section_name,
         ]);
-        
+
         return 1;
     }
 }

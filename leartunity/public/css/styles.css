@@ -72,7 +72,7 @@ input[type='submit'] {
     font-size: 20px;
     font-weight: light;
 }
-form { 
+form {
     display: flex;
     align-items: center;
     width: 100%;
@@ -262,7 +262,7 @@ input#q {
     padding: 0px !important;
     font-weight: bold;
     padding-top: 20px;
-    text-transform: capitalize; 
+    text-transform: capitalize;
 }
 .plan {
     border-radius: 10px;
@@ -333,16 +333,16 @@ input#q {
 ::-webkit-scrollbar {
     width: 12px; /* Width of the scrollbar */
   }
-  
+
   ::-webkit-scrollbar-thumb {
     background-color: var(--primary); /* Color of the scrollbar thumb */
     border-radius: 6px; /* Border radius of the scrollbar thumb */
   }
-  
+
   ::-webkit-scrollbar-track {
     background-color: #f1f1f1; /* Color of the scrollbar track */
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     background-color: rgb(92, 92, 92); /* Color of the scrollbar thumb on hover */
   }
@@ -401,9 +401,9 @@ section.intro-video {
 
 /* body {
 	background-color: #6DC4F4;
-}h1 { 
+}h1 {
      color:white;
- 
+
 } */
 
 .container_playlist {
@@ -411,7 +411,7 @@ section.intro-video {
     max-width: 600px;
     margin: 50px auto;
   }
-  
+
   button.accordion {
     width: 100%;
     background-color: whitesmoke;
@@ -424,7 +424,7 @@ section.intro-video {
     cursor: pointer;
     transition: background-color 0.2s linear;
   }
-  
+
   button.accordion:after {
     font-family: FontAwesome;
     content: "\f150";
@@ -432,16 +432,16 @@ section.intro-video {
     font-size: 18px;
     float: right;
   }
-  
+
   button.accordion.is-open:after {
     content: "\f151";
   }
-  
+
   button.accordion:hover,
   button.accordion.is-open {
     background-color: #ddd;
   }
-  
+
   .accordion-content {
     background-color: white;
     border-left: 1px solid whitesmoke;
@@ -471,7 +471,7 @@ section.intro-video {
 
 .accordion-content ul li {
     padding-bottom: 5px;
-    
+
     text-decoration: underline;
     padding-top: 5px;
 }

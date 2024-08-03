@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-    protected $with = "categories";
+    protected $with = ["categories", "reviews", "author"];
     protected $guarded = [];
     public function purchases() {
         return $this->hasMany(Purchase::class, "purchase_product_id", "stripe_id");

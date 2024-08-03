@@ -112,7 +112,6 @@ class CourseController extends Controller
     }
     public function store(CourseRequest $request) {
 
-        $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
 
@@ -126,7 +125,7 @@ class CourseController extends Controller
 
         $product_id = $stripe->id;
 
-        $data = $request->get("base64");
+        $data = $request->get("image");
         list(, $data)      = explode(',', $data);
         $data = base64_decode($data);
         $fileName = time() . ".png";
@@ -148,13 +147,18 @@ class CourseController extends Controller
             "stripe_id" => $stripe->default_price,
             "stripe_product_id" => $product_id
         ]);
-        $course->categories()->attach($categories);
+        $course->categories()->attach(request()->categories);
 
         return redirect()->to("/instructor");
     }
     public function show(Request $request, Course $course) {
         $sections = $course->sections;
-        return view("Teaching.show", compact("course", "sections"));
+        $csrf = csrf_token();
+        return Inertia::render("Instructor/Content/Add", [
+            "course" => $course,
+            "sections" => $sections,
+            "csrf" => $csrf
+        ]);
     }
 
     public function changeStatus(Request $request, Course $course) {

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class ResumableJS {
             $file->move(public_path("uploads"), $fileName);
 
             $closure($fileName);
-        }  
+        }
 
         $handler = $save->handler();
 

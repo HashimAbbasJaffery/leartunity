@@ -14,6 +14,7 @@ class Section extends Model
 {
     use HasFactory;
 
+    protected $with = "contents";
     protected $guarded = [];
     public function course() {
         return $this->belongsTo(Course::class, "course_id");

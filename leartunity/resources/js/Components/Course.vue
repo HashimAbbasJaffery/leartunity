@@ -6,9 +6,11 @@ import NavLink from "./NavLink.vue"
 import Instructor from "./Instructor.vue";
 import swal from "sweetalert";
 
-defineProps({
+let props = defineProps({
     course: Object
 })
+
+
 
 
 </script>
@@ -27,7 +29,7 @@ defineProps({
                 <img v-if="course.thumbnail" :src="'/course/'+course.thumbnail" style="border-radius: 10px;" height="600" width="400" alt="">
                 <img v-if="!course.thumbnail" src="https://placehold.co/600x400" height="600" width="400" alt="">
         </div>
-        <Instructor href="#" :imae="null" name="Hashim" rating="4"/>
+        <Instructor href="#" :image="course.author?.profile?.profile_pic ?? null" :name="course.author.name" :rating="props.course.reviews?.stars ?? null"/>
 
         <div class="course-detail mt-4">
             <div class="course-description">
@@ -36,11 +38,11 @@ defineProps({
                 </h1>
                 {{ course.description.substring(0, 80) }}
             </div>
-            <div class="course-options mt-2">
-                <a href="#">Enroll</a>
-                <a href="#">See Details</a>
-
-                <a href="#">Manage</a>        </div>
+            <div class="course-options mt-2 space-x-2">
+                <NavLink href="#">Enroll</NavLink>
+                <NavLink :href="`/course/${course.slug}`">See Details</NavLink>
+                <NavLink :href="`/instructor/course/${course.slug}`">Manage</NavLink>
+            </div>
             <div class="course-price flex justify-between">
                 <p>{{ course.price }} $</p>
                 <p>Duration: {{ course.contents_sum_duration }}</p>
