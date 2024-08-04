@@ -27,13 +27,13 @@ class SectionController extends Controller
 
         $section_name = $request->section_name;
         $count = $course->sections->count();
-        $section =$course->sections()->create([
+        $section = $course->sections()->create([
             "section_name" => $section_name,
             "status" => 1,
             "sequence" => $count + 1
         ]);
 
-        return Section::all();
+        return [...$course->sections, $section];
     }
 
     public function destroy(Section $section) {

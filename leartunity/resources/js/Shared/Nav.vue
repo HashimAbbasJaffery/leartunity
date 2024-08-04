@@ -1,11 +1,19 @@
 <script setup>
 import NavLink from '../Components/NavLink.vue';
+import { usePage } from '@inertiajs/vue3';
+import {computed} from "vue"
 
+const page = usePage();
+const user = page.props.auth.user;
+const isUser = computed(() => user);
+const isGuest = computed(() => !user);
+const isAdmin = computed(() => user.role === "admin");
+const isTeacher = computed(() => user.role !== "user");
 </script>
 <template>
   <nav>
     <ul style="position: relative; height: 36px">
-      <li>
+      <li v-if="isAdmin">
         <NavLink href="/admin">Admin</NavLink>
       </li>
       <li class="mx-3">
@@ -14,7 +22,7 @@ import NavLink from '../Components/NavLink.vue';
       <li class="mx-3">
         <NavLink href="/courses">Courses</NavLink>
       </li>
-      <li class="mx-3">
+      <li class="mx-3" v-if="isTeacher">
         <NavLink href="/instructor">Instructor</NavLink>
       </li>
 
@@ -22,15 +30,16 @@ import NavLink from '../Components/NavLink.vue';
         <NavLink href="/referrals">Referrals</NavLink>
       </li>
 
-      <li class="mx-3 highlighted">
-        <NavLink href="/profile/1">Hashim</NavLink>
+      <li class="mx-3 highlighted" v-if="user">
+        <NavLink href="/profile/1">{{ user.name }}</NavLink>
       </li>
-      <li class="mx-3">
+    <li class="mx-3" v-if="isGuest">
         <NavLink href="/register">Register</NavLink>
-      </li>
-      <li class="mx-3 highlighted">
+    </li>
+    <li class="mx-3 highlighted" v-if="isGuest">
         <NavLink href="/login">Login</NavLink>
-      </li>
+    </li>
+
 
       <ul class="notification-drop" style="position: relative">
         <li class="item">
@@ -75,12 +84,13 @@ import NavLink from '../Components/NavLink.vue';
            style="font-size: 20px"
           class="bold-600 text-xl"
             href="/logout"
+            v-if="isUser"
         >
             <i class="fa-solid fa-power-off"></i>
         </NavLink>
       </li>
       <li>
-        <NavLink href="/test">1</NavLink>
+        <NavLink href="/test">{{ user.balance }}</NavLink>
       </li>
     </ul>
   </nav>

@@ -15,14 +15,14 @@
                         </div>
                         <div class="action-buttons" v-if="instructor">
                             <button @click="deleteContent(content.id)"  class="bg-red-400 hover:bg-red-500 text-white px-2 py-1 rounded mx-2">Delete</button>
-                            <button @click="addContent" class="bg-blue-400 hover:bg-blue-500 text-white px-2 py-1 rounded mx-2">Update</button>
+                            <button @click="addContent(content.id, 2)" class="bg-blue-400 hover:bg-blue-500 text-white px-2 py-1 rounded mx-2">Update</button>
                         </div>
                     </div>
                 </li>
             </ul>
             <div class="options ml-5" style="display: flex;" v-if="instructor">
                     <a href="#" id="contents-1"
-                        @click="addContent"
+                        @click="addContent(section.id)"
                         class="create-content create-course rounded text-center py-2"
                         style="width:100%; display: inline-block">
                         <i class="fa-solid fa-plus p-3 rounded-full"
@@ -113,8 +113,9 @@ watch(expandedSection, function() {
         expand.value = false;
     }
 })
-
-function successUpload() {
+let actionType = ref(1);
+let clickedId = ref();
+const successUpload = () => {
     const content = document.getElementById("content-video");
     const title = document.getElementById("content-title").value;
     const description = document.getElementById("content-description").value;
@@ -123,15 +124,13 @@ function successUpload() {
         title,
         description
     }
-    props.resumable.resumable.opts.target = `/instructor/content/${props.section.id}/update`
+    props.resumable.resumable.opts.target = `/instructor/content/${clickedId.value}/${actionType.value == 1 ? 'add' : 'update'}`
     const data = new FormData();
     data.append("content", content.files[0])
     data.append("title", title.value);
     data.append("description", description);
 
     props.resumable.resumable.upload();
-
-
 }
 function uploadPreparation() {
     setTimeout(() => {
@@ -141,8 +140,10 @@ function uploadPreparation() {
 }
 
 let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-function addContent() {
+function addContent(id, action = 1) {
     let modal = new Modal();
+    actionType.value = action;
+    clickedId.value = id;
     modal.oneInput("Upload Content", successUpload, true, true, "html", uploadPreparation,
     '<input type="text" id="content-title" class="mb-2" style="width: 100%; border: 1px solid var(--primary); resize: none" ><textarea id="content-description" type="text" style="width: 100%; border: 1px solid var(--primary); height: 100px; resize: none" class="mb-2"></textarea> <input id="content-video" style="border: none;width: 100%;" type="file" value="Choose Files"/>', csrf)
 }

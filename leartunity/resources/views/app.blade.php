@@ -10,7 +10,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Leartunity</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="stylesheet" href="{{ asset("css/output.css") }}">
+    <link rel="stylesheet" href="{{ asset('/css/login.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.1.0/resumable.min.js"></script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

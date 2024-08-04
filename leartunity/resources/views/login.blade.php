@@ -27,7 +27,7 @@
         <div class="vector-art">
             <img src="{{ asset('/img/login-img.png') }}" height="450"  class="login-cover" alt="">
         </div>
-        
+
         <div class="login-form">
             <div class="logo text-center">
                 <h1>Leartunity.</h1>
@@ -39,20 +39,20 @@
                 @error("email")
                     <p class="err-message">{{ $message }}</p>
                 @enderror
-                <input 
-                    id="email" 
-                    type="email" 
-                    class="@error('email') invalid @enderror" 
-                    name="email" 
+                <input
+                    id="email"
+                    type="email"
+                    class="@error('email') invalid @enderror"
+                    name="email"
                     placeholder="@lang('Type Email')"
                     value="{{ old('email') }}"
                 >
                 @error("password")
                     <p class="err-message">{{ $message }}</p>
                 @enderror
-                <input 
-                    type="password" 
-                    name="password" 
+                <input
+                    type="password"
+                    name="password"
                     placeholder="@lang('Password')"
                     class="@error('password') invalid @enderror"
                     valie="{{ old('password') }}"

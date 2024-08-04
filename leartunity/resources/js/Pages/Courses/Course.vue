@@ -66,7 +66,7 @@
                 <div class="course-rating flex">
 
 
-                  <p class="ml-1" v-html="calculateReviewStars(course.reviews?.stars) + ` (${course.reviews?.stars})` ?? null"></p>
+                  <p class="ml-1" v-html="calculateReviewStars(course.reviews?.stars)"></p>
                 </div>
               </div>
             </div>

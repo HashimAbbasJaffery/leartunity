@@ -10,6 +10,7 @@ use App\Services\ContentService;
 use App\Services\CourseCertificate;
 use App\Services\VideoTrackingService;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\CashierServiceProvider;
 use Stripe\StripeClient;
@@ -35,5 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(StripeClient::class)
                     ->needs('$config')
                     ->give(env("STRIPE_SECRET"));
+
+        Inertia::share("user", auth()->user());
     }
 }

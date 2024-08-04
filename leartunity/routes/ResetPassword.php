@@ -1,14 +1,15 @@
-<?php 
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
+use Inertia\Inertia;
 
 
-// Reset-Password 
+// Reset-Password
 
 Route::get("forgot-password", function() {
-    return view("forgot-password");
+    return Inertia::render("Session/ForgotPassword");
 });
 
 Route::post("forgot-password", function(\Illuminate\Http\Request $request) {
@@ -19,13 +20,15 @@ Route::post("forgot-password", function(\Illuminate\Http\Request $request) {
     $email = $request->only("email");
     $status = Password::sendResetLink($email);
 
-    return $status === Password::RESET_LINK_SENT 
+    return $status === Password::RESET_LINK_SENT
                         ? back()->with("success", "We have sent you an email")
-                        : back()->with("error", "We couldn't find your email"); 
+                        : back()->with("error", "We couldn't find your email");
 })->middleware("guest")->name("forgot-password");
 
 Route::get("reset-password/{token}", function(string $token) {
-    return view("reset-password", compact("token"));
+    return Inertia::render("Session/ResetPassword", [
+        "token" => $token
+    ]);
 })->name("password.reset");
 
 Route::post("reset-password", function(\Illuminate\Http\Request $request) {
@@ -45,6 +48,6 @@ Route::post("reset-password", function(\Illuminate\Http\Request $request) {
     });
 
     return $status === Password::PASSWORD_RESET
-                        ? to_route("login")->with("success", "Password has been changed")
-                        : back()->with("error", "You probably wrote wrong email address");
+                        ? to_route("login")->with("message", "Password has been changed")
+                        : back()->with("message", "You probably wrote wrong email address");
 })->name("reset-password");

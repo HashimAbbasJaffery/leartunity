@@ -7,11 +7,15 @@ use App\Services\StreakService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Inertia\Inertia;
 
 class SessionController extends Controller
 {
     public function index() {
-        return view("login");
+        $token = csrf_token();
+        return Inertia::render("Session/Login", [
+            "token" => $token
+        ]);
     }
 
     public function create(LoginRequest $request, StreakService $streak) {
@@ -23,10 +27,11 @@ class SessionController extends Controller
             $request->session()->regenerate();
             $user = User::find(auth()->id());
             $last_login = $streak->checkAndUpdate($user);
-            return redirect()->intended("/");
+            $intendedUrl = session()->get('url.intended');
+            return $intendedUrl ? redirect($intendedUrl) : redirect("/courses");
         }
 
-        return redirect()->back()->with("error", "Invalid Username or Password");
+        return back()->with("message", "Invalid Username or Password");
     }
     public function logout(Request $request) {
         Auth::logout();
@@ -41,7 +46,9 @@ class SessionController extends Controller
         $user = "";
         if($referral_id)
             $user = User::select("name", "id")->find($referral_id);
-    
-        return view("register", compact("user"));
+
+        return Inertia::render("Session/Register", [
+            "referrer" => $user
+        ]);
     }
 }

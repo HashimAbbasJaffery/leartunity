@@ -7,6 +7,7 @@ import Buttons from "../../Components/Essentials/Buttons.vue";
 import Category from "../../Components/Category/Category.vue";
 import axios from "axios";
 import Loading from "../../Components/Essentials/Loading.vue";
+import { usePage } from "@inertiajs/vue3";
 
 import {router} from "@inertiajs/vue3"
 
@@ -55,6 +56,9 @@ function clearFilter() {
         clear.value = false
     }, 0)
 }
+
+const page = usePage()
+console.log(page.props.auth.user)
 
 
 </script>
