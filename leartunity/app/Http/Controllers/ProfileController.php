@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules\File as FileValidation;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
@@ -19,7 +20,7 @@ class ProfileController extends Controller
     }
     public function index(Request $request) {
         $user = auth()->user();
-        $profile = Profile::where("user_id", $request->id)->first();
+        $profile = Profile::with("user.follows")->where("user_id", $request->id)->first();
 
         if(!$profile) {
             auth()->user()->profile()->create([
@@ -44,8 +45,14 @@ class ProfileController extends Controller
 
         $is_following = $user?->follows_to()->where("follower_id", $user->id)->exists();
         $followersCount = $profile->user->follows->count();
-
-        return view("guest.profile.profile", compact("count", "avgRating", "profile", "courses", "is_following", "followersCount"));
+        return Inertia::render("User/Profile", [
+            "count" => $count,
+            "avgRating" => $avgRating,
+            "profile" => $profile,
+            "courses" => $courses,
+            "is_following" => $is_following,
+            "followersCount" => $followersCount
+        ]);
     }
     public function changeProfileImage(ImageUploadingRequest $request, Profile $profile) {
         $data = $request->get("profile_pic");
@@ -77,7 +84,7 @@ class ProfileController extends Controller
         auth()->user()->profile()->update([
             $column => $image_name
         ]);
-        
+
         return $this->response("success", [$column, $image_name]);
     }
 }

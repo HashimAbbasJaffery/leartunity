@@ -21,6 +21,7 @@ class Cropper {
             this.$image_crop.croppie('bind', {
                 url: event.target.result
             })
+            return
         }
         reader.readAsDataURL(element.files[0]);
     }

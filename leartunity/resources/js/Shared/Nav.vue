@@ -31,7 +31,7 @@ const isTeacher = computed(() => user.role !== "user");
       </li>
 
       <li class="mx-3 highlighted" v-if="user">
-        <NavLink href="/profile/1">{{ user.name }}</NavLink>
+        <NavLink :href="`/profile/${user.id}`">{{ user.name }}</NavLink>
       </li>
     <li class="mx-3" v-if="isGuest">
         <NavLink href="/register">Register</NavLink>
