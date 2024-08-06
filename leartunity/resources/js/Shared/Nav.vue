@@ -17,7 +17,7 @@ const isTeacher = computed(() => user.role !== "user");
         <NavLink href="/admin">Admin</NavLink>
       </li>
       <li class="mx-3">
-        <NavLink href="#">My Learning</NavLink>
+        <NavLink href="/learn">My Learning</NavLink>
       </li>
       <li class="mx-3">
         <NavLink href="/courses">Courses</NavLink>
