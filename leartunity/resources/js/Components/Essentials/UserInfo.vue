@@ -2,7 +2,7 @@
 
 <div class="profile-intro container mx-auto cover" :style="`background: url('/cover/${cover}') no-repeat; background-size: cover;`">
     <div class="profile-pic profile_pic" style="background: url('#');  background-size: cover;">
-        <ProfilePic @changePicture="changePicture($event)" :profile_pic="picture" :id @toggleModal="isOpen = true"></ProfilePic>
+        <ProfilePic @changePicture="changePicture($event)" :profile_pic="profile_pic" :id @toggleModal="isOpen = true"></ProfilePic>
     </div>
     <label for="cover">
         <div class="edit-cover flex">
@@ -16,7 +16,7 @@
 <script setup>
 import ProfilePic from './ProfilePic.vue';
 import Cropper from "../../../../resources/js/Classes/Cropper.js";
-import {ref} from "vue"
+import {ref, toRef} from "vue"
 import { router } from '@inertiajs/vue3';
 
 let props = defineProps({
@@ -24,23 +24,25 @@ let props = defineProps({
     profile_pic: String,
     id: Number
 });
-let cover = ref(props.cover)
-let picture = ref(props.profile_pic)
+toRef(props.profile_pic)
+toRef(props.cover)
+
 
 
 let emit = defineEmits(["toggleModal", "sendCropper"]);
 
 
 let cropper = new Cropper(134, 134, "circle", "#cropper");
-
-
 const changePicture = (element, type) => {
     emit("toggleModal", true);
     let $image_crop;
-    $image_crop = cropper.get();
     if(type === 'cover') {
         cropper.destroy();
         cropper = new Cropper(856, 300, "square", "#cropper");
+        $image_crop = cropper.get();
+    } else {
+        cropper.destroy();
+        cropper = new Cropper(134, 134, "circle", "#cropper");
         $image_crop = cropper.get();
     }
     cropper.bindPicture(element.target);

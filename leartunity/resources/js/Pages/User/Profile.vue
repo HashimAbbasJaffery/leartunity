@@ -3,8 +3,8 @@
 
 <!-- Modal toggle -->
     <p>{{ isOpen }}</p>
-    <Modal @toggleModal="isOpen = $event" :id="profile.id" :cropperObj="cropper"></Modal>
-    <UserInfo @sendCropper="cropper = $event" @toggleModal="isOpen = $event" :profile_pic="profile.profile_pic" :cover="profile.cover" :id="profile.id"></UserInfo>
+    <Modal @changeProfile="profilePic = $event" @changeCover="cover = $event" @toggleModal="isOpen = $event" :id="profile.id" :cropperObj="cropper"></Modal>
+    <UserInfo @sendCropper="cropper = $event" @toggleModal="isOpen = $event" :profile_pic="profilePic" :cover="cover" :id="profile.id"></UserInfo>
     <div class="profile-content container mx-auto flex">
         <aside  class="py-4 h-auto" style="width: 30%;">
             <div v-if="user" class="aside-wrapper">
@@ -98,6 +98,8 @@ Echo.join(`profile.${props.profile.id}`)
 let isOpen = ref(false);
 provide("isOpen", isOpen);
 provide("cropper", cropper)
+let cover = ref(props.profile.cover);
+let profilePic = ref(props.profile.profile_pic);
 
 </script>
 
