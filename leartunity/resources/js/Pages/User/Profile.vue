@@ -2,8 +2,9 @@
 <Layout>
 
 <!-- Modal toggle -->
-
-    <UserInfo :profile_pic="profile.profile_pic" :cover="profile.cover" :id="profile.id"></UserInfo>
+    <p>{{ isOpen }}</p>
+    <Modal @toggleModal="isOpen = $event" :id="profile.id" :cropperObj="cropper"></Modal>
+    <UserInfo @sendCropper="cropper = $event" @toggleModal="isOpen = $event" :profile_pic="profile.profile_pic" :cover="profile.cover" :id="profile.id"></UserInfo>
     <div class="profile-content container mx-auto flex">
         <aside  class="py-4 h-auto" style="width: 30%;">
             <div v-if="user" class="aside-wrapper">
@@ -61,6 +62,7 @@ let props = defineProps({
 let page = usePage();
 
 let user = page.props.auth.user;
+let cropper = ref();
 
 let user_id = null;
 let follows = [];
@@ -93,7 +95,9 @@ Echo.join(`profile.${props.profile.id}`)
     })
 
 
-
+let isOpen = ref(false);
+provide("isOpen", isOpen);
+provide("cropper", cropper)
 
 </script>
 

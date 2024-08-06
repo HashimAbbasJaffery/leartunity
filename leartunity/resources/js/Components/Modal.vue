@@ -18,7 +18,7 @@
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
-                    <span class="sr-only">Close modal</span>
+                    <span class="sr-only" id="lol">Close modal</span>
                 </button>
             </div>
             <!-- Modal body -->
@@ -27,7 +27,7 @@
             </div>
             <!-- Modal footer -->
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button type="button" id="modal-gateway" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crop</button>
+                <button @click="testing" type="button" id="modal-gateway" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crop</button>
                 <button data-modal-hide="default-modal" type="button" class="cancel py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
             </div>
         </div>
@@ -42,9 +42,58 @@ import {inject, watch, ref} from "vue"
 let isOpen = inject("isOpen");
 let toggle = ref();
 
-watch(isOpen, () => {
-    toggle.value.click();
+let props = defineProps({
+    cropperObj: Object,
+    id: Number
 })
+
+watch(isOpen, () => {
+    console.log(isOpen.value);
+    if(isOpen.value) {
+        console.log("Open");
+        toggle.value.click();
+    } else {
+        console.log("Close")
+        toggle.value.classList.add = "hide"
+    }
+})
+
+let emit = defineEmits(["toggleModal"]);
+
+function testing() {
+    props.cropperObj.upload(resp => {
+    console.log("uplading...")
+    const type = props.cropperObj.getType();
+    const name = type === "square" ? "cover" : "profile_pic";
+    const data = new FormData();
+    data.append(name, resp);
+    let parameters = {
+        [name]: resp
+    }
+    axios.post(`/user/${ props.id }/picture`, data)
+        .then(res => {
+
+            const data = res.data;
+            console.log(data);
+            $(".cancel").click();
+
+            const isSuccess = data.type;
+            if(isSuccess === "failed") return;
+            console.log(data);
+            const fileType = data.message[0];
+            const fileName = data.message[1];
+
+            // if(type === "square") {
+            //     cover.value = fileName
+            // } else {
+            //     picture.value = fileName;
+            // }
+
+            $("#modal-gateway").off("click");
+            emit("toggleModal", false);
+        })
+})
+}
 
 </script>
 

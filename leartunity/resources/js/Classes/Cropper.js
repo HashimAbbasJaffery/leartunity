@@ -8,6 +8,10 @@ class Cropper {
             height:300
             }
         });
+        this.type = type;
+    }
+    getType() {
+        return this.type;
     }
     get() {
         return this.$image_crop;
