@@ -53,6 +53,15 @@ class LearningController extends Controller
         $quiz_tracker = !count($quiz_tracker) ? $quiz_tracker : reset($quiz_tracker);
 
         $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
-        return view("Learning.course", compact("course", "comments", "current_content", "next_content", "tracker", "instance_tracker", "quiz_tracker"));
+
+        return Inertia::render("Learning/Course", [
+            "course" => $course,
+            "comments" => $comments,
+            "current_content" => $current_content,
+            "next_content" => $next_content,
+            "tracker" => $tracker,
+            "instance_tracker" => $instance_tracker,
+            "quiz_tracker" => $quiz_tracker
+        ]);
     }
 }

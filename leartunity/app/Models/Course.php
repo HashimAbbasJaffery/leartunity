@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-    protected $with = ["categories", "reviews", "author"];
+    protected $with = ["categories", "reviews", "author", "tracker", "contents", "sections"];
     protected $guarded = [];
     public function purchases() {
         return $this->hasMany(Purchase::class, "purchase_product_id", "stripe_id");
@@ -31,7 +31,7 @@ class Course extends Model
         return $this->hasMany(Section::class);
     }
     public function comments() {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->whereNull("replies_to");
     }
     public function contents() {
         return $this->hasManyThrough(Content::class, Section::class, "course_id", "contentable_id");

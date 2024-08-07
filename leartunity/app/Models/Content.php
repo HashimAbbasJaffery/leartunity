@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Content extends Model
 {
+    protected $with = "comments";
     use HasFactory;
     protected $guarded = [];
 
@@ -29,5 +30,8 @@ class Content extends Model
     }
     public function previous() {
         return $this->belongsTo(Content::class, "previous_video");
+    }
+    public function comments() {
+        return $this->hasMany(Comment::class)->whereNull("replies_to");
     }
 }

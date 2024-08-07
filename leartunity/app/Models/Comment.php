@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    protected $with = ["replies", "user"];
     protected $guarded = [];
     public function course(){
         return $this->belongsTo(Course::class);

@@ -8,6 +8,7 @@ import swal from "sweetalert";
 import { usePage } from "@inertiajs/vue3";
 import PilllMessage from "./Messages/PilllMessage.vue";
 import {computed} from "vue"
+import { secondsToHms } from "../Helpers/Helper";
 
 let props = defineProps({
     course: Object
@@ -18,25 +19,6 @@ const user = page.props.auth.user;
 const isOwner = computed(() => user.id === props.course.author_id);
 
 
-function secondsToHms(seconds) {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-
-  let timeString = "";
-
-  if (h > 0) {
-    timeString += `${h} hrs `;
-  }
-  if (m > 0) {
-    timeString += `${m} mins `;
-  }
-  if(s > 0) {
-      timeString += `${s} secs`;
-  }
-
-  return timeString.trim();
-}
 
 console.log(props.course);
 
@@ -63,7 +45,8 @@ console.log(props.course);
                 {{ course.description.substring(0, 80) }}
             </div>
             <div class="course-options mt-2 space-x-2">
-                <NavLink href="#">Enroll</NavLink>
+                <a :href="`/checkout/${course.stripe_id}`">Enroll</a>
+                <NavLink :href="`/checkout/${course.stripe_id}`">Enroll</NavLink>
                 <NavLink :href="`/course/${course.slug}`">See Details</NavLink>
                 <NavLink v-if="isOwner" :href="`/instructor/course/${course.slug}`">Manage</NavLink>
             </div>
