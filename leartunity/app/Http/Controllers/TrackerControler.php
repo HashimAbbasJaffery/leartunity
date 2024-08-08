@@ -25,10 +25,10 @@ class TrackerControler extends Controller
             $this->certificate->generateAndStore($course);
         }
 
-        if($tracking_track === -1) return $progress;
+        if($tracking_track === -1) return $course->tracker->progress;
 
         // Store the results into the database (Core Code)
-        $course->tracker()->update([
+        $tracker = $course->tracker()->update([
             "tracking" => json_encode($tracking_track),
             "user_id" => auth()->user()->id,
             "progress" => $progress,

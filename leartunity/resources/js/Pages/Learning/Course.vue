@@ -70,6 +70,15 @@
                 </div>
             </div>
             <div class="lectures order-1 mr-2" style="width: 30%">
+                <div class="course-overview bg-slate-300 mb-4 rounded px-3 py-3">
+                    <h1 class="text-center font-bold  pb-3">{{ course.title }}</h1>
+                    <p class="text-2xs mt-3" v-if="progress < 10">0%</p>
+                    <div class="w-full progress-ccontainer bg-white" :class="{ 'mt-3': progress > 10 }" style="height: 15px">
+                        <div class="progress bg-blue-400 flex justify-end items-center relative" :style="`width: ${progress}%`" style="height: 15px;">
+                            <p class="text-2xs text-black absolute" style="top: -15px; transition: width .5s ease" v-if="progress > 10">{{ progress }}%</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="sections mb-2">
                     <Section v-for="(section, index) in course.sections" :section="section" :key="section.id" :index="index" ></Section>
                 </div>
@@ -101,8 +110,7 @@ let props = defineProps({
     next_content: Object
 })
 
-
-
+let progress = ref(props.course.tracker.progress);
 provide("course", props.course);
 provide("current_content", props.current_content);
 provide("completed", JSON.parse(props.course.tracker.tracking).map(tracker => tracker.id));
@@ -142,7 +150,7 @@ onMounted(() => {
     }
     async function updateProgress() {
         const status = await axios.post(`/learn/course/${props.current_content.id}/updateTracker/${props.course.id}`);
-        return status;
+        progress.value = status.data;
     }
     player.on('ended', e => {
         let modal = new Modal();
