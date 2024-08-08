@@ -19,6 +19,7 @@ class CommentController extends Controller
             "content_id" => $content->id,
         ]);
 
-        return $course->comments;
+        // Refetching all comments
+        return $content->refresh()->comments;
     }
 }

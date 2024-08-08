@@ -34,7 +34,10 @@ let content = inject("current_content");
 let emit = defineEmits(["hide", "addCourse"]);
 let submit = async () => {
     const status = await axios.post(`/learn/comment/${course.slug}/${content.id}/add`, { comment: comment.value, replying_to: props.replying_to });
+    console.log(status.data);
+    comment.value = "";
     emit("addCourse", status.data);
+    emit("hide")
 }
 
 

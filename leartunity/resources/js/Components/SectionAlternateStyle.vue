@@ -9,24 +9,31 @@
     </div>
 </div>
 <div class="lessons" v-if="toggleSection">
-    <LessonComponent v-for="content in contents" :content :key="content.id"></LessonComponent>
+    <LessonComponent @click="emit('changeVideo', content.content)" v-for="content in contents" :content :key="content.id"></LessonComponent>
 </div>
 </template>
 
 <script setup>
 import { convertToRoman } from '../Helpers/Helper';
 import LessonComponent from './LessonComponent.vue';
-import {ref} from "vue"
+import {ref, inject} from "vue"
 
 let props = defineProps({
     section: Object,
-    index: Number
+    index: Number,
 });
+
+let emit = defineEmits(["changeVideo"]);
 
 let contents = props.section.contents;
 let toggleSection = ref(false);
 let caretVisible = ref(false);
 
+let content = inject("current_content");
+
+if(content.section.id === props.section.id) {
+    toggleSection.value = true;
+}
 
 </script>
 

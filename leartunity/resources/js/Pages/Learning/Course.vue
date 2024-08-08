@@ -24,51 +24,8 @@
     <section class="mt-3 mb-3 px-1">
         <div class="lecture flex">
             <div class="order-2" style="width: 70%; margin-bottom: 10px;">
-                    <video id="player">
-                        <source class="video" src="#" type="video/mp4" />
-                        <source class="video" src="#" type="video/webm" />
-                        <!-- Captions are optional -->
-                    </video>
-                    <div class="content-quiz" v-if="isQuiz">
-                        <div class="description">
-                            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-                                <span class="font-medium">That's fantastic! Your score of 1% on the quiz shows you've mastered the material.</span>
-                            </div>
-                            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                                <span class="font-medium">1% isn't the end! Keep practicing, you've got this!</span>
-                            </div>
-                                <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                                    <span class="font-medium">You need to score 1% in order to be eligible for certification...</span>
-                                </div>
-                                <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-                                    <span class="font-medium">You have Passed the Exam with score of 11%</span>
-                                </div>
-                        </div>
-                        <div class="questions">
-                            <form method="POST"  name="submitQuiz" style="display: inline-block;" id="submitQuiz" action="#">
-                                    <h1 class="text-xl font-bold mb-2">Question No. 1</h1>
-
-                                        <div class="question mb-8">
-                                            <p>The Question</p>
-                                            <ul class="mt-3">
-                                                <li><input class="mr-2" type="radio" name="1" value="1">True</li>
-                                                <li><input class="mr-2" type="radio" name="1" value="0">False</li>
-                                            </ul>
-                                        </div>
-
-                                        <div class="question mb-8">
-
-                                            <p>The Question</p>
-                                            <ul class="mt-3">
-
-                                                <li><input class="mr-2" value="f">test</li>
-                                            </ul>
-                                        </div>
-                                    <input type="submit" value="Submit" style="border-radius: 0px; width: 20%; cursor: pointer;">
-                                </form>
-
-                        </div>
-                    </div>
+                    <Quiz v-if="isQuiz"></Quiz>
+                    <VideoScreen :video v-else></VideoScreen>
                 <div class="course-detail">
                     <div class="lecture-detail detail mt-3">
                         {{ current_content.description }}
@@ -114,7 +71,7 @@
             </div>
             <div class="lectures order-1 mr-2" style="width: 30%">
                 <div class="sections mb-2">
-                    <Section v-for="(section, index) in course.sections" :section="section" :key="section.id" :index="index"></Section>
+                    <Section v-for="(section, index) in course.sections" :section="section" :key="section.id" :index="index" ></Section>
                 </div>
             </div>
         </div>
@@ -128,24 +85,33 @@
 
 import Layout from "../../Shared/Layout.vue";
 import Section from "../../Components/SectionAlternateStyle.vue";
-import {computed, ref, provide} from "vue"
+import {computed, ref, provide, onMounted, onUnmounted} from "vue"
 import CommentVue from "../../Components/Comment.vue";
 import CommentModal from "../../Components/CommentModal.vue";
+import VideoScreen from "../../Components/VideoScreen.vue";
+import Quiz from "../../Components/Quiz.vue";
+import { router } from "@inertiajs/vue3";
+import Plyr from "plyr";
+import Modal from "../../Classes/Modal";
+import axios from "axios";
 
 let props = defineProps({
     course: Object,
     current_content: Object,
+    next_content: Object
 })
 
-// console.log(props.current_content.comments[0].replies);
+
 
 provide("course", props.course);
 provide("current_content", props.current_content);
+provide("completed", JSON.parse(props.course.tracker.tracking).map(tracker => tracker.id));
 
 let comments = ref(props.current_content.comments);
 let active = ref(false);
 let replying_to = ref();
 let replying_name = ref();
+let video = ref(props.current_content.content);
 
 
 function toggle(event) {
@@ -154,6 +120,46 @@ function toggle(event) {
     replying_name.value = event[1];
 }
 let isQuiz = computed(() => props.current_content.content_type === '2')
+
+let player;
+onMounted(() => {
+    player = new Plyr('#player');
+    player.source = {
+        type: 'video',
+        title: 'Example title',
+        sources: [
+            {
+                src: `/uploads/${props.current_content.content}`,
+                type: 'video/mp4',
+                size: 720,
+            },
+            {
+                src: `/uploads/${props.current_content.content}`,
+                type: 'video/webm',
+                size: 1080,
+            },
+        ],
+    }
+    async function updateProgress() {
+        const status = await axios.post(`/learn/course/${props.current_content.id}/updateTracker/${props.course.id}`);
+        return status;
+    }
+    player.on('ended', e => {
+        let modal = new Modal();
+        const status = updateProgress();
+        modal.oneInput("Do you want to see the next lecture?", function() {
+            router.get(`/learn/course/${props.course.slug}/${props.next_content.id}`)
+        }, true, "Yes", "")
+    })
+})
+
+onUnmounted(() => {
+    player.destroy();
+})
+
+
+
+
 
 
 </script>
