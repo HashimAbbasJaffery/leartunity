@@ -17,5 +17,7 @@ Route::post("course/quiz/{content}/submit", [QuizController::class, "submit"])->
 
 Route::get("certificate/{certificate_id}", function(Certificate $certificate) {
     $certificate_path = $certificate->certificate . "/certificate.pdf";
-    return response()->download($certificate_path);
+    // dd($certificate_path);
+    // return response()->download($certificate_path);
+    return response()->file($certificate_path);
 });

@@ -9,6 +9,7 @@ use App\Services\CourseCertificate;
 use Illuminate\Http\Request;
 use App\Models\Content;
 use Illuminate\Support\Arr;
+use App\Models\User;
 use Illuminate\Support\Facades\File;
 
 class TrackerControler extends Controller
@@ -21,11 +22,15 @@ class TrackerControler extends Controller
     public function update(Content $content, Course $course) {
         $service = $this->service->track($content, $course);
         [ $progress, $tracking_track ] = $service;
-        if($progress >= 100) {
+        $certificate = $this->certificate->get($course, User::find(auth()->id()));
+
+        if($progress >= 100 && !$certificate) {
             $this->certificate->generateAndStore($course);
+            $certificate = $this->certificate->get($course, User::find(auth()->id()));
         }
 
-        if($tracking_track === -1) return $course->tracker->progress;
+
+        if($tracking_track === -1) return [$course->tracker->progress, $certificate];
 
         // Store the results into the database (Core Code)
         $tracker = $course->tracker()->update([
@@ -35,6 +40,6 @@ class TrackerControler extends Controller
             "status" => 1
         ]);
 
-        return $progress;
+        return [ $progress, $certificate];
     }
 }

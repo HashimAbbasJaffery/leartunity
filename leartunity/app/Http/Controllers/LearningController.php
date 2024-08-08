@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Certificate;
 use App\Models\Content;
 use App\Models\Course;
 use App\Models\Purchase;
@@ -54,6 +55,7 @@ class LearningController extends Controller
 
         $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
 
+        $certificate = Certificate::where("user_id", auth()->id())->where("certificate_id", $course->id)->first();
         return Inertia::render("Learning/Course", [
             "course" => $course,
             "comments" => $comments,
@@ -61,7 +63,8 @@ class LearningController extends Controller
             "next_content" => $next_content,
             "tracker" => $tracker,
             "instance_tracker" => $instance_tracker,
-            "quiz_tracker" => $quiz_tracker
+            "quiz_tracker" => $quiz_tracker,
+            "certificate_id" => $certificate?->certificate_id ?? null
         ]);
     }
 }

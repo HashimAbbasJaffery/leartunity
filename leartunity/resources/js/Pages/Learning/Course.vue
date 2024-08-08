@@ -3,9 +3,6 @@
 
 <Layout>
     <CommentModal @addCourse="comments = $event" :replying_name :replying_to @hide="active = false" :active></CommentModal>
-    <div class="progress {{ $course->tracker->progress >= 100 ? '' : 'none'}} container mx-auto download-certificate py-3 px-2 rounded" style="bottom: 10px; left: 10px;background: #15F5BA; position: fixed; width: 50%; z-index: 2">
-        You Have completed this course! Download your certificate from <a href="#" style="text-decoration: underline;">Here</a>
-    </div>
     <div style="border: 1px solid white; background: var(--primary); width: 50%; margin: auto; height: 400px; z-index: 2;" class="animate__animated none comment-post rounded alert-box fixed left-0 right-0 bottom-0 p-2 text-white">
         <div class="comment-post-header flex items-center">
             <i class="fa-solid fa-reply mr-2"></i>
@@ -70,14 +67,15 @@
                 </div>
             </div>
             <div class="lectures order-1 mr-2" style="width: 30%">
-                <div class="course-overview bg-slate-300 mb-4 rounded px-3 py-3">
+                <div class="course-overview bg-gray-200 mb-4 rounded px-3 py-3">
                     <h1 class="text-center font-bold  pb-3">{{ course.title }}</h1>
                     <p class="text-2xs mt-3" v-if="progress < 10">0%</p>
-                    <div class="w-full progress-ccontainer bg-white" :class="{ 'mt-3': progress > 10 }" style="height: 15px">
-                        <div class="progress bg-blue-400 flex justify-end items-center relative" :style="`width: ${progress}%`" style="height: 15px;">
+                    <div v-if="progress < 100" class="w-full progress-ccontainer bg-white" :class="{ 'mt-3': progress > 10 }" style="height: 15px">
+                        <div class="progress rounded-full bg-gray-800 flex justify-end items-center relative" :style="`width: ${progress}%`" style="height: 15px;">
                             <p class="text-2xs text-black absolute" style="top: -15px; transition: width .5s ease" v-if="progress > 10">{{ progress }}%</p>
                         </div>
                     </div>
+                    <a :href="`/learn/certificate/${certificate}`" target="_blank" v-if="progress >= 100" class="inline-block text-center hover:bg-green-600 bg-green-500 mt-3 rounded-full w-full text-white py-1">View Certificate</a>
                 </div>
                 <div class="sections mb-2">
                     <Section v-for="(section, index) in course.sections" :section="section" :key="section.id" :index="index" ></Section>
@@ -102,13 +100,15 @@ import Quiz from "../../Components/Quiz.vue";
 import { router } from "@inertiajs/vue3";
 import Plyr from "plyr";
 import Modal from "../../Classes/Modal";
+import NavLink from "../../Components/NavLink.vue";
 import axios from "axios";
 
 let props = defineProps({
     course: Object,
     current_content: Object,
-    next_content: Object
-})
+    next_content: Object,
+    certificate_id: Number
+});
 
 let progress = ref(props.course.tracker.progress);
 provide("course", props.course);
@@ -120,7 +120,7 @@ let active = ref(false);
 let replying_to = ref();
 let replying_name = ref();
 let video = ref(props.current_content.content);
-
+let certificate = ref(props.certificate_id);
 
 function toggle(event) {
     active.value = !active.value;
@@ -150,7 +150,8 @@ onMounted(() => {
     }
     async function updateProgress() {
         const status = await axios.post(`/learn/course/${props.current_content.id}/updateTracker/${props.course.id}`);
-        progress.value = status.data;
+        certificate.value = status.data[1].certificate_id;
+        progress.value = status.data[0];
     }
     player.on('ended', e => {
         let modal = new Modal();
