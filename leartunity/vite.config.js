@@ -9,5 +9,10 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
+        "@vue/babel-plugin-jsx",
     ],
+    esbuild: {
+        jsxFactory: 'h',
+        jsxFragment: 'Fragment'
+    }
 });

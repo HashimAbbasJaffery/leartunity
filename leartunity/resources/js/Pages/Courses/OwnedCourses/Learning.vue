@@ -14,7 +14,7 @@
                         <div class="progress-bar" style="background: rgb(222, 222, 222); height: 2px;">
                             <div class="completed-progress" style="background: var(--primary); height: 2px; width: 50%;">&nbsp;</div>
                         </div>
-                            <a class="highlighted px-4 py-1" href="#">Download Certificate</a>
+                        <a class="highlighted px-4 py-1" href="#">Download Certificate</a>
 
                         <div class="mt-4 inline-block">
                                 <a class="give-review highlighted px-4 py-1 bg-green-500 hover:bg-green-600">Give Review</a>

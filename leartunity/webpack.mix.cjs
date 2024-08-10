@@ -20,6 +20,9 @@ module.exports = async () => {
 
 mix.js('resources/js/app.js', 'public/js')
     .vue(3)
+    .babelConfig({
+        presets: ['@babel/preset-env'],
+    })
     .postCss('resources/css/app.css', 'public/css', [
 
     ])

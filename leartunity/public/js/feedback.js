@@ -27,7 +27,7 @@ const mouseoutStar = (stars, old_class, new_class) => {
 
 stars.forEach(star => {
     let flag = false;
-    
+
     star.addEventListener("click", function() {
         if(!flag)
             mouseoverStar(star)
@@ -36,5 +36,5 @@ stars.forEach(star => {
 
     if(!flag)
         mouseoverStar(star);
-    
+
 })

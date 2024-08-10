@@ -11,9 +11,8 @@ class QuoteController extends Controller
         $content = $request->quote;
         $quote = Quote::find(1);
         $quote->update([
-            "quote" => $content 
+            "quote" => $content
         ]);
 
-        return 1;
     }
 }

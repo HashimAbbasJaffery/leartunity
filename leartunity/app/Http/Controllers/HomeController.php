@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Quote;
+use Inertia\Inertia;
 
 class HomeController extends Controller
 {
@@ -15,13 +16,20 @@ class HomeController extends Controller
 
         $quote = Quote::all()->random(1)->where("status", 1)->first();
         $categories = Category::withCount("courses")
+                        ->with(["courses" => function($query) {
+                            $query->limit(8);
+                        }])
                         ->whereHas("courses")
                         ->orderBy("courses_count", "desc")
                         ->limit(3)
                         ->whereStatus(1)
                         ->get();
-        
+
         $plans = Plan::whereStatus(1)->get();
-        return view("user.index", compact("categories", "plans", "quote"));
+        return Inertia::render("Index", [
+            "categories" => $categories,
+            "plans" => $plans,
+            "quote" => $quote
+        ]);
     }
 }

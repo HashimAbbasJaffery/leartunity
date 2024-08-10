@@ -42,10 +42,10 @@
                             $stars = $reviews->stars;
                           }
                         @endphp
-                        <x-user.course 
+                        <x-user.course
                           :course="$course"
                         />
-                        
+
                     @endforeach
               </div>
             @endforeach
@@ -72,7 +72,7 @@
             </div>
             <div class="apply">
               <h1>
-                @lang("become teacher?") 
+                @lang("become teacher?")
               </h1>
               <p>@lang("Start teaching right away, and arrange live sessions")</p>
               <div class="flex">
@@ -83,11 +83,11 @@
           </section>
         </main>
     @push("scripts")
-      
+
       <script>
         function debounce(func, delay) {
         let timerId;
-        
+
         return function(...args) {
           clearTimeout(timerId);
           timerId = setTimeout(() => {
@@ -160,7 +160,7 @@
               results.textContent = "";
               data.forEach(data => {
                 if(type.value === "course") {
-                  url = `/course/${data.slug}`; 
+                  url = `/course/${data.slug}`;
                 }
                 if(type.value === "teachers") {
                   url = `/profile/${data.id}`;
@@ -171,7 +171,7 @@
               if(!data.length) {
                 results.innerHTML = "<p class='py-3'>No result Found</p>";
               }
-              
+
               results.classList.add("show");
               results.classList.remove("none");
             })

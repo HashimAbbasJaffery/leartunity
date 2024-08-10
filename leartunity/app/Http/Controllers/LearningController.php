@@ -23,6 +23,15 @@ class LearningController extends Controller
         $user = auth()->user();
         $purchases = $user->purchases;
 
+        $certificates = Certificate::whereIn("certificate_id", $purchases->pluck("course.id")->toArray())
+                                    ->where("user_id", auth()->id())
+                                    ->get();
+
+        $purchases = $purchases->map(function($purchase) use($certificates) {
+            $purchase["certificate"] = $certificates->firstWhere("certificate_id", $purchase->course->id);
+            return $purchase;
+        });
+
         return Inertia::render("OwnedCourses/Learning", [
             "purchases" => $purchases
         ]);
