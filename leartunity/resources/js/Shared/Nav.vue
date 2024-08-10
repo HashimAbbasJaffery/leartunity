@@ -2,6 +2,10 @@
 import NavLink from '../Components/NavLink.vue';
 import { usePage } from '@inertiajs/vue3';
 import {computed} from "vue"
+import axios from 'axios';
+import {ref, inject} from "vue";
+
+let currency = ref();
 
 const page = usePage();
 const user = page.props.auth.user;
@@ -9,30 +13,45 @@ const isUser = computed(() => user);
 const isGuest = computed(() => !user);
 const isAdmin = computed(() => user.role === "admin");
 const isTeacher = computed(() => user.role !== "user");
+
+let userCurrency = inject("currency");
+
+
+async function changeCurrency() {
+    const status = await axios.post(`user/${user.id}/changeCurrency`, { currency: currency.value });
+    userCurrency.value = status.data.currency;
+}
 </script>
 <template>
+    <p>{{ currency }}</p>
   <nav>
     <ul style="position: relative; height: 36px">
-      <li v-if="isAdmin">
-        <NavLink href="/admin">Admin</NavLink>
-      </li>
-      <li class="mx-3">
-        <NavLink href="/learn">My Learning</NavLink>
-      </li>
-      <li class="mx-3">
-        <NavLink href="/courses">Courses</NavLink>
-      </li>
-      <li class="mx-3" v-if="isTeacher">
-        <NavLink href="/instructor">Instructor</NavLink>
-      </li>
+    <li>
+        <select v-model="currency" name="" id="" class="px-2" @change="changeCurrency">
+            <option value="1">USD</option>
+            <option value="2">JPY</option>
+        </select>
+    </li>
+    <li v-if="isAdmin">
+    <NavLink href="/admin">Admin</NavLink>
+    </li>
+    <li class="mx-3">
+    <NavLink href="/learn">My Learning</NavLink>
+    </li>
+    <li class="mx-3">
+    <NavLink href="/courses">Courses</NavLink>
+    </li>
+    <li class="mx-3" v-if="isTeacher">
+    <NavLink href="/instructor">Instructor</NavLink>
+    </li>
 
-      <li class="mx-3">
-        <NavLink href="/referrals">Referrals</NavLink>
-      </li>
+    <li class="mx-3">
+    <NavLink href="/referrals">Referrals</NavLink>
+    </li>
 
-      <li class="mx-3 highlighted" v-if="user">
-        <NavLink :href="`/profile/${user.id}`">{{ user.name }}</NavLink>
-      </li>
+    <li class="mx-3 highlighted" v-if="user">
+    <NavLink :href="`/profile/${user.id}`">{{ user.name }}</NavLink>
+    </li>
     <li class="mx-3" v-if="isGuest">
         <NavLink href="/register">Register</NavLink>
     </li>

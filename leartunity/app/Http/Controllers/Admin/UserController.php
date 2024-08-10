@@ -68,11 +68,11 @@ class UserController extends Controller
         }
 
         return to_route("login");
-    } 
+    }
     public function changeCurrency(User $user) {
         $currency = request()->get("currency");
         $user->currency_id = $currency;
         $user->save();
-        return 1;
+        return $user;
     }
 }

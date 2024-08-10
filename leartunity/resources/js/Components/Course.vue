@@ -1,14 +1,13 @@
 <script setup>
-import {onMounted, ref} from "vue"
-import calculateReviewStars from "../../../public/js/helpers/stars";
+import { rate } from "../Classes/CurrencyExchange";
 import Switch from "./Essentials/Switch.vue";
 import NavLink from "./NavLink.vue"
 import Instructor from "./Instructor.vue";
-import swal from "sweetalert";
 import { usePage } from "@inertiajs/vue3";
 import PilllMessage from "./Messages/PilllMessage.vue";
 import {computed} from "vue"
 import { secondsToHms } from "../Helpers/Helper";
+import {ref, inject, watch} from "vue";
 
 let props = defineProps({
     course: Object
@@ -16,11 +15,31 @@ let props = defineProps({
 
 const page = usePage();
 const user = page.props.auth.user;
+let currency = inject("currency");
+
+
+
+const unit = currency.unit;
+const currencyLocale = currency.currency;
 const isOwner = computed(() => user.id === props.course.author_id);
 
+let userCurrencyRate = ref(1);
+async function convert(unit) {
+    const currencyRate = await rate(unit);
+    userCurrencyRate.value = currencyRate;
+}
+
+watch(currency, function(val, oldVal) {
+    console.log(val);
+    console.log(oldVal)
+})
 
 
-console.log(props.course);
+convert(currencyLocale);
+
+
+
+
 
 </script>
 <template>
@@ -51,7 +70,7 @@ console.log(props.course);
                 <NavLink v-if="isOwner" :href="`/instructor/course/${course.slug}`">Manage</NavLink>
             </div>
             <div class="course-price flex justify-between">
-                <p>{{ course.price }} $</p>
+                <p>{{ Math.round(course.price * userCurrencyRate) }} {{ unit }}</p>
                 <p>{{ secondsToHms(course.contents_sum_duration) ? secondsToHms(course.contents_sum_duration) : "No Content Yet!" }}</p>
             </div>
         </div>

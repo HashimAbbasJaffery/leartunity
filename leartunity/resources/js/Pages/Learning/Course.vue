@@ -156,9 +156,13 @@ onMounted(() => {
     player.on('ended', e => {
         let modal = new Modal();
         const status = updateProgress();
-        modal.oneInput("Do you want to see the next lecture?", function() {
-            router.get(`/learn/course/${props.course.slug}/${props.next_content.id}`)
-        }, true, "Yes", "")
+        if(props.next_content) {
+            modal.oneInput("Do you want to see the next lecture?", function() {
+                router.get(`/learn/course/${props.course.slug}/${props.next_content.id}`)
+            }, true, "Yes", "")
+        } else {
+            modal.success("Check back casually to see new content");
+        }
     })
 })
 

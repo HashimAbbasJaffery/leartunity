@@ -1,19 +1,23 @@
 <template>
   <Layout>
-    <p>{{ test }}</p>
         <main>
             <section id="search-area" class="container mx-auto" style="position: relative;">
-                <select class="search-type highlighted p-1 mt-4" style="width: 10%;height: 35px;">
-                  <option value="categories">Categories</option>
-                  <option value="course">Course</option>
-                  <option value="teachers">Teachers</option>
-                </select>
-                <input type="text" placeholder="Search for anything!" style="border-radius: 0px; border: 1px solid #424242;" id="q" name="" />
-                <div class="results none" style="overflow: auto;max-height: 300px;border-radius: 5px;border: 1px solid black;right: 0px;position: absolute; background: white; width: 89%; top: 115%; padding-left: 10px;">
-                  <div class="teachers results py-2">
-                    &nbsp;
-                  </div>
-                </div>
+                <form class="inline-block">
+                    <select v-model="form.type" class="search-type highlighted p-1 mt-4" style="width: 10%;height: 35px;">
+                        <option value="categories">Categories</option>
+                        <option value="course">Course</option>
+                        <option value="teachers">Teachers</option>
+                    </select>
+                    <input type="text" v-model="form.query" placeholder="Search for anything!" style="border-radius: 0px; border: 1px solid #424242;" id="q" name="" />
+                    <div v-if="show_drawer" class="results" style="overflow: auto;max-height: 300px;border-radius: 5px;border: 1px solid black;right: 0px;position: absolute; background: white; width: 89%; top: 115%; padding-left: 10px;">
+                        <div v-show="form.query" class="teachers results py-2 flex" v-for="result in results" :key="result.id">
+                          <div v-if="form.type !== 'categories'" class="search_thumbnail mr-4">
+                            <img :width="meta_data.path === 'profile_pic' ? 50 : 80" :src="`/${meta_data.folder}/${result[meta_data.path]}`" alt="">
+                          </div>
+                          <p>{{ result[meta_data.title] }}</p>
+                        </div>
+                    </div>
+                </form>
             </section>
             <div>
             <div id="separator" class="container mx-auto mt-4" style="background: black; height: 2px;">&nbsp;</div>
@@ -60,8 +64,9 @@
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import Course from "../Components/Course.vue"
-import {ref, watch} from "vue";
+import {ref, watch, reactive} from "vue";
 import { router } from "@inertiajs/vue3";
+import axios from "axios";
 
 import { useDebouncedRef } from "../debounce";
 
@@ -77,8 +82,36 @@ watch(quoteMessage, function() {
 })
 
 let current_cat_active = ref(props.categories[0].category)
-let test = ref();
+let results = ref();
+let meta_data = reactive({
+  title: "",
+  path: "",
+  link: "",
+  folder: ""
+})
+let show_drawer = ref(false);
 
+let form = reactive({
+    query: "",
+    type: "categories"
+})
+
+watch(form, async () => {
+  if(!form.query.length) {
+    show_drawer.value = false;
+    results.value = "";
+    return;
+  }
+  results.value = "";
+  show_drawer.value = false;
+  const status = await axios.get(`/api/search?query=${form.query}&type=${form.type}`);
+  results.value = status.data[1];
+  meta_data.title = status.data[0];
+  meta_data.path = status.data[2];
+  meta_data.link = status.data[3];
+  meta_data.folder = status.data[4];
+  show_drawer.value = true;
+})
 
 console.log(props.categories)
 </script>

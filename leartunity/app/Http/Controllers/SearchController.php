@@ -10,14 +10,14 @@ class SearchController extends Controller
     public function get() {
         $keyword = request()->get("query");
         $type = request()->get("type");
-
         $table = "users";
         $column = "name";
         $flag = false; // This Flag Determines that whether the result requires some attribute from the relationship
-        $path = "profile.profile_pic"; // It provides the Database column location, '.' represents that column is inside relationship 
-        $directories = "/profile/"; // It provides the directory path 
+        $path = "profile_pic"; // It provides the Database column location, '.' represents that column is inside relationship
+        $directories = "/profile/"; // It provides the directory path
         $url = "/profile";
         $findingColumn = "id";
+        $folder = "profile";
 
         if($type === "course") {
             $table = "courses";
@@ -27,6 +27,7 @@ class SearchController extends Controller
             $path = "thumbnail";
             $directories = "/course/";
             $url = "/course";
+            $folder = "course";
         }
         if($type === "categories") {
             $table = "categories";
@@ -35,13 +36,24 @@ class SearchController extends Controller
             $path = "";
             $directories = "";
             $findingColumn = "";
+            $folder = "";
         }
-        
+
         if($flag) {
             $result = DB::table($table)->where($column, "like", "%$keyword%")->whereStatus(1)->limit(10)->get();
         } else {
-            $result = User::with("profile")->where($column, "like", "%$keyword%")->whereStatus(1)->limit(10)->get();
+            $result = User::with("profile")
+                    ->where("role", "instructor")
+                    ->orWhere("role", "admin")
+                    ->where($column, "like", "%$keyword%")
+                    ->whereStatus(1)
+                    ->limit(10)
+                    ->get();
+
+            $result = $result->each(function($res) {
+                $res["profile_pic"] = $res->profile->profile_pic;
+            });
         }
-        return [$column, $result, $path, $directories];
+        return [$column, $result, $path, $directories, $folder];
     }
 }

@@ -22,4 +22,7 @@ class Section extends Model
     public function contents(): MorphMany {
         return $this->MorphMany(Content::class, "contentable");
     }
+    public function next() {
+        return $this->where("sequence", $this->sequence + 1);
+    }
 }

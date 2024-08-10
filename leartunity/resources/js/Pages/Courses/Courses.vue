@@ -58,7 +58,8 @@ function clearFilter() {
 }
 
 const page = usePage()
-console.log(page.props.auth.user)
+
+let currency = page.props.auth.currency;
 
 
 </script>
@@ -77,12 +78,12 @@ console.log(page.props.auth.user)
                         <Filter class="price-range filter mt-3" title="Price Range">
                             <div class="range-inputs mt-4">
                                 <label>
-                                    From ($)
+                                    From ({{ currency.unit }})
                                     <br />
                                     <input type="number" v-model="filters.from" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                                 </label>
                                 <label>
-                                    To ($)
+                                    To ({{ currency.unit }})
                                     <br />
                                     <input type="number" v-model="filters.to" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                                 </label>

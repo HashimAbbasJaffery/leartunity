@@ -64,6 +64,11 @@ class LearningController extends Controller
 
         $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
 
+        if(!$next_content) {
+            $next_section = $content->section->next()->firstWhere("course_id", $course->id);
+            $next_content = $next_section->contents()->first();
+        }
+
         $certificate = Certificate::where("user_id", auth()->id())->where("certificate_id", $course->id)->first();
         return Inertia::render("Learning/Course", [
             "course" => $course,

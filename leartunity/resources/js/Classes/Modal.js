@@ -24,4 +24,11 @@ export default class Modal {
             }
         });
     }
+    success(title) {
+        Swal.fire({
+            icon: "success",
+            title,
+            confirmButtonText: "Ok"
+        });
+    }
 }
