@@ -4,49 +4,65 @@ import { usePage } from '@inertiajs/vue3';
 import {computed} from "vue"
 import axios from 'axios';
 import {ref, inject} from "vue";
+import { rate } from '../Classes/CurrencyExchange';
 
-let currency = ref();
 
 const page = usePage();
 const user = page.props.auth.user;
+const userCurrency = page.props.auth.currency;
+let currency = ref(userCurrency.id);
+console.log(userCurrency.currency);
 const isUser = computed(() => user);
 const isGuest = computed(() => !user);
 const isAdmin = computed(() => user.role === "admin");
 const isTeacher = computed(() => user.role !== "user");
 
-let userCurrency = inject("currency");
+let locales = inject("localeData");
 
+let emit = defineEmits("changeCurrency");
 
-async function changeCurrency() {
-    const status = await axios.post(`user/${user.id}/changeCurrency`, { currency: currency.value });
-    userCurrency.value = status.data.currency;
+convert(userCurrency.currency, userCurrency.unit)
+let rateExchange = ref();
+let currencyUnit = ref();
+
+async function convert(locale, unit) {
+    const currencyRate = await rate(locale);
+    rateExchange.value = currencyRate;
+    currencyUnit.value = unit;
 }
+
+function changeCurrency() {
+    const locale = Array.from(listValue.children).find(child => child.value == currency.value);
+    const unit = locale.dataset.unit;
+    currencyUnit.value = unit;
+    convert(locale.textContent, unit);
+    emit('changeCurrency', currency.value)
+}
+
 </script>
 <template>
-    <p>{{ currency }}</p>
   <nav>
     <ul style="position: relative; height: 36px">
     <li>
-        <select v-model="currency" name="" id="" class="px-2" @change="changeCurrency">
-            <option value="1">USD</option>
-            <option value="2">JPY</option>
+        <select v-model="currency" name="" id="listValue" class="px-2" @change="changeCurrency">
+            <option v-for="locale in locales" :value="locale.id" :data-unit="locale.unit" :key="locale.id">{{ locale.currency }}</option>
         </select>
     </li>
     <li v-if="isAdmin">
-    <NavLink href="/admin">Admin</NavLink>
+    <NavLink href="/admin" v-translate>Admin</NavLink>
     </li>
     <li class="mx-3">
-    <NavLink href="/learn">My Learning</NavLink>
+    <NavLink href="/learn" v-translate>My Learning</NavLink>
     </li>
     <li class="mx-3">
-    <NavLink href="/courses">Courses</NavLink>
+    <NavLink href="/courses" v-translate>Courses</NavLink>
     </li>
     <li class="mx-3" v-if="isTeacher">
-    <NavLink href="/instructor">Instructor</NavLink>
+    <NavLink href="/instructor" v-translate>Instructor</NavLink>
     </li>
 
     <li class="mx-3">
-    <NavLink href="/referrals">Referrals</NavLink>
+    <NavLink href="/referrals" v-translate>Referrals</NavLink>
     </li>
 
     <li class="mx-3 highlighted" v-if="user">
@@ -109,7 +125,7 @@ async function changeCurrency() {
         </NavLink>
       </li>
       <li>
-        <NavLink href="/test">{{ user.balance }}</NavLink>
+        <NavLink href="/test">{{ Math.round(user.balance * rateExchange) }} {{ currencyUnit }}</NavLink>
       </li>
     </ul>
   </nav>

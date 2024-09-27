@@ -13,7 +13,7 @@ class WebGeneralSettingProvider extends ServiceProvider
     public function register(): void
     {
         //
-        
+
     }
 
     /**

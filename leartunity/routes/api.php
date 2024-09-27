@@ -22,6 +22,11 @@ Route::get("/courses", function() {
     return json_encode($courses);
 })->name("getApiCourses");
 
+Route::post('/log-missing-translation', function(Request $request) {
+    echo "lol";
+    return request()->key;
+});
+
 
 Route::get("/search", [SearchController::class, "get"])->name("search");
 

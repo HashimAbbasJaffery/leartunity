@@ -1,35 +1,36 @@
 <script setup>
+import { trans } from 'laravel-vue-i18n';
 </script>
 <template>
 
   <footer>
     <div class="container mx-auto flex justify-around">
       <div class="first-column column">
-        <h1>Learning Materials</h1>
+        <h1 v-translate>Learning Materials</h1>
         <nav>
           <ul>
-            <li>Courses</li>
-            <li>Books</li>
-            <li>Live Sessions</li>
-            <li>Teachers</li>
+            <li v-translate>Courses</li>
+            <li v-translate>Books</li>
+            <li v-translate>Live Sessions</li>
+            <li v-translate>Teachers</li>
           </ul>
         </nav>
       </div>
       <div class="second-column column">
-        <h1>Website Information</h1>
+        <h1 v-translate>Website Information</h1>
         <nav>
           <ul>
-            <li>Privacy Policy</li>
-            <li>Contact Us</li>
-            <li>Feedbacks</li>
+            <li v-translate>Privacy Policy</li>
+            <li v-translate>Contact Us</li>
+            <li v-translate>Feedbacks</li>
           </ul>
         </nav>
       </div>
       <div class="fourth-column column">
-        <h1>newsletter</h1>
+        <h1 v-translate>Newsletter</h1>
         <div class="newsletter">
-          <input type="text" placeholder="Enter Your Email" />
-          <button>Subscribe</button>
+          <input type="text" :placeholder="trans('Enter your email')"/>
+          <button v-translate>Subscribe</button>
         </div>
       </div>
       <div class="third-column column">

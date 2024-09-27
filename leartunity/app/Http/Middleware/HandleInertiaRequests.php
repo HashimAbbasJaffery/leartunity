@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,8 +41,9 @@ class HandleInertiaRequests extends Middleware
         $user = User::find(auth()->id());
         return array_merge(parent::share($request), [
             "auth.user" => auth()->user()?->only(["balance", "name", "role", "id", "follows"]) ?? false,
-            "auth.currency" => $user->currency,
-            "flash.message" => session()->get("message")
+            "auth.currency" => $user?->currency ?? Currency::firstWhere("currency", "USD"),
+            "flash.message" => session()->get("message"),
+            "supported.currencies" => Currency::all()
         ]);
     }
 }

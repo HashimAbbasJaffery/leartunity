@@ -9,33 +9,39 @@ import {computed} from "vue"
 import { secondsToHms } from "../Helpers/Helper";
 import {ref, inject, watch} from "vue";
 
+
 let props = defineProps({
     course: Object
 })
 
+
 const page = usePage();
 const user = page.props.auth.user;
-let currency = inject("currency");
+let currency = inject("currency")
 
 
 
-const unit = currency.unit;
-const currencyLocale = currency.currency;
+let unit = inject("unit");
 const isOwner = computed(() => user.id === props.course.author_id);
+convert(currency.value?.currency ?? currency.value[0]?.currency);
 
-let userCurrencyRate = ref(1);
+let userCurrencyRate = ref();
+
 async function convert(unit) {
     const currencyRate = await rate(unit);
+    console.log(currencyRate);
     userCurrencyRate.value = currencyRate;
 }
 
-watch(currency, function(val, oldVal) {
-    console.log(val);
-    console.log(oldVal)
-})
+let emit = defineEmits(["changeUnit"]);
 
+watch(currency, function(value) {
+    console.log(value);
+    convert(value[0].currency);
+    unit.value = value[0].unit;
+    emit("changeUnit", unit.value);
+});
 
-convert(currencyLocale);
 
 
 
@@ -47,10 +53,10 @@ convert(currencyLocale);
         <div class="course-header" style="position: relative;">
                     <Switch v-if="isOwner" :active="course.status" :id="course.id"/>
                     <div style="position: absolute; bottom: 10px; right: 10px;" class="flex">
-                        <NavLink ref="delButton" method="DELETE" :href="`/instructor/course/${course.slug}/delete`" class="mr-2 text-white px-2 rounded bg-red-500 hover:bg-red-600" as="button">Delete</NavLink>
-                        <NavLink :href="`/instructor/course/${course.slug}/edit`" class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600" as="button">Update</NavLink>
+                        <NavLink v-if="isOwner" ref="delButton" method="DELETE" :href="`/instructor/course/${course.slug}/delete`" class="mr-2 text-white px-2 rounded bg-red-500 hover:bg-red-600" as="button" v-translate>Delete</NavLink>
+                        <NavLink v-if="isOwner" :href="`/instructor/course/${course.slug}/edit`" class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600" as="button" v-translate>Update</NavLink>
                     </div>
-                <PilllMessage class="bg-black text-white">Purchased</PilllMessage>
+                <PilllMessage class="bg-black text-white" v-if="isOwner" v-translate>Purchased</PilllMessage>
                 <img v-if="course.thumbnail" :src="'/course/'+course.thumbnail" style="border-radius: 10px;" height="600" width="400" alt="">
                 <img v-if="!course.thumbnail" src="https://placehold.co/600x400" height="600" width="400" alt="">
         </div>
@@ -64,10 +70,8 @@ convert(currencyLocale);
                 {{ course.description.substring(0, 80) }}
             </div>
             <div class="course-options mt-2 space-x-2">
-                <a :href="`/checkout/${course.stripe_id}`">Enroll</a>
-                <NavLink :href="`/checkout/${course.stripe_id}`">Enroll</NavLink>
-                <NavLink :href="`/course/${course.slug}`">See Details</NavLink>
-                <NavLink v-if="isOwner" :href="`/instructor/course/${course.slug}`">Manage</NavLink>
+                <a :href="`/checkout/${course.stripe_id}`" v-translate>Enroll</a>
+                <NavLink style="margin-right: 5px;" v-if="isOwner" :href="`/instructor/course/${course.slug}`" v-translate>Manage</NavLink>
             </div>
             <div class="course-price flex justify-between">
                 <p>{{ Math.round(course.price * userCurrencyRate) }} {{ unit }}</p>

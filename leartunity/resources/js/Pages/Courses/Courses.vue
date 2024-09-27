@@ -1,15 +1,18 @@
 <script setup>
-import Layout from "../../Shared/Layout.vue";
+// import Layout from "../../Shared/Layout.vue";
 import Course from "../../Components/Course.vue";
-import {defineProps, reactive, ref, provide} from "vue"
+import {defineProps, reactive, inject} from "vue"
 import Filter from "../../Components/Category/Filter.vue"
 import Buttons from "../../Components/Essentials/Buttons.vue";
 import Category from "../../Components/Category/Category.vue";
 import axios from "axios";
 import Loading from "../../Components/Essentials/Loading.vue";
 import { usePage } from "@inertiajs/vue3";
+import { provide, ref, watch } from "vue";
+import { useLocaleStore } from "../../Stores/LocaleStore";
 
-import {router} from "@inertiajs/vue3"
+
+
 
 
 let props = defineProps({
@@ -59,7 +62,20 @@ function clearFilter() {
 
 const page = usePage()
 
-let currency = page.props.auth.currency;
+
+
+
+const currency = ref(page.props.auth.currency);
+
+const localeStore = useLocaleStore();
+const supportedCurrencies = page.props.supported.currencies;
+localeStore.setLocaleData(supportedCurrencies);
+
+
+
+let unit = ref(currency.value.unit ?? "$");
+
+
 
 
 </script>
@@ -70,26 +86,26 @@ let currency = page.props.auth.currency;
             <section class="store container mx-auto">
                 <aside class="filter-bar">
                     <form @submit.prevent="submit" id="submitFilter" style="display: block;">
-                        <Filter :title="'Categories'" class="category-filter filter">
+                        <Filter :title="$t('Categories')" class="category-filter filter">
                             <ul class="mt-4">
                                 <Category v-model="filters.categoryList" v-for="category in categories" :key="category.id" :category="category" />
                             </ul>
                         </Filter>
-                        <Filter class="price-range filter mt-3" title="Price Range">
+                        <Filter class="price-range filter mt-3" :title="$t('Price Range')">
                             <div class="range-inputs mt-4">
                                 <label>
-                                    From ({{ currency.unit }})
+                                    <span v-translate>From</span> ({{ unit }})
                                     <br />
                                     <input type="number" v-model="filters.from" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                                 </label>
                                 <label>
-                                    To ({{ currency.unit }})
+                                    <span v-translate>To</span> ({{ unit }})
                                     <br />
                                     <input type="number" v-model="filters.to" class="price_range" style="border-radius: 5px; width: 95%; padding-left: 10px;"/>
                                 </label>
                             </div>
                         </Filter>
-                        <Filter title="Search" class="search-filter filter mt-3">
+                        <Filter :title="$t('Search')" class="search-filter filter mt-3">
                             <div class="search-bar mt-4 flex">
                                 <select id="type" v-model="filters.type" class="search-type highlighted p-1 " style="height: 35px; outline: none; width: 30%; font-size: 14px;">
                                     <option>Title</option>
@@ -99,16 +115,16 @@ let currency = page.props.auth.currency;
                             </div>
                         </Filter>
 
-                        <Buttons class="disabled:bg-black/60" :disabled="loading" :value="loading ? 'Fetching...' : 'Search'" v-model="filters.search" />
+                        <Buttons class="disabled:bg-black/60" :disabled="loading" :value="loading ? $t('Fetching...') : $t('Search')" v-model="filters.search" />
                     </form>
-                    <Buttons value="Clear Filters" @click="clearFilter" lighted/>
+                    <Buttons :value="$t('Clear Filters')" @click="clearFilter" lighted/>
                 </aside>
                 <div class="store-section relative mb-40">
                     <Loading :active="loading">
-                        <p class="mt-3">Fetching...</p>
+                        <p class="mt-3" v-translate>Fetching...</p>
                     </Loading>
                     <div class="grid grid-cols-3 gap-4 store-cards" v-if="courses.length">
-                        <Course v-for="course in courses" :key="course.id" :course="course" class="course" />
+                        <Course @changeUnit="unit = $event" v-for="course in courses" :key="course.id" :course="course" class="course" />
                     </div>
                     <div v-if="!courses.length" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                         <span class="font-medium">No Course found by matching with your filter</span>

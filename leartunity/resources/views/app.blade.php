@@ -39,9 +39,9 @@
    @php
 
    $settings = \App\Models\Setting::first();
-    $primary_color = $settings->primary_color;
-    $secondary_color = $settings->secondary_color;
-    $family = $settings->font_family;
+    $primary_color = $settings?->primary_color ?? "black";
+    $secondary_color = $settings?->secondary_color ?? "black";
+    $family = $settings?->font_family ?? "sans-serif";
    @endphp
     <style>
       .container {

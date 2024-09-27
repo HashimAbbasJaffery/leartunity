@@ -13,7 +13,12 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     public function index() {
-        $quote = Quote::all()->random(1)->where("status", 1)->first();
+        $quote = "";
+        try {
+            $quote = Quote::all()->random(1)->where("status", 1)->first();
+        } catch(\Exception $e){
+
+        }
         $categories = Category::withCount("courses")
                         ->with(["courses" => function($query) {
                             $query->limit(8);

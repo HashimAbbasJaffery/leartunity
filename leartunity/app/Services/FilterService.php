@@ -15,8 +15,8 @@ class FilterService {
         }
 
 
-        // $user_currency = (User::find(auth()->id()))->currency;
-        $user_currency = "USD";
+        $user_currency = (User::find(auth()->id()))->currency;
+        // $user_currency = "USD";
         $price_range = [ request()->from, request()->to ];
         // Price Filter
         if(isset(request()->from) && isset(request()->to)) {
@@ -25,9 +25,8 @@ class FilterService {
 
 
         if(isset($parameters["price_range"])) {
-            // $parameters["price_range"][0] /= \App\Helpers\exchange_rate($user_currency->currency);
-            // $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
-
+            $parameters["price_range"][0] /= \App\Helpers\exchange_rate($user_currency->currency);
+            $parameters["price_range"][1] /= \App\Helpers\exchange_rate($user_currency->currency);
         }
 
         // Search Filter
