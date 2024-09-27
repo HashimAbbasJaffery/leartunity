@@ -18,7 +18,7 @@
     <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> -->
-    <link href="{{ $settings->font_link }}" rel="stylesheet">
+    <link href="{{ $settings?->font_link ?? 'montserrat' }}" rel="stylesheet">
 
     <link
     rel="stylesheet"
@@ -35,9 +35,9 @@
       <script src="http://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
  @vite('resources/js/app.js')
    @php
-    $primary_color = $settings->primary_color;
-    $secondary_color = $settings->secondary_color;
-    $family = $settings->font_family;
+    $primary_color = $settings?->primary_color ?? "black";
+    $secondary_color = $settings?->secondary_color ?? "black";
+    $family = $settings?->font_family ?? "montserrat";
    @endphp
     <style>
       .container {
@@ -106,7 +106,7 @@
                       LTS Store
                     </a></li> -->
                     @auth
-                      <li class="mx-3"><a href="{{ route("learn") }}" class="bold-600" style="font-size: 14px;">@lang("My Learning")</a></li>
+                      <li class="mx-3"><a href="{{ route("learn") }}" class="bold-600" style="font-size: 14px;">@lang("Learning")</a></li>
                     @endauth
                     <!-- <li class="mx-3"><a href="#" class="bold-600">Plans</a></li> -->
                     <li class="mx-3"><a href="{{ route('courseList') }}" style="font-size: 14px;" class="bold-600">@lang("courses")</a></li>
@@ -153,7 +153,7 @@
                     @endauth
                     @auth
                       <li ><a href="{{ route('user.balance', [ "user" => auth()->user() ]) }}" class="bold-600 text-xl" style="position: relative; font-size: 14px;">
-                        {{ floor($user->balance * App\Helpers\exchange_rate($user->currency->currency)) }} {{ $user->currency->unit }}
+                        {{ floor($user->balance * App\Helpers\exchange_rate($user?->currency?->currency ?? "USD")) }} {{ $user->currency?->unit ?? "$" }}
                       </a></li>
                     @endauth
 

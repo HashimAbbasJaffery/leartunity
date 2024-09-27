@@ -6,7 +6,7 @@
             <div class="choose-color flex items-center">
                 <form class="inline flex items-center" method="POST" action="{{ route('admin.swatch.create') }}">
                     @csrf
-                    <input type="color" id="color-picker" name="hexColor" style="border: none; width: 90%;" value="{{ $setting->primary_color }}">
+                    <input type="color" id="color-picker" name="hexColor" style="border: none; width: 90%;" value="{{ $setting?->primary_color ?? "black" }}">
                     <input type="submit" value="@lang('Add To Swatch')" style="cursor: pointer;border-radius: 0px; width: 10%; font-size: 13px; height: 25px;">
                 </form>
             </div>
@@ -15,10 +15,10 @@
                     <label>
                         <div class="color mb-4 mr-2" data-color="{{ $swatch->hexColor }}" style="cursor: pointer;background: {{ $swatch->hexColor }}; width: 20px; height: 20px;">&nbsp;</div>
                         <input type="radio" name="" class="none">
-                    </label>  
-                    
+                    </label>
+
                 @endforeach
-                
+
             </div>
             <input type="submit" class="block mb-4 change-color" value="@lang('Change Color')" style="cursor: pointer;border-radius: 0px; width: 20%; font-size: 13px; height: 25px;">
         </section>
@@ -57,11 +57,11 @@
         </script>
         <script>
             const choose = document.querySelector(".choose");
-            
+
             choose.addEventListener("click", function() {
                 const fontLink = choose.dataset.link;
                 const fontName = choose.dataset.name;
-                
+
                 axios.put("{{ route("admin.font.update") }}", {
                     font_link: fontLink,
                     font_family: fontName
@@ -94,7 +94,7 @@
                         result.classList.remove("none");
                         const chooseFont = document.querySelector(".choose");
 
-                        
+
                         let link = document.createElement('link');
                         link.rel = 'stylesheet';
                         link.href = `https://fonts.googleapis.com/css2?family=${res.data.items[0].family}:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap`;
@@ -110,5 +110,5 @@
                     });
             })
         </script>
-    @endpush 
+    @endpush
 </x-layout>

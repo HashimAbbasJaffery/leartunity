@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('general_setting', function (Blueprint $table) {
-            $table->string("font_link")->default(null);
+            $table->string("font_link")->default(null)->nullable();
         });
     }
 

@@ -23,7 +23,7 @@ class CourseController extends Controller
             $course = $request->route()->parameters()["course"];
             $slug = ($course->slug) ? $course->slug : $course;
         } catch(\Exception $e) {
-        
+
         }
 
         Log::debug($slug);
@@ -31,14 +31,15 @@ class CourseController extends Controller
             $this->middleware("is_course_owner:$slug");
     }
     public function index() {
-        $courses = Course::withoutGlobalScopes()->where("author_id", auth()->user()->id)->paginate(6);
-        
-        $courses->withPath("/get/courses/" . "1");
-        
+        $courses = Course::withoutGlobalScopes()
+            ->where("author_id", auth()->user()->id)->paginate(6);
+
+        $courses->withPath("/get/courses/" . auth()->id());
+
         return view("Teaching.index", compact("courses"));
     }
     public function destroy(Course $course) {
-        
+
         $this->middleware("is_course_owner:$course->slug");
         $course->delete();
         return redirect()->back();
@@ -48,9 +49,9 @@ class CourseController extends Controller
         $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->base64;
-        
+
         $stripe = $this->stripe->products->retrieve($course->stripe_product_id);
-        
+
 
         $stripe = $this->stripe->products->create([
             'name' => $request->title,
@@ -63,25 +64,25 @@ class CourseController extends Controller
         $product->name = $request->title;
         $product->default_price_data["unit_amount"] = $request->price;
         $product->save();
-        
+
         $fileName = $course->thumbnail;
         if($file) {
 
-            
+
             $data = $request->get("base64");
             list(, $data) = explode(',', $data);
             $data = base64_decode($data);
             $fileName = time() . ".png";
-            
+
             File::put(public_path("course/$fileName"), $data);
 
             // $fileName = time() . $file->getClientOriginalName();
             // $file->move(public_path("course"), $fileName);
-        } 
+        }
 
         $course->update([
             "title" => $request->title,
-            "description" => $request->description, 
+            "description" => $request->description,
             "pre_req" => $request->pre_req,
             "price" => $request->price,
             "thumbnail" => $fileName,
@@ -94,7 +95,7 @@ class CourseController extends Controller
 
         $course->categories()->sync($categories);
 
-        
+
 
         return redirect()->to("/instructor");
     }
@@ -107,7 +108,7 @@ class CourseController extends Controller
         $categories = explode(",", $request->categories);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
-        
+
         $stripe = $this->stripe->products->create([
             'name' => $request->title,
             'default_price_data' => [
@@ -117,20 +118,20 @@ class CourseController extends Controller
         ]);
 
         $product_id = $stripe->id;
-        
+
         $data = $request->get("base64");
         list(, $data)      = explode(',', $data);
         $data = base64_decode($data);
         $fileName = time() . ".png";
-        
+
         File::put(public_path("course/$fileName"), $data);
-        
+
         $user_preferred_currency = User::find(auth()->id())->currency->currency;
         $exchange_rate = \App\Helpers\exchange_rate($user_preferred_currency);
 
         $course = Course::create([
             "title" => $request->title,
-            "description" => $request->description, 
+            "description" => $request->description,
             "pre_req" => $request->pre_req,
             "price" => $request->price / $exchange_rate,
             "thumbnail" => $fileName,
@@ -150,7 +151,7 @@ class CourseController extends Controller
     }
 
     public function changeStatus(Request $request, Course $course) {
-        
+
         $this->middleware("is_course_owner:$course->slug");
         $course->update([
             "status" => !$course->status

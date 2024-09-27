@@ -14,8 +14,8 @@ class SearchController extends Controller
         $table = "users";
         $column = "name";
         $flag = false; // This Flag Determines that whether the result requires some attribute from the relationship
-        $path = "profile.profile_pic"; // It provides the Database column location, '.' represents that column is inside relationship 
-        $directories = "/profile/"; // It provides the directory path 
+        $path = "profile.profile_pic"; // It provides the Database column location, '.' represents that column is inside relationship
+        $directories = "/profile/"; // It provides the directory path
         $url = "/profile";
         $findingColumn = "id";
 
@@ -36,7 +36,7 @@ class SearchController extends Controller
             $directories = "";
             $findingColumn = "";
         }
-        
+
         if($flag) {
             $result = DB::table($table)->where($column, "like", "%$keyword%")->whereStatus(1)->limit(10)->get();
         } else {

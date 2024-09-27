@@ -54,12 +54,16 @@ class CourseController extends Controller
         $courses = Course::withSum("contents", "duration")->whereStatus(1)->paginate(6);
         $courses->withPath("get/courses");
 
-        $categories = Category::whereHas("courses")->get();
+        $categories = Category::withCount("courses")
+                                ->orderBy("courses_count", "ASC")
+                                ->whereHas("courses")
+                                ->limit(10)
+                                ->get();
         return view("guest.courses.courses", compact("courses", "categories"));
     }
 
     public function getData(Request $request, FilterService $service, $status = null) {
-        $courses = $service->filter($request, $status);
+        $courses = $service->filter($request, $status, true);
 
         return $courses;
     }

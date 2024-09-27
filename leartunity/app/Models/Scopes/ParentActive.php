@@ -20,6 +20,6 @@ class ParentActive implements Scope
         $builder->whereHas("categories", function($query) {
             $query->whereStatus(1);
         });
-        
+
     }
 }

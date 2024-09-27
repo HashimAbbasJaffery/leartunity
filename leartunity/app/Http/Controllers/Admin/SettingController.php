@@ -13,10 +13,10 @@ class SettingController extends Controller
         $setting = Setting::first();
         $swatches = Swatch::all();
 
-        return view("Admin.setting", compact("setting", "swatches"));        
+        return view("Admin.setting", compact("setting", "swatches"));
     }
     public function update(Request $request) {
         $setting = (Setting::first())->update($request->all());
         return 1;
-    } 
+    }
 }
