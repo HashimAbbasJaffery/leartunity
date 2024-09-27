@@ -3,10 +3,12 @@
     <section class="container mx-auto mt-5">
         <div class="store-section" style="width: 100%;">
             <div class="grid grid-cols-3 gap-4 store-cards">
-                <Course v-for="course in courses" :course="course" :key="course.id"></Course>
+                <Course v-for="course in courses.data" :course="course" :key="course.id"></Course>
             </div>
-            <div class="load-more_section">
-                <button class="highlighted load-more" style="@if(!$courses->hasPages()) display: none; @endif">Load More</button>
+            <div class="pagination-pages mb-4" v-if="courses.data.length">
+                <ul class="flex">
+                    <li @click="pagination(link.url)" v-for="link in links" :key="link.label" :style="{ opacity: (link.active || !link.url) ? 0.5 : 1 }" class="ml-2 text-white px-4 rounded cursor-pointer" style="background: var(--primary);" v-html="link.label"></li>
+                </ul>
             </div>
         </div>
     </section>
@@ -22,10 +24,28 @@
 import Layout from "../../Shared/Layout.vue"
 import Course from "../../Components/Course.vue"
 import NavLink from "../../Components/NavLink.vue"
+import axios from "axios";
+import {ref} from "vue";
 
 let props = defineProps({
     courses: Array
 })
+let courses = ref(props.courses);
+const links = ref(props.courses.links);
+
+
+
+const pagination = async url => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+    let pageCourses = await axios.get(url);
+    pageCourses = pageCourses.data;
+    links.value = pageCourses.links;
+    console.log(pageCourses.links);
+    courses.value = pageCourses;
+}
 </script>
 
 <style>

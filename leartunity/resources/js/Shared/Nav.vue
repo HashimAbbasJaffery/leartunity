@@ -76,7 +76,7 @@ function changeCurrency() {
     </li>
 
 
-      <ul class="notification-drop" style="position: relative">
+      <ul v-if="!isGuest" class="notification-drop" style="position: relative">
         <li class="item">
           <i
             class="fa fa-bell-o notification-bell"
@@ -124,7 +124,7 @@ function changeCurrency() {
             <i class="fa-solid fa-power-off"></i>
         </NavLink>
       </li>
-      <li>
+      <li v-if="!isGuest">
         <NavLink href="/test">{{ Math.round(user.balance * rateExchange) }} {{ currencyUnit }}</NavLink>
       </li>
     </ul>

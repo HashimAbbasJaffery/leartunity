@@ -43,6 +43,10 @@ watch(currency, function(value) {
 });
 
 
+const purchases = props.course.purchases;
+console.log(purchases);
+console.log(user);
+let isPurchased = computed(() => purchases.filter(purchase => purchase.user_id === user.id).length > 0);
 
 
 
@@ -56,7 +60,7 @@ watch(currency, function(value) {
                         <NavLink v-if="isOwner" ref="delButton" method="DELETE" :href="`/instructor/course/${course.slug}/delete`" class="mr-2 text-white px-2 rounded bg-red-500 hover:bg-red-600" as="button" v-translate>Delete</NavLink>
                         <NavLink v-if="isOwner" :href="`/instructor/course/${course.slug}/edit`" class="text-white px-2 rounded bg-blue-500 hover:bg-blue-600" as="button" v-translate>Update</NavLink>
                     </div>
-                <PilllMessage class="bg-black text-white" v-if="isOwner" v-translate>Purchased</PilllMessage>
+                <PilllMessage class="bg-black text-white" v-if="isPurchased" v-translate>Purchased</PilllMessage>
                 <img v-if="course.thumbnail" :src="'/course/'+course.thumbnail" style="border-radius: 10px;" height="600" width="400" alt="">
                 <img v-if="!course.thumbnail" src="https://placehold.co/600x400" height="600" width="400" alt="">
         </div>
@@ -70,7 +74,9 @@ watch(currency, function(value) {
                 {{ course.description.substring(0, 80) }}
             </div>
             <div class="course-options mt-2 space-x-2">
-                <a :href="`/checkout/${course.stripe_id}`" v-translate>Enroll</a>
+                <a :href="`/checkout/${course.stripe_id}`" v-if="!isPurchased" v-translate>Enroll</a>
+
+                <NavLink style="margin-right: 5px;" :href="`/course/${course.slug}`" v-translate>See More</NavLink>
                 <NavLink style="margin-right: 5px;" v-if="isOwner" :href="`/instructor/course/${course.slug}`" v-translate>Manage</NavLink>
             </div>
             <div class="course-price flex justify-between">

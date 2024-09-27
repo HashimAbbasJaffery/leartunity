@@ -32,10 +32,12 @@ class CourseController extends Controller
             $this->middleware("is_course_owner:$slug");
     }
     public function index() {
-
-        $courses = Course::withoutGlobalScopes()->withSum("contents", "duration")->where("author_id", auth()->user()->id)->get();
-
-
+        $courses = Course::withoutGlobalScopes()
+                            ->withSum("contents", "duration")
+                            ->with("author", "purchases")
+                            ->where("author_id", auth()->user()->id)
+                            ->paginate(6);
+        if(request()->wantsJson()) return $courses;
         return Inertia::render("Instructor/index", [
             "courses" => $courses
         ]);

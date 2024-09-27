@@ -12,22 +12,10 @@ const pinia = createPinia();
 let isLoaded = ref(false);
 
 const i18n = createI18n({
-    locale: 'ur',  // Set your default locale
+    locale: 'en',  // Set your default locale
     fallbackLocale: 'en',  // Fallback locale
     saveMissing: true,  // Enable saveMissing
-    missing: async (locale, key) => {
-      try {
-        await axios.post('/api/log-missing-translation', {
-          locale: locale,
-          key: key,
-          message: key,  // Log the key or a default message
-        });
-      } catch (error) {
-        console.error('Failed to log missing translation:', error);
-      } finally {
-        console.log(key)
-      }
-    }
+
   });
 
 let app = createInertiaApp({
@@ -43,7 +31,7 @@ let app = createInertiaApp({
       .use(pinia)
       .component("Layout", Layout)
       .use(i18nVue, {
-        lang: "ur",
+        lang: "en",
         globalInjection: true,
         resolve: lang => import(`../../lang/${lang}.json`),
         onLoad: () => isLoaded.value = true

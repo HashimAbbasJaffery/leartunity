@@ -16,9 +16,12 @@ class ProfileController extends Controller
 {
     protected $courses;
     public function __construct() {
-        $this->courses = Course::where("author_id", request()->id);
+        $this->courses = Course::with("author", "purchases")->where("author_id", request()->id);
     }
     public function index(Request $request) {
+
+        $courses = $this->courses->paginate(6);
+        if(request()->wantsJson()) return $courses;
         $user = auth()->user();
         $profile = Profile::with("user.follows")->where("user_id", $request->id)->first();
 
@@ -28,8 +31,6 @@ class ProfileController extends Controller
             ]);
         }
 
-        $courses = $this->courses->paginate(6);
-        $courses->withPath("/get/courses");
         $reviewCourses = $this->courses->whereHas("reviews")->get();
         $count = 0;
         $sum = 0;

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Purchase extends Model
 {
     use HasFactory;
-    protected $with = [ "course" ];
     protected $guarded = [];
     public function user(): BelongsTo {
         return $this->BelongsTo(User::class);

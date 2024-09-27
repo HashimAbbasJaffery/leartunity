@@ -59,13 +59,23 @@ class CourseController extends Controller
     }
 
     public function getCourses() {
-        $courses = Course::withSum("contents", "duration")->whereStatus(1)->get();
+        $filters = [
+            "categories" => request()->get("categoryList") ?? "",
+            "price_range" => [request()->get("from") ?? 1, request()->get("to") ?? PHP_INT_MAX],
+            "type" => request()->get("type") ?? "",
+            "search" => request()->get("search") ?? ""
+        ];
+        $courses = Course::withSum("contents", "duration")
+                            ->with("author", "purchases")
+                            ->filter($filters)
+                            ->whereStatus(1)
+                            ->paginate(6);
+        if(request()->wantsJson()) return $courses;
         $categories = Category::withCount("courses")
                                 ->orderBy("courses_count", "ASC")
                                 ->whereHas("courses")
                                 ->limit(10)
                                 ->get();
-        // return view("guest.courses.courses", compact("courses", "categories"));
         return Inertia::render("Courses/Courses", [
             "categories" => $categories,
             "courses" => $courses
