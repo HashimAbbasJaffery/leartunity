@@ -60,7 +60,11 @@ class CourseController extends Controller
 
     public function getCourses() {
         $courses = Course::withSum("contents", "duration")->whereStatus(1)->get();
-        $categories = Category::whereHas("courses")->get();
+        $categories = Category::withCount("courses")
+                                ->orderBy("courses_count", "ASC")
+                                ->whereHas("courses")
+                                ->limit(10)
+                                ->get();
         // return view("guest.courses.courses", compact("courses", "categories"));
         return Inertia::render("Courses/Courses", [
             "categories" => $categories,
