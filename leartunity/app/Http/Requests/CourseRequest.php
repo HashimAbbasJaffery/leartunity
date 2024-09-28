@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Validator;
 
 class CourseRequest extends FormRequest
 {
@@ -21,13 +23,42 @@ class CourseRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             "title" => ["required"],
-            "description" => ["required", "min:25", "max:5000"],
-            "pre_req" => ["required", "min:25", "max:500"],
+            "description" => ["required"],
+            "pre_req" => ["required"],
             "price" => ["required", "integer"],
             "categories" => [ "required" ],
-            "image" => [ "required" ]
+        ];
+        if(!request()->routeIs("course.update")) {
+            $rules["image"] = ["required"];
+        }
+        return $rules;
+    }
+
+    public function after() {
+        return [
+            function(Validator $validator) {
+                $withoutContinuosSpace = [
+                    preg_replace('/\s+/', ' ', $this->description),
+                    preg_replace('/\s+/', ' ', $this->pre_req)
+                ];
+
+                $description = explode(" ", $withoutContinuosSpace[0]);
+                $pre_req = explode(" ", $withoutContinuosSpace[1]);
+                if(count($description) < 25) {
+                    $validator->errors()->add(
+                        'description',
+                        "Minimum 25 words are required"
+                    );
+                }
+                if(count($pre_req) < 25) {
+                    $validator->errors()->add(
+                        'pre_req',
+                        "Minimum 25 words are required"
+                    );
+                }
+            }
         ];
     }
 }

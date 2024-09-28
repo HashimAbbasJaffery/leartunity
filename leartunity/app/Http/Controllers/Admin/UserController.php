@@ -41,10 +41,10 @@ class UserController extends Controller
     }
     public function store(Request $request, StripeAccountCreate $stripeAccount) {
         $referral_id = null;
-        $referred_by = User::find($request->referral_id);
+        $referred_by = User::find($request->referred_by);
         $referral_exists = $referred_by?->exists();
-        if($request->referral_id && $referral_exists) {
-            $referral_id = $request->referral_id;
+        if($request->referred_by && $referral_exists) {
+            $referral_id = $request->referred_by;
         }
         $validation = \Illuminate\Support\Facades\Validator::make($request->all(), [
             "name" => ["required"],

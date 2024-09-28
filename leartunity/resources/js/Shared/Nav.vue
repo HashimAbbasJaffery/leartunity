@@ -51,17 +51,17 @@ function changeCurrency() {
     <li v-if="isAdmin">
     <NavLink href="/admin" v-translate>Admin</NavLink>
     </li>
-    <li class="mx-3">
+    <li class="mx-3" v-if="isUser">
     <NavLink href="/learn" v-translate>My Learning</NavLink>
     </li>
     <li class="mx-3">
     <NavLink href="/courses" v-translate>Courses</NavLink>
     </li>
-    <li class="mx-3" v-if="isTeacher">
+    <li class="mx-3" v-if="isTeacher && isUser">
     <NavLink href="/instructor" v-translate>Instructor</NavLink>
     </li>
 
-    <li class="mx-3">
+    <li class="mx-3" v-if="isUser">
     <NavLink href="/referrals" v-translate>Referrals</NavLink>
     </li>
 

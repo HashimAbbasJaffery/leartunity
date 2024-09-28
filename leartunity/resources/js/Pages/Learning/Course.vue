@@ -156,6 +156,7 @@ onMounted(() => {
     player.on('ended', e => {
         let modal = new Modal();
         const status = updateProgress();
+        console.log(props.next_content);
         if(props.next_content) {
             modal.oneInput("Do you want to see the next lecture?", function() {
                 router.get(`/learn/course/${props.course.slug}/${props.next_content.id}`)

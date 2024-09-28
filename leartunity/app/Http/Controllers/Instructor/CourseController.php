@@ -48,15 +48,9 @@ class CourseController extends Controller
         $course->delete();
         return redirect()->back();
     }
-    public function update(Request $request, Course $course) {
+    public function update(CourseRequest $request, Course $course) {
         $this->middleware("is_course_owner:$course->slug");
-        $validated = $request->validate([
-            "title" => ["required", "min:4", "max:50"],
-            "description" => ["required", "min:25", "max:1000"],
-            "pre_req" => ["required", "min:25", "max:1000"],
-            "price" => ["required"],
-            "categories" => ["required"]
-        ]);
+
         $categories = $request->categories;
         $slug = str($request->title)->slug("-");
         $file = $request->image;
@@ -104,7 +98,7 @@ class CourseController extends Controller
 
         $course->categories()->sync($categories);
         $courses = Course::all();
-        return redirect()->to("/courses")->with(compact("courses"));
+        return redirect()->to("/instructor")->with(compact("courses"));
     }
     public function edit(Request $request, Course $course) {
         $categories = Category::all();

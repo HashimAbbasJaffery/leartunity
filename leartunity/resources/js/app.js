@@ -6,6 +6,7 @@ import { createI18n } from 'vue-i18n';
 import {ref, watch} from "vue"
 import Layout from "../../resources/js/Shared/Layout.vue";
 
+
 import "./bootstrap.js";
 
 const pinia = createPinia();
@@ -25,12 +26,12 @@ let app = createInertiaApp({
   },
     setup({ el, App, props, plugin }) {
 
-    createApp({ render: () => h(App, props) })
+    const app = createApp({ render: () => h(App, props) })
 
-      .use(plugin)
-      .use(pinia)
-      .component("Layout", Layout)
-      .use(i18nVue, {
+        .use(plugin)
+        .use(pinia)
+        .component("Layout", Layout)
+        .use(i18nVue, {
         lang: "en",
         globalInjection: true,
         resolve: lang => import(`../../lang/${lang}.json`),
@@ -44,8 +45,10 @@ let app = createInertiaApp({
             }
         })
 
-        .use(i18n)
-      .mount(el)
+        .use(i18n);
+
+        app.config.globalProperties.$route = route
+        app.mount(el)
   },
 })
 

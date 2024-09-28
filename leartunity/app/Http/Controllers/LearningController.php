@@ -29,7 +29,7 @@ class LearningController extends Controller
 
         $purchases = $purchases->map(function($purchase) use($certificates) {
             $purchase["certificate"] = $certificates->firstWhere("certificate_id", $purchase->course->id);
-            $purchase->load("course", "course.author");
+            $purchase->load("course", "course.author", "course.tracker", "course.contents");
             return $purchase;
         });
 
@@ -38,6 +38,7 @@ class LearningController extends Controller
         ]);
     }
     public function get(Course $course, Content $content) {
+        $course->load(["author", "sections"]);
         $current_content = $content;
         $stripe_id = $course->stripe_id;
         $does_own_course = auth()
@@ -67,7 +68,7 @@ class LearningController extends Controller
 
         if(!$next_content) {
             $next_section = $content->section->next()->firstWhere("course_id", $course->id);
-            $next_content = $next_section->contents()->first();
+            $next_content = $next_section?->contents()?->first() ?? false;
         }
 
         $certificate = Certificate::where("user_id", auth()->id())->where("certificate_id", $course->id)->first();

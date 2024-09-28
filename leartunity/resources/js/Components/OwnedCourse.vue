@@ -21,8 +21,7 @@
             </div>
         </div>
     </div>
-    <h1 ref="lol">jdfhjdf</h1>
-    <NavLink :href="`learn/course/${purchase.course.slug}/${getFirstContentId(purchase)}`" style="text-align:center; padding: 3px 6px 3px 6px;position: absolute; right: 0px;" class="highlighted" v-translate>{{ (!getProgress(purchase)) ? "Start" : "Resume" }}</NavLink>
+    <NavLink v-if="hasCourses" :href="`learn/course/${purchase.course.slug}/${getFirstContentId(purchase)}`" style="text-align:center; padding: 3px 6px 3px 6px;position: absolute; right: 0px;" class="highlighted" v-translate>{{ (!getProgress(purchase)) ? "Start" : "Resume" }}</NavLink>
 </div>
 </template>
 
@@ -33,6 +32,8 @@ import Modal from '../Classes/Modal';
 import {ref} from "vue";
 
 let lol = ref();
+let hasCourses = ref(true);
+
 console.log(lol);
 
 let props = defineProps({
@@ -40,7 +41,12 @@ let props = defineProps({
 });
 
 function getFirstContentId(purchase) {
-    return purchase.course.contents[0].id;
+    let contents = purchase.course.contents;
+    if(!contents.length) {
+        hasCourses.value = false;
+    } else {
+        return contents[0]?.id ;
+    }
 }
 
 function getProgress(purchase) {
