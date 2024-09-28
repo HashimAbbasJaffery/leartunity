@@ -1,5 +1,4 @@
 <template>
-    <p>{{ currency }}</p>
     <slot></slot>
 </template>
 
