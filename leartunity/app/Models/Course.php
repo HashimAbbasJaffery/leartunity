@@ -56,6 +56,9 @@ class Course extends Model
 
         // Filtration by price range
         $query->when($filters["price_range"], function() use($query, $filters) {
+            $currency = User::find(auth()->id())->currency->currency;
+            $filters["price_range"][0] /= \App\Helpers\exchange_rate($currency);
+            $filters["price_range"][1] /= \App\Helpers\exchange_rate($currency);
             $query->whereBetween("price", $filters["price_range"]);
         });
 
