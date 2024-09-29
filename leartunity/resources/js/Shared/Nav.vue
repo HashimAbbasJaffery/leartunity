@@ -61,9 +61,9 @@ function changeCurrency() {
     <NavLink href="/instructor" v-translate>Instructor</NavLink>
     </li>
 
-    <li class="mx-3" v-if="isUser">
+    <!-- <li class="mx-3" v-if="isUser">
     <NavLink href="/referrals" v-translate>Referrals</NavLink>
-    </li>
+    </li> -->
 
     <li class="mx-3 highlighted" v-if="user">
     <NavLink :href="`/profile/${user.id}`">{{ user.name }}</NavLink>

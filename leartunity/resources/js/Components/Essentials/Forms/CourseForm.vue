@@ -44,7 +44,7 @@
             <p class="text-red-600" v-if="!form.categories.length" style="font-size: 13px;">{{ $page.props.errors?.categories ?? "" }}</p>
             <div class="categories rounded mb-3 flex items-start flex-wrap" style="overflow: auto;border: 1px solid black; height: 100px;">
                 <label v-for="category in categories" :key="category.id" class="flex items-center px-2" for="category-{id}">
-                    <input :value="category.id" :checked="course.categories.filter(cat => cat.id === category.id).length" v-model="form.categories" class="mr-2 category @error('categories') has-error @enderror" type="checkbox" :id="category.id" style="width: 15px;"/>
+                    <input :value="category.id" :checked="course?.categories?.filter(cat => cat.id === category.id)?.length ?? false" v-model="form.categories" class="mr-2 category @error('categories') has-error @enderror" type="checkbox" :id="category.id" style="width: 15px;"/>
                     {{ category.category }}
                 </label>
             </div>

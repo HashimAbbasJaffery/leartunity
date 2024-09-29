@@ -15,11 +15,12 @@ class is_instructor
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = auth()->user();
-        if($user && ($user->role === "instructor" || $user->role === "admin")) {
-            return $next($request);
-        } else {
-            abort(403);
-        }
+        // $user = auth()->user();
+        // if($user && ($user->role === "instructor" || $user->role === "admin")) {
+        //     return $next($request);
+        // } else {
+        //     abort(403);
+        // }
+        return $next($request);
     }
 }

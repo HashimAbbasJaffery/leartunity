@@ -104,6 +104,12 @@ const pagination = async url => {
 }
 
 
+let deleted = () => {
+    let url = `${props.courses.path}?page=${props.courses.current_page}`;
+    pagination(url)
+}
+
+
 </script>
 <template>
 
@@ -150,10 +156,10 @@ const pagination = async url => {
                         <p class="mt-3" v-translate>Fetching...</p>
                     </Loading>
                     <div class="grid grid-cols-3 gap-4 store-cards" v-if="courses.length">
-                        <Course @changeUnit="unit = $event" v-for="course in courses" :key="course.id" :course="course" class="course" />
+                        <Course @deleted="deleted" @changeUnit="unit = $event" v-for="course in courses" :key="course.id" :course="course" class="course" />
                     </div>
 
-                    <div class="pagination-pages mb-4" v-if="courses.length">
+                    <div class="pagination-pages mb-4" v-if="courses.length && links.length > 3">
                         <ul class="flex">
                             <li @click="pagination(link.url)" v-for="link in links" :key="link.label" :style="{ opacity: (link.active || !link.url) ? 0.5 : 1 }" class="ml-2 text-white px-4 rounded cursor-pointer" style="background: var(--primary);" v-html="link.label"></li>
                         </ul>

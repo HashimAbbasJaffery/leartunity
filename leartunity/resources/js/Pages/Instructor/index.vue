@@ -3,7 +3,7 @@
     <section class="container mx-auto mt-5">
         <div class="store-section" style="width: 100%;">
             <div class="grid grid-cols-3 gap-4 store-cards">
-                <Course v-for="course in courses.data" :course="course" :key="course.id"></Course>
+                <Course @deleted="deleted" v-for="course in courses.data" :course="course" :key="course.id"></Course>
             </div>
             <div class="pagination-pages mb-4" v-if="courses.data.length">
                 <ul class="flex">
@@ -33,8 +33,6 @@ let props = defineProps({
 let courses = ref(props.courses);
 const links = ref(props.courses.links);
 
-
-
 const pagination = async url => {
     window.scrollTo({
         top: 0,
@@ -45,6 +43,11 @@ const pagination = async url => {
     links.value = pageCourses.links;
     console.log(pageCourses.links);
     courses.value = pageCourses;
+}
+
+let deleted = () => {
+    let url = `${props.courses.path}?page=${props.courses.current_page}`;
+    pagination(url)
 }
 </script>
 

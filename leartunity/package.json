@@ -41,6 +41,7 @@
         "qs": "^6.13.0",
         "resumablejs": "^1.1.0",
         "sweetalert": "^2.1.2",
-        "vue-i18n": "^9.13.1"
+        "vue-i18n": "^9.13.1",
+        "vue-sweetalert2": "^5.0.11"
     }
 }

@@ -5,6 +5,8 @@ import { i18nVue, trans } from 'laravel-vue-i18n';
 import { createI18n } from 'vue-i18n';
 import {ref, watch} from "vue"
 import Layout from "../../resources/js/Shared/Layout.vue";
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 
 import "./bootstrap.js";
@@ -30,6 +32,7 @@ let app = createInertiaApp({
 
         .use(plugin)
         .use(pinia)
+        .use(VueSweetalert2)
         .component("Layout", Layout)
         .use(i18nVue, {
         lang: "en",
