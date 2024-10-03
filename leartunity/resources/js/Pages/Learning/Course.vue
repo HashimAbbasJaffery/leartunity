@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="lectures order-1 mr-2" style="width: 30%">
-                <div class="course-overview bg-gray-200 mb-4 rounded px-3 py-3">
+                <div v-if="is_purchased" class="course-overview bg-gray-200 mb-4 rounded px-3 py-3">
                     <h1 class="text-center font-bold  pb-3">{{ course.title }}</h1>
                     <p class="text-2xs mt-3" v-if="progress < 10">0%</p>
                     <div v-if="progress < 100" class="w-full progress-ccontainer bg-white" :class="{ 'mt-3': progress > 10 }" style="height: 15px">
@@ -107,13 +107,13 @@ let props = defineProps({
     course: Object,
     current_content: Object,
     next_content: Object,
-    certificate_id: Number
+    certificate_id: Number,
+    is_purchased: Boolean
 });
-
-let progress = ref(props.course.tracker.progress);
+let progress = ref(props.is_purchased ? props.course.tracker.progress : -1);
 provide("course", props.course);
 provide("current_content", props.current_content);
-provide("completed", JSON.parse(props.course.tracker.tracking).map(tracker => tracker.id));
+provide("completed", props.is_purchased ? JSON.parse(props.course.tracker.tracking).map(tracker => tracker.id) : -1);
 
 let comments = ref(props.current_content.comments);
 let active = ref(false);
@@ -149,6 +149,7 @@ onMounted(() => {
         ],
     }
     async function updateProgress() {
+        if(!props.is_purchased) return;
         const status = await axios.post(`/learn/course/${props.current_content.id}/updateTracker/${props.course.id}`);
         certificate.value = status.data[1].certificate_id;
         progress.value = status.data[0];
@@ -156,7 +157,6 @@ onMounted(() => {
     player.on('ended', e => {
         let modal = new Modal();
         const status = updateProgress();
-        console.log(props.next_content);
         if(props.next_content) {
             modal.oneInput("Do you want to see the next lecture?", function() {
                 router.get(`/learn/course/${props.course.slug}/${props.next_content.id}`)

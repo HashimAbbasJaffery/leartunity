@@ -1,4 +1,5 @@
 <template>
+    <p>{{ stars }}</p>
   <div class="course flex" v-el:mainDiv style="position: relative;">
     <div class="course-image mr-5" style="width: 20%">
         <img :src="`/course/${purchase.course.thumbnail}`" height="250" width="250" class="rounded" />
@@ -31,10 +32,9 @@ import NavLink from './NavLink.vue';
 import Modal from '../Classes/Modal';
 import {ref} from "vue";
 
-let lol = ref();
 let hasCourses = ref(true);
+const stars = ref(1);
 
-console.log(lol);
 
 let props = defineProps({
     purchase: Object
@@ -55,12 +55,13 @@ function getProgress(purchase) {
 
 
 function giveReview() {
+    let stars = 1;
     let html = `<div class="" style="font-size: 25px;">
-                    <i class="fa-solid fa-star feedback-star starred" data-star="1" onmouseover="mouseoverStar()" style="cursor: pointer;"></i>
-                    <i class="fa-regular fa-star feedback-star" data-star="2" onmouseover="mouseoverStar()" style="cursor: pointer;"></i>
-                    <i class="fa-regular fa-star feedback-star" data-star="3" onmouseover="mouseoverStar()" style="cursor: pointer;"></i>
-                    <i class="fa-regular fa-star feedback-star" data-star="4" onmouseover="mouseoverStar()" style="cursor: pointer;"></i>
-                    <i class="fa-regular fa-star feedback-star" data-star="5" onmouseover="mouseoverStar()" style="cursor: pointer;"></i>
+                    <i class="fa-solid fa-star feedback-star starred" data-star="1" onclick="${stars = 5}" style="cursor: pointer;"></i>
+                    <i class="fa-regular fa-star feedback-star" data-star="2" onclick="${stars = 5}" style="cursor: pointer;"></i>
+                    <i class="fa-regular fa-star feedback-star" data-star="3" onclick="${stars = 5}" style="cursor: pointer;"></i>
+                    <i class="fa-regular fa-star feedback-star" data-star="4" onclick="${stars = 5}" style="cursor: pointer;"></i>
+                    <i class="fa-regular fa-star feedback-star" data-star="5" onclick="${stars = 5}" style="cursor: pointer;"></i>
                 </div>`
     let modal = new Modal();
     modal.oneInput("Leave an honest Review!", function() {

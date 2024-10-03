@@ -60,6 +60,8 @@ const deleteCourse = () => {
     }, true, "Delete", null);
 }
 
+console.log(props.course);
+
 
 
 </script>
@@ -85,11 +87,12 @@ const deleteCourse = () => {
                 </h1>
                 {{ course.description.substring(0, 80) }}
             </div>
-            <div class="course-options mt-2 space-x-2">
-                <a :href="`/checkout/${course.stripe_id}`" v-if="!isPurchased" v-translate>Enroll</a>
-
-                <NavLink style="margin-right: 5px;" :href="`/course/${course.slug}`" v-translate>See More</NavLink>
-                <NavLink style="margin-right: 5px;" v-if="isOwner && !$route().current('home')" :href="`/instructor/course/${course.slug}`" v-translate>Manage</NavLink>
+            <div class="course-options mt-2">
+                <a  class="m-2" :href="`/checkout/${course.stripe_id}`" v-if="!isPurchased" v-translate>Enroll</a>
+                <NavLink class="m-2" v-if="course.contents.length && isOwner" style="margin-right: 5px;" :href="`/learn/course/${course.slug}/${ course.contents[0].id }`" v-translate>Open</NavLink>
+                <NavLink class="m-2" style="margin-right: 5px;" :href="`/course/${course.slug}`" v-translate>See More</NavLink>
+                <br>
+                <NavLink class="m-2" style="margin-right: 5px;" v-if="isOwner && !$route().current('home')" :href="`/instructor/course/${course.slug}`" v-translate>Manage</NavLink>
             </div>
             <div class="course-price flex justify-between">
                 <p>{{ Math.round(course.price * userCurrencyRate) }} {{ unit }}</p>

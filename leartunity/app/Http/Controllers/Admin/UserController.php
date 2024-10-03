@@ -12,13 +12,21 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Validator;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
     public function index(Request $request) {
         $keyword = $request->keyword;
         $users = User::where("name", "like", "%$keyword%")->where("id", "!=", auth()->id())->paginate(8)->withQueryString();
-        return view("Admin.users", compact("users", "keyword"));
+        $users->each(function($user) {
+            $user["is_banned"] = $user->isBanned();
+        });
+        if($request->wantsJson()) return $users;
+        return Inertia::render("Admin/User/Index", [
+            "users" => $users,
+            "keyword" => $keyword
+        ]);
     }
     public function edit(Request $request, User $user) {
         $context = $request->context;
@@ -30,14 +38,13 @@ class UserController extends Controller
     }
     public function banManager(Request $request, User $user) {
         $context = $request->context;
-
         if($context) {
             $user->ban();
         } else {
             $user->unban();
         }
 
-        return 1;
+        return $user->isBanned();
     }
     public function store(Request $request, StripeAccountCreate $stripeAccount) {
         $referral_id = null;

@@ -27,6 +27,7 @@
         "@inertiajs/vue3": "^1.0.14",
         "@vitejs/plugin-vue": "^5.1.1",
         "@vue/server-renderer": "^3.4.37",
+        "chart.js": "^4.4.4",
         "cropperjs": "^2.0.0-rc.1",
         "croppie": "^2.6.5",
         "datatables.net-dt": "^2.1.7",

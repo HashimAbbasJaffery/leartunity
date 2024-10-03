@@ -1,8 +1,12 @@
 export default class Modal {
+    constructor(value = "") {
+        this.value = value;
+    }
     oneInput(title, callback, showCancel = true, confirmText = "save", input = "input", didOpen = false, html = "text", csrf = false) {
         Swal.fire({
             title: title,
             [input]: html,
+            inputValue: this.value,
             query: {
                 _token: csrf
             },

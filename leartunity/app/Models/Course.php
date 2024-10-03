@@ -12,7 +12,7 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $with = ["categories"];
+    protected $with = ["categories", "contents"];
     protected $guarded = [];
     public function purchases() {
         return $this->hasMany(Purchase::class, "purchase_product_id", "stripe_id");
@@ -56,7 +56,7 @@ class Course extends Model
 
         // Filtration by price range
         $query->when($filters["price_range"], function() use($query, $filters) {
-            $currency = User::find(auth()->id())->currency->currency;
+            $currency = User::find(auth()->id())->currency?->currency ?? "USD";
             $filters["price_range"][0] /= \App\Helpers\exchange_rate($currency);
             $filters["price_range"][1] /= \App\Helpers\exchange_rate($currency);
             $query->whereBetween("price", $filters["price_range"]);

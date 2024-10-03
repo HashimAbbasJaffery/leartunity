@@ -8,6 +8,7 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class AdminController extends Controller
 {
@@ -17,15 +18,15 @@ class AdminController extends Controller
         $users_count = User::count();
 
         $counts = [
-            "courses" => $courses_count, 
-            "categories" => $categories_count, 
+            "courses" => $courses_count,
+            "categories" => $categories_count,
             "users" => $users_count
         ];
 
         $categories = Category::withoutGlobalScopes()->whereHas("courses")->withCount("courses")->orderBy("courses_count", "DESC")->limit(5)->get();
         $labels = $categories->pluck("category")->toArray();
         $data = $categories->pluck("courses_count")->toArray();
-        
+
         $pie_chart = [
             "labels" => $labels,
             "data" => $data
@@ -38,6 +39,11 @@ class AdminController extends Controller
             "labels" => $courses_labels,
             "data" => $courses_data
         ];
-        return view("Admin.index", compact("counts", "pie_chart", "bar_graph"));
+        // return view("Admin.index", compact("counts", "pie_chart", "bar_graph"));
+        return Inertia::render("Admin/Index", [
+            "counts" => $counts,
+            "pie_chart" => $pie_chart,
+            "bar_graph" => $bar_graph
+        ]);
     }
 }

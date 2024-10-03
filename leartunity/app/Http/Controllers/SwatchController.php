@@ -9,10 +9,10 @@ class SwatchController extends Controller
 {
     public function store(Request $request) {
         $swatch = Swatch::where("hexColor", $request->hexColor)->exists();
-        if($swatch) return redirect()->back(); 
-        
+        if($swatch) return redirect()->back();
+
         $swatch = Swatch::create($request->all());
 
-        return redirect()->back();
+        return $swatch;
     }
 }
