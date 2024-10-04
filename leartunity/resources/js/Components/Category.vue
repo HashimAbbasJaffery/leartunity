@@ -39,6 +39,7 @@ const deleteCategory = async id => {
     modal.oneInput(`Are you sure you want to delete ${title.value} Category?`, async function() {
         const data = await axios.post(`/admin/category/${id}/delete`, { _method: "DELETE" });
         emit("deleted");
+        modal.success("Successfully Deleted!");
     }, true, "Delete", "");
 }
 

@@ -18,7 +18,7 @@
             </div>
             <input type="submit" @click="changeColor" class="block mb-4 change-color" value="Change Color" style="cursor: pointer;border-radius: 0px; width: 20%; font-size: 13px; height: 25px;">
         </section>
-        <section class="choose-fonts container mx-auto">
+        <!-- <section class="choose-fonts container mx-auto">
             <h1>Search Google Fonts</h1>
             <input type="text" class="rounded mb-4" name="search-fonts" id="search-fonts" style="border-radius: 0px; height: 25px;">
             <div class="none searched-result">
@@ -31,7 +31,7 @@
                     </label>
                 </div>
             </div>
-        </section>
+        </section> -->
     </main>
 </Layout>
 </template>
@@ -43,7 +43,6 @@ import axios from "axios";
 import Modal from "../../../Classes/Modal";
 
 const modal = new Modal();
-console.log(process);
 
 let props = defineProps({
     setting: Object,

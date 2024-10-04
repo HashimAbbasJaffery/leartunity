@@ -58,20 +58,18 @@ class UserController extends Controller
             "password" => [ "required", "confirmed" ],
             "email" => [ "required", "email", "unique:users,email" ]
         ]);
-        $stripe_account_id = $stripeAccount->create();
         $attributes = [
             ...$validation->validated(),
             'ip_address' => $request->ip(),
             "referred_by" => $referral_id,
-            "stripe_account_id" => $stripe_account_id
         ];
         $user = User::create($attributes);
-        event(new Registered($user));
+        event(new Registered($user)); // Blocking
         $message = __("Ding, ding, ding! ") . $user->name . __(" is your new referral!");
 
         if($referral_id) {
             $referred_by->notify(new MessageNotification($message));
-            NotificationEvent::dispatch($referred_by->id, $message);
+            NotificationEvent::dispatch($referred_by->id, $message); // Blocking
         }
 
         return to_route("login");

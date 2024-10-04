@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CreateStripeAccount;
 use App\Events\FollowerCounter;
 use App\Listeners\FollowerListener;
 use App\Listeners\StripeEventListener;
@@ -31,6 +32,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+            \App\Listeners\CreateStripeAccount::class
         ],
         WebhookReceived::class => [
             StripeEventListener::class
