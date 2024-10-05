@@ -29,7 +29,7 @@ class LearningController extends Controller
 
         $purchases = $purchases->map(function($purchase) use($certificates) {
             $purchase["certificate"] = $certificates->firstWhere("certificate_id", $purchase->course->id);
-            $purchase->load("course", "course.author", "course.tracker", "course.contents");
+            $purchase->load("course", "course.author", "course.tracker", "course.contents", "course.reviews");
             return $purchase;
         });
 

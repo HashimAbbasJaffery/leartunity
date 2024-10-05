@@ -4,8 +4,14 @@
 
         <div v-if="expand">
             <ul class="ml-5" v-for="content in contents" :key="content.id">
-                <li ref="content" @click="!content.is_paid ? emit('changeVideo', content.content) : ''" class="px-4 py-3 bg-gray-300 rounded my-3 flex justify-between item-center" :class="{'cursor-not-allowed': content.is_paid && !instructor}">
-                    <p :class="{'cursor-pointer': !content.is_paid, 'cursor-not-allowed': content.is_paid}">{{ content.title }}</p>
+                <li ref="content" @click="!content.is_paid ? emit('changeVideo', content.content) : ''" class="px-4 py-3 rounded my-3 flex justify-between item-center" :class="{'cursor-not-allowed': content.is_paid && !instructor}">
+                    <div class="content-info flex relative" style="height: 78.5px;">
+                        <div class="thumbnail mr-3 rounded" style="background: var(--primary);">
+                            <img :src="`/thumbnails/${content.thumbnail}`" alt="" width="150">
+                            <time datetime="" class="absolute bottom-0 text-xs text-white p-1" style="background: var(--primary)">1:00</time>
+                        </div>
+                        <p :class="{'cursor-pointer': !content.is_paid, 'cursor-not-allowed': content.is_paid}">{{ content.title }}</p>
+                    </div>
                     <div class="meta-data flex">
                         <div class="content-meta" v-if="!instructor">
                             <span class="text-gray-500 text-sm mr-3" v-if="content.is_paid">

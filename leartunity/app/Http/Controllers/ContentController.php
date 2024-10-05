@@ -8,6 +8,7 @@ use App\Interfaces\LinkedList;
 use App\Models\Content;
 use App\Models\Course;
 use App\Models\Section;
+use App\Services\ContentDescription;
 use App\Services\ResumableJS;
 use App\Services\VideoDescription;
 use FFMpeg\FFProbe;
@@ -48,6 +49,8 @@ class ContentController extends Controller
         $title = $request->title;
         $description = $request->description;
 
+
+        // It is using resumableJS behind the scene
         $progress = $jws->upload($request, function($fileName) use($section, $title, $description, $list, $videoService) {
 
             $count = $section->contents->count();
@@ -62,13 +65,17 @@ class ContentController extends Controller
                 "is_paid" => 1,
                 "sequence" => $count +  1,
                 "description" => $description,
-                "previous_video" => $previous_content?->id
+                "previous_video" => $previous_content?->id,
             ]);
+
+            // Creating the thumbnail of the video and storing it into the database
+            $thumbnail_path = (new ContentDescription())->thumbnail(public_path("uploads/$fileName"));
+            $new_content->thumbnail = $thumbnail_path;
+            $new_content->save();
+
             $previous_content?->update([
                 "next_video" => $new_content->id
             ]);
-
-
 
         });
 

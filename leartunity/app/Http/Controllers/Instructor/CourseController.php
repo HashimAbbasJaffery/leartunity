@@ -27,6 +27,7 @@ class CourseController extends Controller
                             ->with("author", "purchases")
                             ->where("author_id", auth()->user()->id)
                             ->paginate(6);
+
         if(request()->wantsJson()) return $courses;
         return Inertia::render("Instructor/index", [
             "courses" => $courses

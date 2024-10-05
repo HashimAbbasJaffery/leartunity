@@ -12,7 +12,7 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $with = ["categories", "contents"];
+    protected $with = ["categories", "contents", "reviews"];
     protected $guarded = [];
     public function purchases() {
         return $this->hasMany(Purchase::class, "purchase_product_id", "stripe_id");
