@@ -1,8 +1,5 @@
 <template>
     <Layout>
-     <div class="progression" style="padding: 10px;position: fixed; margin: 0 auto; top: 10px; right: 10px;">
-         <div class="progress-bar none" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="--value:5"></div>
-     </div>
      <section id="add-section" class="container mx-auto mt-3">
          <h1 style="font-size: 25px; font-weight: 500;">Add Section</h1>
          <div class="course-sections mb-3">

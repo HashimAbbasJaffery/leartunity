@@ -48,6 +48,7 @@ class ContentController extends Controller
     public function store(ContentRequest $request, Section $section, LinkedList $list, ResumableJS $jws, VideoDescription $videoService) {
         $title = $request->title;
         $description = $request->description;
+        $new_content_id = null;
 
 
         // It is using resumableJS behind the scene
@@ -79,7 +80,7 @@ class ContentController extends Controller
 
         });
 
-        return $progress;
+        return $section->contents()->latest()->select(["id", "title", "content", "duration", "is_paid", "thumbnail"])->first();
 
     }
     public function update(ContentUpdateRequest $request, Content $content, LinkedList $list, ResumableJS $jws) {
@@ -107,6 +108,6 @@ class ContentController extends Controller
     public function destroy(Content $content, LinkedList $list) {
         $list->remove($content);
         $contents = $content->section->contents;
-        return $contents;
+        return 1;
     }
 }
