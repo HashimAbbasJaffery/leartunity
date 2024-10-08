@@ -4,7 +4,7 @@
 
         <div v-if="expand">
             <ul class="ml-5" v-for="content in contents" :key="content.id">
-                <Content :content="content" :instructor="instructor"></Content>
+                <Content @update="addContent($event, 2)" :content="content" :instructor="instructor"></Content>
             </ul>
 
             <ul class="ml-5 mb-3" v-if="is_uploading">
@@ -43,6 +43,7 @@
 import {ref, inject, watch} from "vue"
 import Modal from "../Classes/Modal";
 import Content from "./Content.vue";
+import axios from "axios";
 
 let props = defineProps({
     section: Array,
@@ -60,13 +61,10 @@ let contents = ref(props.section.contents)
 let progress = ref(0);
 let uploadingTitle = ref("");
 let is_uploading = ref(false);
-
-
-
 let expand = ref(false);
+let hasFile = ref(false);
 
 let emit = defineEmits(["expand", "changeVideo"])
-
 
 function sectionExpand() {
     expand.value = !expand.value
@@ -74,8 +72,6 @@ function sectionExpand() {
         emit("expand", props.section.section_name)
     }
 }
-
-
 
 let expandedSection = inject("expanded");
 watch(expandedSection, function() {
@@ -86,20 +82,42 @@ watch(expandedSection, function() {
 
 let actionType = ref(1);
 let clickedId = ref();
+const withoutFileUpload = async (url, title, description) => {
+    const status = await axios.post(url, { title, description });
+    contents.value.map(content => {
+        if(status.data.id !== content.id) return;
+        content.title = title;
+        content.description = description;
+    });
+}
 const successUpload = () => {
     const content = document.getElementById("content-video");
     const title = document.getElementById("content-title").value;
-    uploadingTitle.value = title;
-    is_uploading.value = true;
     const description = document.getElementById("content-description").value;
+    if(!title || !description) return;
+    const url = `/instructor/content/${clickedId.value}/${actionType.value == 1 ? 'add' : 'update'}`;
+
+    // If no video file is attached
+    if(!hasFile.value) {
+        withoutFileUpload(url, title, description);
+        return;
+    }
+
+    // Only activate for creation of the new content
+    if(actionType.value === 1) {
+        uploadingTitle.value = title;
+        is_uploading.value = true;
+    }
+
     props.resumable.resumable.opts.query = {
         ...props.resumable.resumable.opts.query,
         title,
         description
     }
-    props.resumable.resumable.opts.target = `/instructor/content/${clickedId.value}/${actionType.value == 1 ? 'add' : 'update'}`
+    props.resumable.resumable.opts.target = url;
     const data = new FormData();
-    data.append("content", content.files[0])
+
+    data.append("content", content.files[0]);
     data.append("title", title.value);
     data.append("description", description);
 
@@ -107,15 +125,31 @@ const successUpload = () => {
 
     props.resumable.resumable.on("fileProgress", function(file) {
         progress.value = file.progress() * 100;
-        console.log("lol");
+        contents.value.map(content => {
+            if(clickedId.value !== content.id) return;
+            content.thumbnail = "";
+            content.duration = 0;
+            content.progress = progress.value
+        });
     });
 
     props.resumable.resumable.on("fileSuccess", function(file, response) {
         response = JSON.parse(response);
-        contents.value.push({...response});
-        progress.value = 0
-        uploadingTitle.value = "";
-        is_uploading.value = false;
+        if(actionType.value === 2) {
+            contents.value.map(content => {
+                if(clickedId.value !== content.id) return;
+                content.thumbnail = response.thumbnail;
+                content.duration = response.duration;
+                content.title = response.title;
+                content.progress = 0
+            });
+        } else {
+            contents.value.push({...response});
+            progress.value = 0
+            uploadingTitle.value = "";
+            is_uploading.value = false;
+            hasFile.value = false;
+        }
     })
 
 }
@@ -134,6 +168,11 @@ function addContent(id, action = 1) {
     modal.oneInput("Upload Content", successUpload, true, true, "html", uploadPreparation,
     '<input type="text" id="content-title" class="mb-2" style="width: 100%; border: 1px solid var(--primary); resize: none" ><textarea id="content-description" type="text" style="width: 100%; border: 1px solid var(--primary); height: 100px; resize: none" class="mb-2"></textarea> <input id="content-video" style="border: none;width: 100%;" type="file" value="Choose Files"/>', csrf)
 }
+
+
+props.resumable.resumable.on("fileAdded", function(file) {
+    hasFile.value = true;
+})
 </script>
 
 <style>

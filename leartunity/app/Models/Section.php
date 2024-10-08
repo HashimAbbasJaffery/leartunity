@@ -25,4 +25,10 @@ class Section extends Model
     public function next() {
         return $this->where("sequence", $this->sequence + 1);
     }
+    public function latest_content() {
+        return $this->contents()
+                ->latest()
+                ->select(["id", "title", "content", "duration", "is_paid", "thumbnail"])
+                ->first();
+    }
 }

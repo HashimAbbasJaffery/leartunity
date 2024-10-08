@@ -78,9 +78,9 @@ class ContentController extends Controller
                 "next_video" => $new_content->id
             ]);
 
-        });
+        });;
 
-        return $section->contents()->latest()->select(["id", "title", "content", "duration", "is_paid", "thumbnail"])->first();
+        return $section->latest_content();
 
     }
     public function update(ContentUpdateRequest $request, Content $content, LinkedList $list, ResumableJS $jws) {
@@ -89,11 +89,15 @@ class ContentController extends Controller
 
         $progress = $jws->upload($request, function($fileName) use($content, $title, $description) {
             File::delete(public_path("uploads/" . $content->content));
-            $content->update([
+
+            $thumbnail_path = (new ContentDescription())->thumbnail(public_path("uploads/$fileName"));
+            $content = $content->update([
                 "title" => $title,
                 "description"=> $description,
-                "content" => $fileName
+                "content" => $fileName,
+                "thumbnail" => $thumbnail_path
             ]);
+
         }, function() use($content, $title, $description) {
             $content->update([
                 "title"=> $title,
@@ -101,8 +105,9 @@ class ContentController extends Controller
             ]);
         });
 
-
-        return $progress;
+        $content = $content->refresh();
+        $content->progress = 0;
+        return $content;
 
     }
     public function destroy(Content $content, LinkedList $list) {

@@ -34,8 +34,9 @@ let course = inject("course");
 let current_content = inject("current_content");
 let completed = inject("completed");
 
+
 let isWatching = computed(() => current_content.id === props.content.id);
-let isWatched = computed(() => completed.includes(props.content.id));
+let isWatched = computed(() => (completed === -1) ? false : completed.includes(props.content.id));
 
 
 </script>
