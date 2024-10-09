@@ -40,7 +40,7 @@
 
 <script setup>
 
-import {ref, inject, watch} from "vue"
+import {ref, inject, watch, computed} from "vue"
 import Modal from "../Classes/Modal";
 import Content from "./Content.vue";
 import axios from "axios";
@@ -57,14 +57,19 @@ let props = defineProps({
     }
 })
 
+
 let contents = ref(props.section.contents)
 let progress = ref(0);
 let uploadingTitle = ref("");
 let is_uploading = ref(false);
 let expand = ref(false);
 let hasFile = ref(false);
+let actionType = ref(1);
+let clickedId = ref();
 
 let emit = defineEmits(["expand", "changeVideo"])
+
+let isAddingContent = computed(() => actionType.value === 1);
 
 function sectionExpand() {
     expand.value = !expand.value
@@ -73,19 +78,11 @@ function sectionExpand() {
     }
 }
 
-let expandedSection = inject("expanded");
-watch(expandedSection, function() {
-    if((props.section.section_name != expandedSection.value) && expand.value) {
-        expand.value = false;
-    }
-})
-
-let actionType = ref(1);
-let clickedId = ref();
 const withoutFileUpload = async (url, title, description) => {
     const status = await axios.post(url, { title, description });
     contents.value.map(content => {
-        if(status.data.id !== content.id) return;
+        let isNotSameContent = status.data.id !== content.id;
+        if(isNotSameContent) return;
         content.title = title;
         content.description = description;
     });
@@ -94,8 +91,9 @@ const successUpload = () => {
     const content = document.getElementById("content-video");
     const title = document.getElementById("content-title").value;
     const description = document.getElementById("content-description").value;
-    if(!title || !description) return;
-    const url = `/instructor/content/${clickedId.value}/${actionType.value == 1 ? 'add' : 'update'}`;
+    let isEveryFieldFilled = title && description;
+    if(!isEveryFieldFilled) return;
+    const url = `/instructor/content/${clickedId.value}/${isAddingContent.value == 1 ? 'add' : 'update'}`;
 
     // If no video file is attached
     if(!hasFile.value) {
@@ -103,8 +101,7 @@ const successUpload = () => {
         return;
     }
 
-    // Only activate for creation of the new content
-    if(actionType.value === 1) {
+    if(isAddingContent.value) {
         uploadingTitle.value = title;
         is_uploading.value = true;
     }
@@ -135,7 +132,7 @@ const successUpload = () => {
 
     props.resumable.resumable.on("fileSuccess", function(file, response) {
         response = JSON.parse(response);
-        if(actionType.value === 2) {
+        if(!isAddingContent.value) {
             contents.value.map(content => {
                 if(clickedId.value !== content.id) return;
                 content.thumbnail = response.thumbnail;

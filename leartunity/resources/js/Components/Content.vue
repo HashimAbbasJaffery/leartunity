@@ -23,8 +23,8 @@
             </div>
         </div>
         <div class="action-buttons" v-if="instructor">
-            <button @click="startDeleteContent(content.id)"  class="bg-red-400 hover:bg-red-500 text-white px-2 py-1 rounded mx-2">Delete</button>
-            <button @click="update(content.id)" class="bg-blue-400 hover:bg-blue-500 text-white px-2 py-1 rounded mx-2">Update</button>
+            <button :disabled="content.progress > 0" @click="startDeleteContent(content.id)"  class="disabled:bg-red-200 disabled:cursor-not-allowed bg-red-400 hover:bg-red-500 text-white px-2 py-1 rounded mx-2">Delete</button>
+            <button :disabled="content.progress > 0" @click="update(content.id)" class="disabled:bg-blue-200 disabled:cursor-not-allowed bg-blue-400 hover:bg-blue-500 text-white px-2 py-1 rounded mx-2">Update</button>
         </div>
     </div>
 </li>
