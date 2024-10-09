@@ -35,11 +35,11 @@
                   <li @click="current_cat_active = category.category" v-for="category in categories" :key="category.id" class="tab" :class="{ 'active': current_cat_active === category.category }">{{ category.category }}</li>
               </ul>
             </div>
-            <div class="grid grid-cols-4 gap-4">
                 <div v-for="category in categories" :key="category.id" :id="`category-${category.id}`" v-show="current_cat_active === category.category">
-                    <Course v-for="course in category.courses" :course="course" :key="course.id"></Course>
+                    <div class="grid grid-cols-4 gap-4">
+                            <Course v-for="course in category.courses" :course="course" :key="course.id"></Course>
+                    </div>
                 </div>
-            </div>
           </section>
           <section id="apply-for-teaching" class="container mx-auto flex ">
             <div class="side-image">
