@@ -87,6 +87,7 @@ const withoutFileUpload = async (url, title, description) => {
         content.description = description;
     });
 }
+
 const successUpload = () => {
     const content = document.getElementById("content-video");
     const title = document.getElementById("content-title").value;
@@ -167,7 +168,7 @@ function addContent(id, action = 1) {
 }
 
 
-props.resumable.resumable.on("fileAdded", function(file) {
+props.resumable?.resumable?.on("fileAdded", function(file) {
     hasFile.value = true;
 })
 </script>
