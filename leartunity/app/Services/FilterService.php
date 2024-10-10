@@ -42,7 +42,7 @@ class FilterService {
 
         if(!$status) {
 
-            $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->get();
+            $courses = Course::with("author.profile", "author", "reviews")->filter($parameters)->paginate(6);
         } else {
             $courses = Course::with("author.profile", "author", "reviews")->whereStatus($status)->filter($parameters)->paginate(6);
         }

@@ -29,6 +29,7 @@ class LearningController extends Controller
 
         $purchases = $purchases->map(function($purchase) use($certificates) {
             $purchase["certificate"] = $certificates->firstWhere("certificate_id", $purchase->course->id);
+            $purchase->load("course", "course.author", "course.tracker", "course.contents", "course.reviews");
             return $purchase;
         });
 
@@ -37,36 +38,37 @@ class LearningController extends Controller
         ]);
     }
     public function get(Course $course, Content $content) {
+        $course->load(["author", "sections"]);
         $current_content = $content;
-        $stripe_id = $course->stripe_id;
-        $does_own_course = auth()
-                            ->user()
-                            ->purchases()
-                            ->where("purchase_product_id", $stripe_id)
-                            ->exists();
-
         $comments = $course->comments()->where("content_id", $content->id)->whereNull("replies_to")->get();
-        abort_if(!$does_own_course, 403);
-        $next_content = $this->sectionService->next_content($content);
+        $next_content = $content->next()->first();
+        $section = $content->section;
+        $next_section = Section::where("course_id", $section->course_id)
+                                ->where("sequence", $section->sequence + 1)
+                                ->first();
 
-        $instance_tracker = json_decode($content->section->course->tracker->tracking);
-        $quiz_tracker = json_decode($content->section->course->tracker->quiz_tracker);
+        $tracker = [];
+        $instance_tracker = [];
+        $quiz_tracker = [];
+        $is_purchased = $course->purchases()->where("user_id", auth()->id())->exists();
+        if($is_purchased) {
+            $instance_tracker = json_decode($content->section->course->tracker->tracking);
+            $quiz_tracker = json_decode($content->section->course->tracker->quiz_tracker);
 
-        $instance_tracker = array_filter($instance_tracker, function($track) use($content) {
-            return $track->id == $content->id;
-        });
-        $quiz_tracker = array_filter($quiz_tracker, function($track) use($content) {
-            return $track->id == $content->id;
-        });
+            $instance_tracker = array_filter($instance_tracker, function($track) use($content) {
+                return $track->id == $content->id;
+            });
+            $quiz_tracker = array_filter($quiz_tracker, function($track) use($content) {
+                return $track->id == $content->id;
+            });
 
-        $instance_tracker = !count($instance_tracker) ? $instance_tracker : reset($instance_tracker);
-        $quiz_tracker = !count($quiz_tracker) ? $quiz_tracker : reset($quiz_tracker);
+            $instance_tracker = !count($instance_tracker) ? $instance_tracker : reset($instance_tracker);
+            $quiz_tracker = !count($quiz_tracker) ? $quiz_tracker : reset($quiz_tracker);
 
-        $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
-
+            $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
+        }
         if(!$next_content) {
-            $next_section = $content->section->next()->firstWhere("course_id", $course->id);
-            $next_content = $next_section->contents()->first();
+            $next_content = $next_section?->contents()?->first() ?? false;
         }
 
         $certificate = Certificate::where("user_id", auth()->id())->where("certificate_id", $course->id)->first();
@@ -78,7 +80,8 @@ class LearningController extends Controller
             "tracker" => $tracker,
             "instance_tracker" => $instance_tracker,
             "quiz_tracker" => $quiz_tracker,
-            "certificate_id" => $certificate?->certificate_id ?? null
+            "certificate_id" => $certificate?->certificate_id ?? null,
+            "is_purchased" => $is_purchased
         ]);
     }
 }

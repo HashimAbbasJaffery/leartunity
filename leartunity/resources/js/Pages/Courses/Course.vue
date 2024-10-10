@@ -21,7 +21,7 @@
           </section>
           <section id="course-content" class="container mx-auto" style="position: relative;">
             <div class="course-header">
-              <p>{{ course.price }} $</p>
+              <p>{{ price }} {{ $page.props.auth.currency.unit }}</p>
             </div>
             <div class="course-details">
               <div class="course-desc" v-html="description.substring(0, descriptionLen)">
@@ -96,9 +96,12 @@
 <script setup>
 import Layout from "../../Shared/Layout.vue"
 import calculateReviewStars from "../../../../public/js/helpers/stars";
-import {ref, provide} from "vue"
+import {ref, provide, onMounted} from "vue"
 import Section from "../../Components/Section.vue";
 import Loader from "../../Components/Essentials/Loading.vue"
+import { usePage } from "@inertiajs/vue3";
+import { rate } from "../../Classes/CurrencyExchange";
+
 
 let props = defineProps({
     course: Object,
@@ -117,9 +120,12 @@ let descriptionLen = ref(1500);
 let video = ref(props.introduction);
 let screen = ref();
 let active = ref(false);
+let originalPrice = ref(props.course.price);
+let price = ref(props.course.price)
 
 
 let description = props.course.description + "<h1>Pre Requisites</h1>" + props.course.pre_req;
+let page = usePage();
 
 function unHide() {
     descriptionLen.value = Infinity;
@@ -139,6 +145,18 @@ function changeVideo(src) {
     }, 1400)
 }
 
+
+onMounted(async () => {
+    let currency = page.props.auth.currency.currency;
+    let totalPrice = originalPrice.value * await rate(currency);
+    price.value = Math.round(totalPrice);
+})
+
+
+
+
+console.log("lol");
+console.log(rate("INR"));
 
 
 </script>

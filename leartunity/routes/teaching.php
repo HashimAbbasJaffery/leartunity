@@ -4,6 +4,7 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\Instructor\CourseController;
 use App\Http\Controllers\Instructor\SectionController;
 use App\Http\Controllers\QuizController;
+use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", [CourseController::class, "index"])->name("instructor");
@@ -25,4 +26,10 @@ Route::get("/course/{course_slug_o}", [CourseController::class, "show"])->name("
 Route::post("/course/store", [CourseController::class, "store"])->name("course.create");
 Route::get("/course/{course_slug_o}/edit", [CourseController::class, "edit"])->name("course.edit");
 Route::put("/course/{course_slug_o}/create", [CourseController::class, "update"])->name("course.update");
-Route::delete("/course/{course_slug_o}/delete", [CourseController::class, "destroy"])->name("course.delete");
+Route::delete("/course/{course:id}", [CourseController::class, "destroy"])->name("course.delete");
+
+Route::put("/course/{course:id}/awardables", function(Request $request, Course $course) {
+   $course->is_certifiable = ! $course->is_certifiable;
+   $course->save();
+   return 1;
+})->name("course.is_awardable");

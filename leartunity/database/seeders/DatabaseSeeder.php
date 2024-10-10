@@ -12,7 +12,7 @@ use App\Models\Category;
 
 class DatabaseSeeder extends Seeder
 {
-    protected $quantity = 5000;
+    protected $quantity = 50;
     /**
      * Seed the application's database.
      */
@@ -20,11 +20,11 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         // User::factory(10)->create();
-        Course::factory(50)->create();
-        // Category::factory($this->quantity)->create();
-        // Course::factory()
-        //         ->has(Category::factory()->count(50))
-        //         ->create();
+        // Course::factory(50)->create();
+        Category::factory($this->quantity)->create();
+        Course::factory()
+                ->has(Category::factory()->count(50))
+                ->create();
         // Setting::create([
         //     "primary_color" => "#333",
         //     "secondary_color" => "white",

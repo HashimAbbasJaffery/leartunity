@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Instructor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseRequest;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Models\Course;
 use App\Models\Category;
@@ -16,45 +18,31 @@ use Stripe\StripeClient as Stripe;
 class CourseController extends Controller
 {
     public function __construct(
-        Request $request,
         protected Stripe $stripe
-    ){
-        $slug = "";
-        try {
-            $course = $request->route()->parameters()["course"];
-            $slug = ($course->slug) ? $course->slug : $course;
-        } catch(\Exception $e) {
-
-        }
-
-        Log::debug($slug);
-        if($slug)
-            $this->middleware("is_course_owner:$slug");
-    }
+    ){}
     public function index() {
+        $this->authorize("create", Course::class);
+        $courses = Course::withoutGlobalScopes()
+                            ->withSum("contents", "duration")
+                            ->with("author", "purchases")
+                            ->where("author_id", auth()->user()->id)
+                            ->paginate(6);
 
-        $courses = Course::withoutGlobalScopes()->withSum("contents", "duration")->where("author_id", auth()->user()->id)->get();
-
-
+        if(request()->wantsJson()) return $courses;
         return Inertia::render("Instructor/index", [
             "courses" => $courses
         ]);
     }
-    public function destroy(Course $course) {
-
+    public function destroy($id){
+        $course = Course::withoutGlobalScopes()->find($id);
+        $this->authorize("delete", $course);
         $this->middleware("is_course_owner:$course->slug");
         $course->delete();
-        return redirect()->back();
+        // return redirect()->back();
     }
-    public function update(Request $request, Course $course) {
-        $this->middleware("is_course_owner:$course->slug");
-        $validated = $request->validate([
-            "title" => ["required", "min:4", "max:50"],
-            "description" => ["required", "min:25", "max:1000"],
-            "pre_req" => ["required", "min:25", "max:1000"],
-            "price" => ["required"],
-            "categories" => ["required"]
-        ]);
+    public function update(CourseRequest $request, Course $course) {
+        $this->authorize("update", $course);
+
         $categories = $request->categories;
         $slug = str($request->title)->slug("-");
         $file = $request->image;
@@ -102,9 +90,10 @@ class CourseController extends Controller
 
         $course->categories()->sync($categories);
         $courses = Course::all();
-        return redirect()->to("/courses")->with(compact("courses"));
+        return redirect()->to("/instructor")->with(compact("courses"));
     }
     public function edit(Request $request, Course $course) {
+        $this->authorize("update", $course);
         $categories = Category::all();
         return Inertia::render("Courses/Edit", [
             "categories" => $categories,
@@ -112,7 +101,7 @@ class CourseController extends Controller
         ]);
     }
     public function store(CourseRequest $request) {
-
+        $this->authorize("create", Course::class);
         $slug = str($request->title)->slug("-");
         $file = $request->file("thumbnail");
 
@@ -153,6 +142,8 @@ class CourseController extends Controller
         return redirect()->to("/instructor");
     }
     public function show(Request $request, Course $course) {
+        $this->authorize("view", $course);
+
         $sections = $course->sections;
         $csrf = csrf_token();
         return Inertia::render("Instructor/Content/Add", [
@@ -163,7 +154,7 @@ class CourseController extends Controller
     }
 
     public function changeStatus(Request $request, Course $course) {
-
+        $this->authorize("update", $course);
         $this->middleware("is_course_owner:$course->slug");
         $course->update([
             "status" => !$course->status
@@ -172,6 +163,7 @@ class CourseController extends Controller
         return 1;
     }
     public function create() {
+        $this->authorize("create", Course::class);
         $categories = Category::all();
         return Inertia::render("Courses/Add", [
             "categories" => $categories

@@ -18,7 +18,7 @@ class ResumableJS {
 
         if($save->isFinished()) {
             $file = $save->getFile();
-            $fileName = time() . $file->getClientOriginalName();
+            $fileName = time() . "." . $file->getClientOriginalExtension();
             $file->move(public_path("uploads"), $fileName);
 
             $closure($fileName);

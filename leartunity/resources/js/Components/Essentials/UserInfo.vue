@@ -16,7 +16,7 @@
 <script setup>
 import ProfilePic from './ProfilePic.vue';
 import Cropper from "../../../../resources/js/Classes/Cropper.js";
-import {ref, toRef} from "vue"
+import {ref, toRef, onMounted} from "vue"
 import { router } from '@inertiajs/vue3';
 
 let props = defineProps({
@@ -48,45 +48,7 @@ const changePicture = (element, type) => {
     cropper.bindPicture(element.target);
     emit("sendCropper", cropper);
 }
-// $('#modal-gateway').click(function(event){
-//     console.log("should be uploading...")
-// cropper.upload(function(resp) {
-//     console.log("uplading...")
-//     const type = cropper.getType();
-//     const name = type === "square" ? "cover" : "profile_pic";
-//     const data = new FormData();
-//     data.append(name, resp);
-//     let parameters = {
-//         [name]: resp
-//     }
-//     axios.post(`/user/${ props.id }/picture`, data)
-//         .then(res => {
 
-//             const data = res.data;
-//             console.log(data);
-//             $(".cancel").click();
-
-//             const isSuccess = data.type;
-//             if(isSuccess === "failed") return;
-//             console.log(data);
-//             const fileType = data.message[0];
-//             const fileName = data.message[1];
-
-//             if(type === "square") {
-//                 cover.value = fileName
-//             } else {
-//                 picture.value = fileName;
-//             }
-
-//             $("#modal-gateway").off("click");
-//             emit("toggleModal", false);
-//         })
-// })
-// })
-
-function testing() {
-    console.log("CLiked")
-}
 </script>
 
 <style>

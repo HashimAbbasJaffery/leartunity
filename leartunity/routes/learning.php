@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\TrackerControler;
 
 Route::get("/", [LearningController::class, "index"])->name("learn");
-Route::get("course/{course:slug}/{content}", [LearningController::class, "get"])->name("watch.course");
+Route::get("course/{course:slug}/{content}", [LearningController::class, "get"])->middleware("can_access_course")->name("watch.course");
 
 Route::post("comment/{course:slug}/{content}/add", [CommentController::class, "create"])->name("create.comment");
 Route::post("course/{content}/updateTracker/{course}", [TrackerControler::class, "update"])->name("update.tracker");

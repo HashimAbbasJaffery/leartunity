@@ -51,19 +51,19 @@ function changeCurrency() {
     <li v-if="isAdmin">
     <NavLink href="/admin" v-translate>Admin</NavLink>
     </li>
-    <li class="mx-3">
+    <li class="mx-3" v-if="isUser">
     <NavLink href="/learn" v-translate>My Learning</NavLink>
     </li>
     <li class="mx-3">
     <NavLink href="/courses" v-translate>Courses</NavLink>
     </li>
-    <li class="mx-3" v-if="isTeacher">
+    <li class="mx-3" v-if="isTeacher && isUser">
     <NavLink href="/instructor" v-translate>Instructor</NavLink>
     </li>
 
-    <li class="mx-3">
+    <!-- <li class="mx-3" v-if="isUser">
     <NavLink href="/referrals" v-translate>Referrals</NavLink>
-    </li>
+    </li> -->
 
     <li class="mx-3 highlighted" v-if="user">
     <NavLink :href="`/profile/${user.id}`">{{ user.name }}</NavLink>
@@ -76,7 +76,7 @@ function changeCurrency() {
     </li>
 
 
-      <ul class="notification-drop" style="position: relative">
+      <ul v-if="!isGuest" class="notification-drop" style="position: relative">
         <li class="item">
           <i
             class="fa fa-bell-o notification-bell"
@@ -124,7 +124,7 @@ function changeCurrency() {
             <i class="fa-solid fa-power-off"></i>
         </NavLink>
       </li>
-      <li>
+      <li v-if="!isGuest">
         <NavLink href="/test">{{ Math.round(user.balance * rateExchange) }} {{ currencyUnit }}</NavLink>
       </li>
     </ul>

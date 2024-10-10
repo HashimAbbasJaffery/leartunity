@@ -20,31 +20,21 @@ export default class Resumable {
             console.log("start")
         })
 
-        this.resumable.on("fileProgress", function(file) {
-            const progressBar = document.querySelector(".progress-bar");
-            const progressStyle = progressBar.style;
-            const progress = Math.floor(file.progress() * 100);
-            progressBar.classList.remove("none")
-            progressBar.classList.add("block");
-            progressStyle.setProperty("--value", progress);
-            console.log(progress)
-        })
 
-        this.resumable.on("fileSuccess", function(file) {
-            const progressBar = document.querySelector(".progress-bar");
-            progressBar.classList.add("none")
-            progressBar.classList.remove("block");
+        // this.resumable.on("fileSuccess", function(file) {
+        //     const progressBar = document.querySelector(".progress-bar");
+        //     progressBar.classList.add("none")
+        //     progressBar.classList.remove("block");
 
-            const page = usePage();
-            const url = page.url;
+        //     const page = usePage();
+        //     const url = page.url;
 
-            setTimeout(() => {
-                router.visit(url, {
-                    except: []
-                })
-            }, 2000)
-
-        })
+        //     setTimeout(() => {
+        //         router.visit(url, {
+        //             except: []
+        //         })
+        //     }, 2000)
+        // })
 
         this.resumable.on('fileError', function (file, response) { // trigger when there is any error
             console.log(response);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ImageUploadingRequest;
 use App\Models\Course;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File as FileValidation;
 use Illuminate\Support\Facades\File;
@@ -16,20 +17,20 @@ class ProfileController extends Controller
 {
     protected $courses;
     public function __construct() {
-        $this->courses = Course::where("author_id", request()->id);
+        $this->courses = Course::with("author", "purchases")->where("author_id", request()->id);
     }
     public function index(Request $request) {
+        $courses = $this->courses->paginate(6);
+        if(request()->wantsJson()) return $courses;
         $user = auth()->user();
         $profile = Profile::with("user.follows")->where("user_id", $request->id)->first();
-
+        $certificates = User::with("certificates")->firstWhere("id", $request->id)->certificates;
         if(!$profile) {
             auth()->user()->profile()->create([
                 "follows" => 0
             ]);
         }
 
-        $courses = $this->courses->paginate(6);
-        $courses->withPath("/get/courses");
         $reviewCourses = $this->courses->whereHas("reviews")->get();
         $count = 0;
         $sum = 0;
@@ -51,7 +52,8 @@ class ProfileController extends Controller
             "profile" => $profile,
             "courses" => $courses,
             "is_following" => $is_following,
-            "followersCount" => $followersCount
+            "followersCount" => $followersCount,
+            "certificates" => $certificates,
         ]);
     }
     public function changeProfileImage(ImageUploadingRequest $request, Profile $profile) {

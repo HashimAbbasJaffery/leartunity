@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-    protected $with = ["categories", "reviews", "author", "tracker", "contents", "sections"];
+
+    protected $with = ["categories", "contents", "reviews"];
     protected $guarded = [];
     public function purchases() {
         return $this->hasMany(Purchase::class, "purchase_product_id", "stripe_id");
@@ -31,7 +32,7 @@ class Course extends Model
         return $this->hasMany(Section::class);
     }
     public function comments() {
-        return $this->hasMany(Comment::class)->whereNull("replies_to");
+        return $this->hasMany(Comment::class);
     }
     public function contents() {
         return $this->hasManyThrough(Content::class, Section::class, "course_id", "contentable_id");
@@ -47,20 +48,23 @@ class Course extends Model
     public function scopeFilter($query, array $filters = []) {
 
         // Filtration by category
-        $query->when($filters["categories"] ?? false, function() use ($query, $filters) {
+        $query->when($filters["categories"], function() use ($query, $filters) {
             $query->whereHas("categories", function($query) use($filters) {
                 $query->whereIn("category_id", $filters["categories"]);
             });
         });
 
         // Filtration by price range
-        $query->when($filters["price_range"] ?? false, function() use($query, $filters) {
+        $query->when($filters["price_range"], function() use($query, $filters) {
+            $currency = User::find(auth()->id())->currency?->currency ?? "USD";
+            $filters["price_range"][0] /= \App\Helpers\exchange_rate($currency);
+            $filters["price_range"][1] /= \App\Helpers\exchange_rate($currency);
             $query->whereBetween("price", $filters["price_range"]);
         });
 
         // Searching from the keyword
 
-        $query->when($filters["search"] ?? false, function() use ($query, $filters) {
+        $query->when($filters["search"], function() use ($query, $filters) {
             $type = strtolower($filters["type"]);
             $query->where($type, "LIKE", "%" . $filters["search"]. "%");
         });

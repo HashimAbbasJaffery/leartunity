@@ -6,9 +6,12 @@ use App\Classes\Points;
 use App\Interfaces\Certificate;
 use App\Interfaces\LinkedList;
 use App\Interfaces\TrackingService;
+use App\Models\Course;
+use App\Policies\CoursePolicy;
 use App\Services\ContentService;
 use App\Services\CourseCertificate;
 use App\Services\VideoTrackingService;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Laravel\Cashier\Cashier;
@@ -38,5 +41,7 @@ class AppServiceProvider extends ServiceProvider
                     ->give(env("STRIPE_SECRET"));
 
         Inertia::share("user", auth()->user());
+
+        Gate::policy(Course::class, CoursePolicy::class);
     }
 }

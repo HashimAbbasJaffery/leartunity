@@ -13,7 +13,7 @@ class ReviewController extends Controller
         $reviews = $course?->reviews ?? null;
 
         $reviews = $reviews?->reviews ?? [];
-        
+
         $value = [
             "id" => auth()->user()->id,
             "name" => auth()->user()->name,
@@ -21,9 +21,10 @@ class ReviewController extends Controller
             "stars" => $stars,
             "review" => $feedback
         ];
+
         $value = [
             ...$reviews,
-            $value 
+            $value
         ];
 
 
@@ -33,7 +34,7 @@ class ReviewController extends Controller
             $current_stars = ($course?->reviews?->stars ?? null);
             $average = (($current_stars * ($total_reviews - 1)) + $stars) / ($total_reviews);
         }
-        
+
         $course->reviews()->updateOrCreate([
             "reviewable_id" => $course->id,
         ], [
@@ -43,7 +44,7 @@ class ReviewController extends Controller
         ]);
 
         return 1;
-        
+
     }
 
     public function update(Request $request, Course $course) {
@@ -53,7 +54,7 @@ class ReviewController extends Controller
         $count = count($course->reviews->reviews);
 
         $reviews = ($reviews?->reviews) ?? [];
-        
+
         // Get the current user's review
         $user_review = array_filter($reviews, function($review) {
             return $review->id === auth()->user()->id;
@@ -68,20 +69,20 @@ class ReviewController extends Controller
         $current_average = $course->reviews->stars;
 
         $average = ((($current_average * $count) - $user_star) + $stars) / $count;
-        
+
 
         $value = [
-            ...$reviews, 
+            ...$reviews,
             [
                 "id" => auth()->user()->id,
                 "name" => auth()->user()->name,
                 "status" => true,
                 "stars" => $stars,
-                "review" => $feedback   
+                "review" => $feedback
             ]
         ];
-       
-       
+
+
         $course->reviews()->updateOrCreate([
             "reviewable_id" => $course->id,
         ], [

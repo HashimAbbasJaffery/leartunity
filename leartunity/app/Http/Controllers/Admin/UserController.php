@@ -12,13 +12,21 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Validator;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
     public function index(Request $request) {
         $keyword = $request->keyword;
         $users = User::where("name", "like", "%$keyword%")->where("id", "!=", auth()->id())->paginate(8)->withQueryString();
-        return view("Admin.users", compact("users", "keyword"));
+        $users->each(function($user) {
+            $user["is_banned"] = $user->isBanned();
+        });
+        if($request->wantsJson()) return $users;
+        return Inertia::render("Admin/User/Index", [
+            "users" => $users,
+            "keyword" => $keyword
+        ]);
     }
     public function edit(Request $request, User $user) {
         $context = $request->context;
@@ -30,41 +38,38 @@ class UserController extends Controller
     }
     public function banManager(Request $request, User $user) {
         $context = $request->context;
-
         if($context) {
             $user->ban();
         } else {
             $user->unban();
         }
 
-        return 1;
+        return $user->isBanned();
     }
     public function store(Request $request, StripeAccountCreate $stripeAccount) {
         $referral_id = null;
-        $referred_by = User::find($request->referral_id);
+        $referred_by = User::find($request->referred_by);
         $referral_exists = $referred_by?->exists();
-        if($request->referral_id && $referral_exists) {
-            $referral_id = $request->referral_id;
+        if($request->referred_by && $referral_exists) {
+            $referral_id = $request->referred_by;
         }
         $validation = \Illuminate\Support\Facades\Validator::make($request->all(), [
             "name" => ["required"],
             "password" => [ "required", "confirmed" ],
             "email" => [ "required", "email", "unique:users,email" ]
         ]);
-        $stripe_account_id = $stripeAccount->create();
         $attributes = [
             ...$validation->validated(),
             'ip_address' => $request->ip(),
             "referred_by" => $referral_id,
-            "stripe_account_id" => $stripe_account_id
         ];
         $user = User::create($attributes);
-        event(new Registered($user));
+        event(new Registered($user)); // Blocking
         $message = __("Ding, ding, ding! ") . $user->name . __(" is your new referral!");
 
         if($referral_id) {
             $referred_by->notify(new MessageNotification($message));
-            NotificationEvent::dispatch($referred_by->id, $message);
+            NotificationEvent::dispatch($referred_by->id, $message); // Blocking
         }
 
         return to_route("login");

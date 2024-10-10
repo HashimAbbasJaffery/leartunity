@@ -16,7 +16,6 @@ let props = defineProps({
     categories: Array
 });
 
-console.log(props.course)
 
 </script>
 

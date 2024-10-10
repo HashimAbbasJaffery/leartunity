@@ -14,10 +14,9 @@ class is_course_owner
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $slug): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        
-        $course = Course::firstWhere("slug", $slug);
+        $course = request()->route("course");
         $is_owner = $course->author()?->is(auth()->user()) ?? null;
         if(!$is_owner) abort(403);
 
