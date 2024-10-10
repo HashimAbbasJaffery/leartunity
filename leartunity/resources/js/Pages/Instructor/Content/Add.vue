@@ -1,7 +1,8 @@
 <template>
     <Layout>
      <section id="add-section" class="container mx-auto mt-3">
-         <h1 style="font-size: 25px; font-weight: 500;">Add Section</h1>
+        <h1 style="font-size: 25px; font-weight: 500;">Add Section</h1>
+
          <div class="course-sections mb-3">
                 <Section :resumable="resumable" v-for="section in sections" :key="section.id" :section="section" instructor></Section>
                  <div class="none contents" id="content-id">
@@ -45,7 +46,10 @@
              style="width:100%; display: inline-block">
              <i class="fa-solid fa-plus p-3 rounded-full" style="background: var(--primary); color: white;"></i>
          </a>
+        <button @click="changeAwardableStatus" v-if="is_awardable" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Award Certificates</button>
+        <button @click="changeAwardableStatus" v-else type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">No Certificates Awarding</button>
      </section>
+
     </Layout>
 </template>
 
@@ -55,6 +59,7 @@ import Section from "../../../Components/Section.vue"
 import Modal from "../../../Classes/Modal";
 import {ref} from "vue"
 import Resumable from "../../../Classes/Resumable";
+import axios from "axios";
 
 let props = defineProps({
     sections: Array,
@@ -64,6 +69,12 @@ let props = defineProps({
 
 let sections = ref(props.sections);
 let resumable = new Resumable();
+let is_awardable = ref(props.course.is_certifiable);
+
+const changeAwardableStatus = async () => {
+    const status = await axios.put(route('course.is_awardable', { id: props.course.id }))
+    if(status.data === 1) is_awardable.value = !is_awardable.value;
+}
 
 const addSection = () => {
     let modal = new Modal();

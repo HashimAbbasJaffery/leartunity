@@ -41,7 +41,11 @@ class LearningController extends Controller
         $course->load(["author", "sections"]);
         $current_content = $content;
         $comments = $course->comments()->where("content_id", $content->id)->whereNull("replies_to")->get();
-        $next_content = $this->sectionService->next_content($content);
+        $next_content = $content->next()->first();
+        $section = $content->section;
+        $next_section = Section::where("course_id", $section->course_id)
+                                ->where("sequence", $section->sequence + 1)
+                                ->first();
 
         $tracker = [];
         $instance_tracker = [];
@@ -63,9 +67,7 @@ class LearningController extends Controller
 
             $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
         }
-
         if(!$next_content) {
-            $next_section = $content->section->next()->firstWhere("course_id", $course->id);
             $next_content = $next_section?->contents()?->first() ?? false;
         }
 

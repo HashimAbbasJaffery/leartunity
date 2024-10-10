@@ -79,7 +79,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->hasMany(Comment::class);
     }
     public function certificates() {
-        return $this->hasMany(Certificate::class, "certificate_id")->whereStatus(1);
+        return $this->hasMany(Certificate::class, "user_id")->whereStatus(1);
     }
     public function referrals() {
         return $this->hasMany(User::class, "referred_by");

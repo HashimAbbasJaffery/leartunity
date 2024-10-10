@@ -23,7 +23,9 @@ class Section extends Model
         return $this->MorphMany(Content::class, "contentable");
     }
     public function next() {
-        return $this->where("sequence", $this->sequence + 1);
+        return $this->where("sequence", $this->sequence + 1)
+                ->where("course_id", $this->id)
+                ->get();
     }
     public function latest_content() {
         return $this->contents()

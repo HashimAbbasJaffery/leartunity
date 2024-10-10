@@ -24,7 +24,7 @@ class TrackerControler extends Controller
         [ $progress, $tracking_track ] = $service;
         $certificate = $this->certificate->get($course, User::find(auth()->id()));
 
-        if($progress >= 100 && !$certificate) {
+        if($progress >= 100 && !$certificate && $course->is_certifiable) {
             $this->certificate->generateAndStore($course);
             $certificate = $this->certificate->get($course, User::find(auth()->id()));
         }

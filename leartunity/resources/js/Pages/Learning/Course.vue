@@ -75,7 +75,8 @@
                             <p class="text-2xs text-black absolute" style="top: -15px; transition: width .5s ease" v-if="progress > 10">{{ progress }}%</p>
                         </div>
                     </div>
-                    <a :href="`/learn/certificate/${certificate}`" target="_blank" v-if="progress >= 100" class="inline-block text-center hover:bg-green-600 bg-green-500 mt-3 rounded-full w-full text-white py-1">View Certificate</a>
+                    <div v-if="progress >= 100 & !course.is_certifiable" class="bg-green-500 text-white text-center rounded">Completed!</div>
+                    <a :href="`/learn/certificate/${certificate}`" target="_blank" v-else class="inline-block text-center hover:bg-green-600 bg-green-500 mt-3 rounded-full w-full text-white py-1">View Certificate</a>
                 </div>
                 <div class="sections mb-2">
                     <Section v-for="(section, index) in course.sections" :section="section" :key="section.id" :index="index" ></Section>

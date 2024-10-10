@@ -30,24 +30,50 @@
             </div>
             <p v-else class="bg-red-500 text-white px-3 py-2 rounded mr-5 text-xs">You must login to access full features</p>
         </aside>
-        <section id="other-info" style="width: 100%;">
-            <div>
 
-            <Loading v-if="loading" :active="true" style="width: auto; height: auto; margin: auto; top: 50%; left: 50%;  ">
-                <p class="mt-3" v-translate>Fetching...</p>
-            </Loading>
-            </div>
-            <div v-if="!loading" id="coursesCollection" class="courses grid grid-cols-3 gap-4">
-                <Course v-for="course in courses.data" :key="course.id" :course="course"></Course>
-            </div>
-            <div class="pagination-pages mb-4" v-if="courses.data.length">
-                <ul class="flex">
-                    <li @click="pagination(link.url)" v-for="link in links" :key="link.label" :style="{ opacity: (link.active || !link.url) ? 0.5 : 1 }" class="ml-2 text-white px-4 rounded cursor-pointer" style="background: var(--primary);" v-html="link.label"></li>
-                </ul>
-            </div>
-            <div v-if="!courses.data.length" class="text-white p-2 rounded mb-3" style="width: 100%; background: var(--primary)">No Courses found</div>
+        <main style="width: 100%;">
 
-        </section>
+
+            <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
+                <li class="me-2" @click="openTab = 'courses'">
+                    <a href="#" :class="{ 'text-blue-600': openTab === 'courses' }" aria-current="page" class="inline-block p-4  bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500">Courses</a>
+                </li>
+                <li class="me-2" @click="openTab = 'certificates'">
+                    <a href="#" :class="{ 'text-blue-600': openTab === 'certificates' }" class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300">Certificates</a>
+                </li>
+            </ul>
+
+            <section id="other-info" style="width: 100%;" v-if="openTab === 'certificates'">
+                <div class="flex flex-start flex-wrap gap-2 justify-center certificates mb-3">
+
+                    <div v-for="certificate in certificates" :key="certificate.id" class="certificate text-center" style="width: 300px;">
+                        <iframe :src="`/${certificate.certificate}/certificate.pdf`"></iframe>
+                        <p class="text-xs text-center mt-3">{{ certificate.course.title }}</p>
+                    </div>
+                    <div v-if="!certificates.length" class="text-white p-2 rounded mb-3" style="width: 100%; background: var(--primary)">No Certificates found</div>
+
+
+                </div>
+            </section>
+            <section id="other-info" style="width: 100%;" v-if="openTab === 'courses'">
+                <div>
+
+                    <Loading v-if="loading" :active="true" style="width: auto; height: auto; margin: auto; top: 50%; left: 50%;  ">
+                        <p class="mt-3" v-translate>Fetching...</p>
+                    </Loading>
+                    </div>
+                    <div v-if="!loading" id="coursesCollection" class="courses grid grid-cols-3 gap-4">
+                        <Course v-for="course in courses.data" :key="course.id" :course="course"></Course>
+                    </div>
+                    <div class="pagination-pages mb-4" v-if="courses.data.length">
+                        <ul class="flex">
+                            <li @click="pagination(link.url)" v-for="link in links" :key="link.label" :style="{ opacity: (link.active || !link.url) ? 0.5 : 1 }" class="ml-2 text-white px-4 rounded cursor-pointer" style="background: var(--primary);" v-html="link.label"></li>
+                        </ul>
+                    </div>
+                    <div v-if="!courses.data.length" class="text-white p-2 rounded mb-3" style="width: 100%; background: var(--primary)">No Courses found</div>
+
+            </section>
+        </main>
 
     </div>
 </Layout>
@@ -68,12 +94,15 @@ import Loading from "../../Components/Essentials/Loading.vue";
 
 let props = defineProps({
     courses: Array,
-    profile: Object
+    profile: Object,
+    certificates: Object
 })
+
 
 let courses = ref(props.courses);
 let links = ref(courses.value.links);
 let loading = ref(false);
+let openTab = ref('courses');
 
 
 let page = usePage();

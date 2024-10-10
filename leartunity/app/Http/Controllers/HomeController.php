@@ -15,14 +15,15 @@ class HomeController extends Controller
     public function index() {
         $quote = Quote::all()->random(1)->where("status", 1)->first();
         $categories = Category::withCount("courses")
-                        ->with(["courses" => function($query) {
-                            $query->limit(8);
-                        }, "courses.author", "courses.purchases"])
                         ->whereHas("courses")
-                        ->orderBy("courses_count", "desc")
+                        ->with(["courses" => function($query) {
+                            $query->limit(24);
+                        }, "courses.author", "courses.purchases"])
                         ->limit(3)
                         ->whereStatus(1)
+                        ->orderBy("courses_count", "desc")
                         ->get();
+        // dd($categories);
 
         $plans = Plan::whereStatus(1)->get();
         return Inertia::render("Index", [

@@ -28,9 +28,6 @@ class CourseController extends Controller
     public function get(Course $course) {
         $currency = User::find(auth()->id())?->currency;
 
-        // if($currency)
-            // $course->price *= round(\App\Helpers\exchange_rate($currency->currency), 2);
-
         $course->currency = $currency?->unit ?? "$";
         $course->description = Str::markdown($course->description, [
             "html_input" => "strip"
