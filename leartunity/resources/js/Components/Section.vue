@@ -88,39 +88,25 @@ const withoutFileUpload = async (url, title, description) => {
     });
 }
 
-const successUpload = () => {
-    const content = document.getElementById("content-video");
-    const title = document.getElementById("content-title").value;
-    const description = document.getElementById("content-description").value;
-    let isEveryFieldFilled = title && description;
-    if(!isEveryFieldFilled) return;
-    const url = `/instructor/content/${clickedId.value}/${isAddingContent.value == 1 ? 'add' : 'update'}`;
+const getUploadURL = () => `/instructor/content/${clickedId.value}/${isAddingContent.value == 1 ? 'add' : 'update'}`;
 
-    // If no video file is attached
-    if(!hasFile.value) {
-        withoutFileUpload(url, title, description);
-        return;
-    }
-
+const showProgress = title => {
     if(isAddingContent.value) {
         uploadingTitle.value = title;
         is_uploading.value = true;
     }
+}
 
+const initiateResumable = (title, description) => {
     props.resumable.resumable.opts.query = {
         ...props.resumable.resumable.opts.query,
         title,
         description
     }
-    props.resumable.resumable.opts.target = url;
-    const data = new FormData();
+    props.resumable.resumable.opts.target = getUploadURL();
+}
 
-    data.append("content", content.files[0]);
-    data.append("title", title.value);
-    data.append("description", description);
-
-    props.resumable.resumable.upload();
-
+const ShowFileUploadProgress = () => {
     props.resumable.resumable.on("fileProgress", function(file) {
         progress.value = file.progress() * 100;
         contents.value.map(content => {
@@ -130,6 +116,28 @@ const successUpload = () => {
             content.progress = progress.value
         });
     });
+}
+
+const successUpload = () => {
+    const content = document.getElementById("content-video");
+    const title = document.getElementById("content-title").value;
+    const description = document.getElementById("content-description").value;
+    let isEveryFieldFilled = title && description;
+    if(!isEveryFieldFilled) return;
+    const url = getUploadURL();
+
+    // If no video file is attached
+    if(!hasFile.value) {
+        withoutFileUpload(url, title, description);
+        return;
+    }
+
+    showProgress(title);
+    initiateResumable(title, description);
+
+    props.resumable.resumable.upload();
+
+    ShowFileUploadProgress();
 
     props.resumable.resumable.on("fileSuccess", function(file, response) {
         response = JSON.parse(response);
