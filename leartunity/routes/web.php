@@ -13,6 +13,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CourseController;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Inertia\Inertia;
 use Stripe\Stripe;
 /*
 |--------------------------------------------------------------------------
@@ -26,21 +27,14 @@ use Stripe\Stripe;
 */
 
 
-// Testing Routes 
-Route::get("test", function () {
-
-    $user = User::find(48);
-    // dd(exchange_rate("INR"));
-    // // $exchanger = new CurrencyExchanger();
-    // dd($exchanger->rate("inr"));
-    // Mail::to("habbas2121@outlook.com")->send(new EmailVerification(User::find(1)));
-
-    // dd("Sent");
+// Testing Routes
+Route::get("test2", function() {
+    return Inertia::render("AnotherTest");
 });
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
- 
+
     return redirect('/home');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
@@ -91,7 +85,7 @@ Route::get("poly", function(Points $points) {
     //         "is_paid" => $status,
     //         "content" => "dummy.mp4",
     //         "duration" => 400,
-    //         "sequence" => $loop, 
+    //         "sequence" => $loop,
     //         "description" => "[Mastering R Basics]: Learn the fundamental concepts and techniques of the R programming language, essential for data analysis and statistical modeling."
     //     ]);
     //     $loop++;
@@ -149,7 +143,7 @@ Route::post("/changeLocale", function() {
   if (! in_array($locale, ['en', 'ur', 'sv', 'fa-IR', "sd"])) {
       abort(400);
   }
-  
+
   session()->put("locale", $locale);
 });
 

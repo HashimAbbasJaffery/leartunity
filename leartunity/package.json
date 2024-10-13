@@ -13,6 +13,11 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "croppie": "^2.6.5"
+        "@inertiajs/inertia-react": "^0.8.1",
+        "@inertiajs/react": "^1.2.0",
+        "@vitejs/plugin-react": "^4.3.2",
+        "croppie": "^2.6.5",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
     }
 }
