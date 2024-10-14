@@ -78,7 +78,7 @@ let props = defineProps({
 let quoteMessage = useDebouncedRef();
 
 watch(quoteMessage, function() {
-    const status = router.put("/admin/change/quote", { quote: quoteMessage.value });
+    const status = axios.post('/admin/change/quote', { quote: quoteMessage.value, _method: "PUT" })
 })
 
 let current_cat_active = ref(props.categories[0].category)

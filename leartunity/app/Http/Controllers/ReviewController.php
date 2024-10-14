@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Course;
 
@@ -13,10 +14,11 @@ class ReviewController extends Controller
         $reviews = $course?->reviews ?? null;
 
         $reviews = $reviews?->reviews ?? [];
-
+        $user = User::with("profile")->firstWhere("id", auth()->user()->id);
         $value = [
-            "id" => auth()->user()->id,
-            "name" => auth()->user()->name,
+            "id" => $user->id,
+            "name" => $user->name,
+            "pic" => $user->profile->profile_pic,
             "status" => true,
             "stars" => $stars,
             "review" => $feedback
@@ -71,11 +73,13 @@ class ReviewController extends Controller
         $average = ((($current_average * $count) - $user_star) + $stars) / $count;
 
 
+        $user = User::with("profile")->firstWhere("id", auth()->user()->id);
         $value = [
             ...$reviews,
             [
-                "id" => auth()->user()->id,
-                "name" => auth()->user()->name,
+                "id" => $user->id,
+                "name" => $user->name,
+                "pic" => $user->profile->profile_pic,
                 "status" => true,
                 "stars" => $stars,
                 "review" => $feedback

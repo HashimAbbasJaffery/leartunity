@@ -74,7 +74,7 @@
                 <div>
                     <div class="course-instructor mt-4 flex">
                         <div class="instructor-img">
-                            <img width="45" src="https://placehold.co/45x45" class="rounded-full" alt="">
+                            <img width="45" :src="review.pic ? `/profile/${review.pic}` : 'https://placehold.co/45x45'" class="rounded-full" alt="">
                         </div>
                         <div class="instructor-details flex">
                             <h2>{{ review.name }}</h2>

@@ -27,12 +27,6 @@
                         <i class="fa-solid fa-plus p-3 rounded-full"
                             style="background: var(--primary); color: white;"></i>
                     </a>
-                    <a href="#" id="contents-1"
-                        style="width:100%; display: inline-block; width: 10%; margin-left: 1%; display: flex; align-items: center; justify-content: center; border-color: #9370DB; color: #9370DB;"
-                        class="create-content create-course rounded text-center py-2"
-                    >
-                        Add Quiz
-                    </a>
             </div>
         </div>
     </div>
