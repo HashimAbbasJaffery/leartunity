@@ -1,6 +1,0 @@
-{
-    "require": {
-        "pusher/pusher-php-server": "^7.2",
-        "php-ffmpeg/php-ffmpeg": "^1.2"
-    }
-}
