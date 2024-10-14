@@ -3,8 +3,9 @@
 
 <!-- Modal toggle -->
 
-    <p>{{ isOpen }}</p>
-    <Modal @changeProfile="profilePic = $event" @changeCover="cover = $event" @toggleModal="isOpen = $event" :id="profile.id" :cropperObj="cropper"></Modal>
+    <Teleport to="body">
+        <Modal @changeProfile="profilePic = $event" @changeCover="cover = $event" @toggleModal="isOpen = $event" :id="profile.id" :cropperObj="cropper"></Modal>
+    </Teleport>
     <UserInfo @sendCropper="cropper = $event" @toggleModal="isOpen = $event" :profile_pic="profilePic" :cover="cover" :id="profile.id"></UserInfo>
     <div class="profile-content container mx-auto flex">
 
@@ -17,10 +18,6 @@
                 <section class="achievements flex">
                         <img :src="`/badges/starting.png`" class="mr-2" style="border-radius: 50px;" height="50" width="50"/>
                         <!-- <p style="font-size: 14px;">No badges have been awarded yet!</p> -->
-                </section>
-
-                <section class="level mt-3">
-                    <p>Watching: <span class="views" ref="views">{{ watching }}</span></p>
                 </section>
 
                 <h1 style="font-weight: 600;" class="mb-1 mt-3">Streak</h1>
@@ -86,10 +83,11 @@ import Layout from '../../Shared/Layout.vue';
 import Course from "../../Components/Course.vue"
 import Followers from '../../Components/Essentials/Followers.vue';
 import { usePage } from '@inertiajs/vue3';
-import {ref, provide} from "vue"
+import {ref, provide, onMounted, onUnmounted} from "vue"
 import Modal from '../../Components/Modal.vue';
 import axios from 'axios';
 import Loading from "../../Components/Essentials/Loading.vue";
+import { Teleport } from 'vue';
 
 
 let props = defineProps({
@@ -114,32 +112,12 @@ let user_id = null;
 let follows = [];
 if(user) {
     user_id = page.props.auth.user.id;
-     follows = page.props.auth.user.follows;
+    follows = page.props.auth.user.follows;
     follows = follows.map(follow => follow.id);
 }
 let watching = ref(0);
 
 let viewers = 0;
-Echo.join(`profile.${props.profile.id}`)
-    .here((users) => {
-        console.log(users)
-        const length = users.length;
-        viewers = length;
-        watching.value = length;
-    })
-    .joining((users) => {
-        viewers++;
-
-        watching.value = viewers;
-    })
-    .leaving((users) => {
-        viewers--;
-        watching.value = viewers;
-    })
-    .error((error) => {
-        console.log(error);
-    })
-
 
 let isOpen = ref(false);
 provide("isOpen", isOpen);
