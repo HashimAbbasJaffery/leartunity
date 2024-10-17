@@ -66,6 +66,7 @@ let expand = ref(false);
 let hasFile = ref(false);
 let actionType = ref(1);
 let clickedId = ref();
+let isEventAttached = ref(false);
 
 let emit = defineEmits(["expand", "changeVideo"])
 
@@ -118,6 +119,28 @@ const ShowFileUploadProgress = () => {
     });
 }
 
+const uploadOnSuccess = () => {
+    props.resumable.resumable.on("fileSuccess", function(file, response) {
+        response = JSON.parse(response);
+        if(!isAddingContent.value) {
+            contents.value.map(content => {
+                if(clickedId.value !== content.id) return;
+                content.thumbnail = response.thumbnail;
+                content.duration = response.duration;
+                content.title = response.title;
+                content.progress = 0
+            });
+        } else {
+            contents.value.push({...response});
+            progress.value = 0;
+            uploadingTitle.value = "";
+            is_uploading.value = false;
+            hasFile.value = false;
+        }
+    })
+    console.log(props.resumable.resumable);
+}
+
 const successUpload = () => {
     const content = document.getElementById("content-video");
     const title = document.getElementById("content-title").value;
@@ -139,24 +162,7 @@ const successUpload = () => {
 
     ShowFileUploadProgress();
 
-    props.resumable.resumable.on("fileSuccess", function(file, response) {
-        response = JSON.parse(response);
-        if(!isAddingContent.value) {
-            contents.value.map(content => {
-                if(clickedId.value !== content.id) return;
-                content.thumbnail = response.thumbnail;
-                content.duration = response.duration;
-                content.title = response.title;
-                content.progress = 0
-            });
-        } else {
-            contents.value.push({...response});
-            progress.value = 0
-            uploadingTitle.value = "";
-            is_uploading.value = false;
-            hasFile.value = false;
-        }
-    })
+    uploadOnSuccess();
 
 }
 function uploadPreparation() {
