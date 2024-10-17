@@ -1,10 +1,18 @@
 <template>
+    <Teleport to="body">
+        <VideoUploadModal @fileAdded="uploadPreparation($event)" :active="isOpenedModal" style="width: 100%;"></VideoUploadModal>
+    </Teleport>
   <div>
         <button class="accordion rounded my-2" :class="{'is-open': expand}" @click="sectionExpand" style="border: 1px solid black;">{{ section.section_name }}</button>
-
         <div v-if="expand">
-            <ul class="ml-5" v-for="content in contents" :key="content.id">
-                <Content @update="addContent($event, 2)" :content="content" :instructor="instructor"></Content>
+        <button type="button" v-if="contents?.length ?? false" @click="deleteMultiple" :disabled="!selected_contents.length || isDeletingMultiple" class="disabled:bg-red-300 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+            {{  isDeletingMultiple ? "Deleting..." : "Delete Selected Content"  }}
+        </button>
+            <ul class="ml-5 flex w-full items-center" v-for="content in contents" :key="content.id">
+                <input type="checkbox" v-model="selected_contents" :value="content.id" class="inline-block" name="" id="">
+                <div class="content w-full">
+                    <Content @update="addContent($event, 2)" @deleted="contents = $event" :content="content" :instructor="instructor"></Content>
+                </div>
             </ul>
 
             <ul class="ml-5 mb-3" v-if="is_uploading">
@@ -40,10 +48,11 @@
 
 <script setup>
 
-import {ref, inject, watch, computed} from "vue"
+import {ref, computed} from "vue"
 import Modal from "../Classes/Modal";
 import Content from "./Content.vue";
 import axios from "axios";
+import VideoUploadModal from "./VideoUploadModal.vue";
 
 let props = defineProps({
     section: Array,
@@ -57,7 +66,7 @@ let props = defineProps({
     }
 })
 
-
+let resumable = ref(props.resumable);
 let contents = ref(props.section.contents)
 let progress = ref(0);
 let uploadingTitle = ref("");
@@ -66,7 +75,9 @@ let expand = ref(false);
 let hasFile = ref(false);
 let actionType = ref(1);
 let clickedId = ref();
-let isEventAttached = ref(false);
+let isOpenedModal = ref(false);
+let selected_contents = ref([]);
+let isDeletingMultiple = ref(false);
 
 let emit = defineEmits(["expand", "changeVideo"])
 
@@ -99,16 +110,16 @@ const showProgress = title => {
 }
 
 const initiateResumable = (title, description) => {
-    props.resumable.resumable.opts.query = {
-        ...props.resumable.resumable.opts.query,
+    resumable.value.resumable.opts.query = {
+        ...resumable.value.resumable.opts.query,
         title,
         description
     }
-    props.resumable.resumable.opts.target = getUploadURL();
+    resumable.value.resumable.opts.target = getUploadURL();
 }
 
 const ShowFileUploadProgress = () => {
-    props.resumable.resumable.on("fileProgress", function(file) {
+    resumable.value.resumable.on("fileProgress", function(file) {
         progress.value = file.progress() * 100;
         contents.value.map(content => {
             if(clickedId.value !== content.id) return;
@@ -120,7 +131,7 @@ const ShowFileUploadProgress = () => {
 }
 
 const uploadOnSuccess = () => {
-    props.resumable.resumable.on("fileSuccess", function(file, response) {
+    resumable.value.resumable.on("fileSuccess", function(file, response) {
         response = JSON.parse(response);
         if(!isAddingContent.value) {
             contents.value.map(content => {
@@ -130,15 +141,16 @@ const uploadOnSuccess = () => {
                 content.title = response.title;
                 content.progress = 0
             });
+            hasFile.value = false;
         } else {
-            contents.value.push({...response});
+            const isAppended = contents.value.filter(content => content.id === response.id).length;
+            !isAppended && contents.value.push({...response});
             progress.value = 0;
             uploadingTitle.value = "";
             is_uploading.value = false;
             hasFile.value = false;
         }
     })
-    console.log(props.resumable.resumable);
 }
 
 const successUpload = () => {
@@ -158,7 +170,7 @@ const successUpload = () => {
     showProgress(title);
     initiateResumable(title, description);
 
-    props.resumable.resumable.upload();
+    resumable.value.resumable.upload();
 
     ShowFileUploadProgress();
 
@@ -182,9 +194,21 @@ function addContent(id, action = 1) {
 }
 
 
-props.resumable?.resumable?.on("fileAdded", function(file) {
+resumable.value?.resumable?.on("fileAdded", function(file) {
     hasFile.value = true;
 })
+
+const deleteMultiple = async () => {
+    const modal = new Modal();
+    modal.oneInput("Are you sure you want to delete selected contents? It is not reversible!", async function() {
+        isDeletingMultiple.value = true;
+        const status = await axios.post(`/api/content/${props.section.id}/delete`, { _method: 'delete', contents: selected_contents.value });
+        modal.success("Successfully deleted selected contents!");
+        contents.value = status.data;
+        selected_contents.value = [];
+        isDeletingMultiple.value = false;
+    }, true, "Delete!", "");
+}
 </script>
 
 <style>

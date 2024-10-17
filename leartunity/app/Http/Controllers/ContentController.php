@@ -111,8 +111,13 @@ class ContentController extends Controller
 
     }
     public function destroy(Content $content, LinkedList $list) {
+        $section = $content->section;
         $list->remove($content);
-        $contents = $content->section->contents;
-        return 1;
+        $section->refresh();
+        return $section->contents;
+    }
+
+    public function deleteMultiple(Request $request) {
+        return $request->all();
     }
 }

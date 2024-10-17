@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
@@ -33,4 +33,5 @@ Route::middleware("auth")->group(function() {
     Route::view("teacher/learn-more", "User.Application.learn-more")->name("apply.learn-more");
     Route::get("apply", [ApplicationController::class, "index"])->name("apply");
     Route::post("apply", [ApplicationController::class, "store"])->name("apply");
+
 });

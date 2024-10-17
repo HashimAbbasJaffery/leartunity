@@ -1,7 +1,7 @@
 <template>
 
 <li v-if="!is_deleted" ref="content" @click="!content.is_paid ? emit('changeVideo', content.content) : ''" class="px-4 py-3 rounded my-3 flex justify-between item-center" :class="{'cursor-not-allowed': content.is_paid && !instructor}">
-    <div class="content-info flex relative" style="height: 78.5px;">
+    <div class="content-info flex relative items-center" style="height: 78.5px;">
         <div class="thumbnail mr-3 rounded" style="background: var(--primary);">
             <img :src="`/thumbnails/${content.thumbnail}`" alt="" width="150">
 
@@ -11,7 +11,7 @@
 
             <time datetime="" v-if="content.duration > 0" class="absolute bottom-0 text-xs text-white p-1" style="background: var(--primary)">{{ secondsToHms(content.duration) }}</time>
         </div>
-        <p :class="{'cursor-pointer': !content.is_paid, 'cursor-not-allowed': content.is_paid}">{{ content.title }}</p>
+        <Link href="#" :class="{'cursor-pointer': !content.is_paid, 'cursor-not-allowed': content.is_paid && !instructor}">{{ content.title }}</Link>
     </div>
     <div class="meta-data flex">
         <div class="content-meta" v-if="!instructor">
@@ -23,7 +23,9 @@
             </div>
         </div>
         <div class="action-buttons" v-if="instructor">
-            <button :disabled="content.progress > 0" @click="startDeleteContent(content.id)"  class="disabled:bg-red-200 disabled:cursor-not-allowed bg-red-400 hover:bg-red-500 text-white px-2 py-1 rounded mx-2">Delete</button>
+            <button :disabled="content.progress > 0 || is_deleting" @click="startDeleteContent(content.id)"  class="disabled:bg-red-200 disabled:cursor-not-allowed bg-red-400 hover:bg-red-500 text-white px-2 py-1 rounded mx-2">
+                {{ is_deleting ? "Deleting!" : "Delete" }}
+            </button>
             <button :disabled="content.progress > 0" @click="update(content.id)" class="disabled:bg-blue-200 disabled:cursor-not-allowed bg-blue-400 hover:bg-blue-500 text-white px-2 py-1 rounded mx-2">Update</button>
         </div>
     </div>
@@ -33,6 +35,7 @@
 
 import Modal from '../Classes/Modal';
 import {ref} from "vue";
+import { Link } from '@inertiajs/vue3';
 
 let props = defineProps({
     content: Object,
@@ -40,16 +43,15 @@ let props = defineProps({
 });
 
 let is_deleted = ref(false);
+let is_deleting = ref(false);
 
 const modal = new Modal()
-let emit = defineEmits("update");
+let emit = defineEmits(["update", "deleted"]);
 
 const deleteContent = async id => {
     const status = await axios.delete(`/instructor/content/${id}/delete`);
-    if(status.data === 1) {
-        is_deleted.value = true;
-        modal.success("Content Deleted!");
-    }
+    let contents = status.data;
+    emit("deleted", contents);
 }
 
 async function startDeleteContent(id) {

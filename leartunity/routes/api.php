@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\SearchController;
+use App\Interfaces\LinkedList;
+use App\Models\Content;
 use App\Models\Course;
+use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +32,12 @@ Route::post('/log-missing-translation', function(Request $request) {
 
 
 Route::get("/search", [SearchController::class, "get"])->name("search");
+
+Route::delete("content/{section}/delete", function(Request $request, Section $section, LinkedList $list) {
+    $list->deleteMultiple($request->contents);
+    $section->refresh();
+    return $section->contents;
+});
 
 
 

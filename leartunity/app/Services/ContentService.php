@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 use App\Interfaces\LinkedList;
@@ -25,20 +25,26 @@ class ContentService implements LinkedList {
         $content->next_video = null;
         $content->previous_video = null;
         $content->save();
-        
+
         $content->delete();
     }
     public function get_first(Section $section) {
         $content = $section->contents()->orderBy("sequence")->first();
         return $content;
     }
-    public function get_last(Section $section) {  
+    public function get_last(Section $section) {
         $content = $this->get_first($section);
-        
+
         while($content?->next) {
             $content = $content->next;
         }
 
         return $content;
+    }
+    public function deleteMultiple(array $content_ids) {
+        $contents = Content::whereIn("id", $content_ids)->get();
+        foreach($contents as $content) {
+            $this->remove($content);
+        }
     }
 }
