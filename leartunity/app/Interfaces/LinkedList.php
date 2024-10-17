@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Interfaces;
 use App\Models;
 use App\Models\Section;
@@ -10,4 +10,5 @@ interface LinkedList {
     public function get_last(Section $list);
     public function add(Content $list);
     public function remove(Content $list);
+    public function deleteMultiple(array $content_ids);
 }
