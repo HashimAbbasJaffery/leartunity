@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
@@ -19,7 +20,8 @@ class ResumableJS {
         if($save->isFinished()) {
             $file = $save->getFile();
             $fileName = time() . "." . $file->getClientOriginalExtension();
-            $file->move(public_path("uploads"), $fileName);
+            Storage::disk("local")->putFileAs("videos", $file, $fileName);
+
 
             $closure($fileName);
         }

@@ -1,5 +1,5 @@
 <template>
-    <video id="player" class="rounded">
+    <video id="player"  class="rounded">
         <!-- Captions are optional -->
     </video>
 </template>
@@ -10,6 +10,7 @@ import {toRef} from "vue"
 let props = defineProps({
     video: String
 });
+
 
 toRef("video");
 

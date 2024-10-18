@@ -104,4 +104,13 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function transactions() {
         return $this->hasMany(Transaction::class);
     }
+    public function isTeacher() {
+        return $this->role === 'admin' || $this->role === 'instructor';
+    }
+    public function isOwnerOfCourse(Course $course) {
+        return $this->id === $course->author_id;
+    }
+    public function isNotOwnerOfCourse(Course $course) {
+        return !$this->isOwnerOfCourse($course);
+    }
 }

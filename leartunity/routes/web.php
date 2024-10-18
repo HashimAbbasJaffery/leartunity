@@ -1,10 +1,12 @@
 <?php
 
 use App\Classes\Points;
+use App\Classes\Video;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Interfaces\LinkedList;
+use App\Models\Course;
 use App\Models\Section;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -28,10 +30,10 @@ use Stripe\Stripe;
 
 
 // Testing Routes
-Route::get("test", function () {
-    return Inertia::render("test", [
-        'name' => 'Hashim'
-    ]);
+Route::get("test", function (Video $video) {
+    $user = User::find(auth()->id());
+    $course = Course::find(107);
+    dd($user->isOwnerOfCourse($course));
 });
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {

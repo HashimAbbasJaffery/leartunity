@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Video;
 use App\Http\Requests\ContentRequest;
 use App\Http\Requests\ContentUpdateRequest;
 use App\Interfaces\LinkedList;
@@ -12,6 +13,7 @@ use App\Services\ContentDescription;
 use App\Services\ResumableJS;
 use App\Services\VideoDescription;
 use FFMpeg\FFProbe;
+use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
@@ -19,44 +21,19 @@ use Inertia\Inertia;
 
 class ContentController extends Controller
 {
-    protected function getContentDetails(Content $content) {
-        if(!$content) return $this->response("error", "Content does not exist");
-        $section = $content->belongsTo(Section::class, "contentable_id")->first();
-        if(!$section) return $this->response("error", "Section Does not exist");
-        $course = $section->course;
-        return $course;
-    }
-    protected function checkContentEligibility(Content $content, $successResponse) {
-        $course = $this->getContentDetails($content);
-        if($course["type"] === "error") return $this->response("error", "something went wrong");
-        $isEligible = auth()->user()->purchases()->where("purchase_product_id", $course->stripe_id)->exists();
-        if(!$content->status) return $this->response("error", "This Content is archived");
-        if(!$isEligible && ($content->is_paid)) return $this->response("error", "You are not eligible to access");
 
-        return $this->response("success", $successResponse);
-    }
-    public function get(Content $content) {
-
-        $course = Course::find(request()->get("course_id"));
-        $video = $content->content;
-
-        $content = $this->checkContentEligibility($content, $video);
-
-        return $content;
-
-    }
-    public function store(ContentRequest $request, Section $section, LinkedList $list, ResumableJS $jws, VideoDescription $videoService) {
+    public function store(ContentRequest $request, Section $section, LinkedList $list, ResumableJS $jws, Video $video) {
+        $this->authorize("create", $section->course);
         $title = $request->title;
         $description = $request->description;
-        $new_content_id = null;
 
 
         // It is using resumableJS behind the scene
-        $progress = $jws->upload($request, function($fileName) use($section, $title, $description, $list, $videoService) {
+        $jws->upload($request, function($fileName) use($section, $title, $description, $list, $video) {
 
             $count = $section->contents->count();
             $previous_content = $list->get_last($section);
-            $duration = $videoService->getDuration($fileName);;
+            $duration = $video->length(storage_path("app/videos/$fileName"));
 
             $new_content = $section->contents()->create([
                 "title" => $title,
@@ -70,7 +47,7 @@ class ContentController extends Controller
             ]);
 
             // Creating the thumbnail of the video and storing it into the database
-            $thumbnail_path = (new ContentDescription())->thumbnail(public_path("uploads/$fileName"));
+            $thumbnail_path = $video->snapshot(storage_path("app/videos/$fileName"));
             $new_content->thumbnail = $thumbnail_path;
             $new_content->save();
 
@@ -83,18 +60,19 @@ class ContentController extends Controller
         return $section->latest_content();
 
     }
-    public function update(ContentUpdateRequest $request, Content $content, LinkedList $list, ResumableJS $jws) {
+    public function update(ContentUpdateRequest $request, Content $content, LinkedList $list, ResumableJS $jws, Video $video) {
         $title = $request->title;
         $description = $request->description;
 
-        $progress = $jws->upload($request, function($fileName) use($content, $title, $description) {
-            File::delete(public_path("uploads/" . $content->content));
-
-            $thumbnail_path = (new ContentDescription())->thumbnail(public_path("uploads/$fileName"));
+        $progress = $jws->upload($request, function($fileName) use($content, $title, $description, $video) {
+            File::delete(storage_path("app/videos/{$content->content}"));
+            $thumbnail_path = $video->snapshot(storage_path("app/videos/$fileName"));
+            $duration = $video->length(storage_path("app/videos/$fileName"));
             $content = $content->update([
                 "title" => $title,
                 "description"=> $description,
                 "content" => $fileName,
+                "duration" => $duration,
                 "thumbnail" => $thumbnail_path
             ]);
 
@@ -110,7 +88,7 @@ class ContentController extends Controller
         return $content;
 
     }
-    public function destroy(Content $content, LinkedList $list) {
+    public function destroy(Content $content, LinkedList $list, Video $video) {
         $section = $content->section;
         $list->remove($content);
         $section->refresh();

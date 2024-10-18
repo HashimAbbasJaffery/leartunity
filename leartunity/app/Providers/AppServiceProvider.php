@@ -6,7 +6,9 @@ use App\Classes\Points;
 use App\Interfaces\Certificate;
 use App\Interfaces\LinkedList;
 use App\Interfaces\TrackingService;
+use App\Models\Content;
 use App\Models\Course;
+use App\Policies\ContentPolicy;
 use App\Policies\CoursePolicy;
 use App\Services\ContentService;
 use App\Services\CourseCertificate;
@@ -43,5 +45,6 @@ class AppServiceProvider extends ServiceProvider
         Inertia::share("user", auth()->user());
 
         Gate::policy(Course::class, CoursePolicy::class);
+        Gate::policy(Content::class, ContentPolicy::class);
     }
 }

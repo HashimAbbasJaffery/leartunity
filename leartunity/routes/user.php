@@ -6,6 +6,8 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\User\ApplicationController;
 use App\Http\Controllers\User\BalanceController;
 use App\Http\Controllers\User\FollowCOntroller;
+use App\Models\Content;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware("auth")->group(function() {
@@ -33,5 +35,30 @@ Route::middleware("auth")->group(function() {
     Route::view("teacher/learn-more", "User.Application.learn-more")->name("apply.learn-more");
     Route::get("apply", [ApplicationController::class, "index"])->name("apply");
     Route::post("apply", [ApplicationController::class, "store"])->name("apply");
+
+
+    Route::get("video/{filename}", function($fileName) {
+        $path = storage_path("app/videos/$fileName");
+
+        if (!File::exists($path)) {
+            abort(404, 'Video not found.');
+        }
+
+        $user = User::find(auth()->id());
+        $course_stripe_id = (Content::firstWhere("content", $fileName))->section->course->stripe_id;
+        $is_authorized = $user->purchases()->where("purchase_product_id", $course_stripe_id)->exists();
+        if(!$is_authorized) return;
+
+        // Stream the video file
+        return response()->stream(function () use ($path) {
+            $stream = fopen($path, 'rb');
+            fpassthru($stream);
+            fclose($stream);
+        }, 200, [
+            'Content-Type' => 'video/mp4', // Adjust content type based on the file type
+            'Content-Length' => File::size($path),
+            'Accept-Ranges' => 'bytes',
+        ]);
+    })->name("video.get");
 
 });

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Classes\Video;
+use File;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Section;
@@ -10,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Storage;
 
 class Content extends Model
 {
@@ -33,5 +37,11 @@ class Content extends Model
     }
     public function comments() {
         return $this->hasMany(Comment::class)->whereNull("replies_to");
+    }
+
+    protected static function booted() {
+        static::deleting(function(Content $content) {
+            File::delete(storage_path("app/videos/{$content->content}"));
+        });
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,7 @@ Route::delete("content/{section}/delete", function(Request $request, Section $se
     $section->refresh();
     return $section->contents;
 });
+
 
 
 

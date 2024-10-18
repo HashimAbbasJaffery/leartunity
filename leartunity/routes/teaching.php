@@ -34,4 +34,4 @@ Route::put("/course/{course:id}/awardables", function(Request $request, Course $
    return 1;
 })->name("course.is_awardable");
 
-Route::delete("/content/delete", [ContentController::class, "deleteMultiple"]);
+Route::delete("/content/delete", [ContentController::class, "deleteMultiple"])->name("course.delete.many");

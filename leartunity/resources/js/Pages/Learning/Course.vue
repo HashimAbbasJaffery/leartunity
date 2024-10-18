@@ -138,7 +138,7 @@ onMounted(() => {
         title: 'Example title',
         sources: [
             {
-                src: `/uploads/${props.current_content.content}`,
+                src: route('video.get', {filename: video.value}),
                 type: 'video/mp4',
                 size: 720,
             },
