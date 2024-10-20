@@ -1,7 +1,7 @@
 <template>
 <Layout>
     <div class="send-application container mx-auto mt-8">
-        <form @submit.prevent="apply" enctype="multipart/form-data" method="POST" style="display: inline;">
+        <form v-if="!application || isCooldownFinished" @submit.prevent="apply" enctype="multipart/form-data" method="POST" style="display: inline;">
             <label for="fullname">
                 <p>Fullname</p>
                 <p class="text-red-500 text-xs">{{ $page.props.errors?.fullname }}</p>
@@ -31,6 +31,16 @@
             </label>
             <input type="submit" style="border-radius: 0px; cursor: pointer;" class="mb-3" value="Submit">
         </form>
+        <div v-else-if="application.status === 0" class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+            Your Application is Pending!
+        </div>
+        <div v-else-if="application.status === 1" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+            Your Application has been approved! You can start making course now...
+        </div>
+        <div v-else class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+            Your Application has been rejected! You can apply again at {{ moment(application.cooldown_till).format("D-MMMM-YYYY h:mm a") }}
+        </div>
+
 
     </div>
 </Layout>
@@ -42,6 +52,7 @@ import Layout from "../../Shared/Layout.vue";
 import { useForm } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
 import { onMounted, computed } from "vue";
+import moment from "moment";
 
 const props = defineProps({
     qualifications: Array,
@@ -53,6 +64,7 @@ onMounted(() => {
 })
 
 const isRejected = computed(() => props.application?.status === 2);
+const isCooldownFinished = computed(() => props.application.status === 2 && moment(props.application.cooldown_till).diff(moment(), 'seconds') <= 0);
 
 const page = usePage();
 
@@ -61,7 +73,8 @@ const form = useForm({
     cover_letter: "",
     qualification: 0,
     read_conditions: false,
-    supporting_file: ''
+    supporting_file: '',
+    _method: props.application ? "PUT" : "POST"
 });
 
 
@@ -78,9 +91,8 @@ const uploadFile = e => {
 }
 
 const apply = async () => {
-    const status = form[isRejected.value ? "put" : "post"](
+    const status = form.post(
         route(isRejected.value ? "application.update" : "application.create", { onSuccess: () => form.reset() })
     )
-    console.log(status);
 }
 </script>

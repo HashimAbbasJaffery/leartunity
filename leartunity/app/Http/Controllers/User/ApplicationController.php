@@ -10,6 +10,7 @@ use App\Models\Application;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ApplicationController extends Controller
@@ -23,19 +24,33 @@ class ApplicationController extends Controller
     public function store(ApplicationRequest $request) {
         $user = User::find(auth()->id());
 
-        $user->application()->create($request->validated());
+        $fileName = null;
+        if($request->hasFile("supporting_file")) {
+            $file = $request->file("supporting_file");
+            $fileName = time() . "." . $file->extension();
+            Storage::disk("local")->putFileAs("documents", $file, $fileName);
+        }
+
+        $user->application()->create([...$request->validated(), "supporting_file" => $fileName]);
     }
     public function update(ApplicationRequest $request) {
         $user = User::find(auth()->id());
-        dd($request->validated());
         $application = $user->application;
         $remaining_days = now()->diff($application->cooldown_till);
 
         if($application->status !== 2) return;
 
         // Cooldown is still not finished!
-        if($remaining_days->d !== 0 && $remaining_days->invert !== 1) return;
+        if($remaining_days->invert !== 1) return;
 
-        $user->application()->update([...$request->except("read_conditions"), "status" => 0]);
+        $fileName = null;
+        if($request->hasFile("supporting_file")) {
+            Storage::disk("local")->delete("documents/$application->supporting_file");
+            $file = $request->file("supporting_file");
+            $fileName = time() . "." . $file->extension();
+            Storage::disk("local")->putFileAs("documents", $file, $fileName);
+        }
+
+        $user->application()->update([...$request->except("read_conditions", "_method"), "status" => 0, "supporting_file" => $fileName]);
     }
 }

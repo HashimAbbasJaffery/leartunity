@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text("cover_letter");
             $table->string("supporting_file")->nullable();
             $table->integer("status")->default(0);
-            $table->timestamp("cooldown_till");
+            $table->timestamp("cooldown_till")->nullable()->default(null);
             $table->timestamps();
         });
     }
