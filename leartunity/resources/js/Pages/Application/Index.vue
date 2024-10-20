@@ -38,7 +38,7 @@
             Your Application has been approved! You can start making course now...
         </div>
         <div v-else class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            Your Application has been rejected! You can apply again at {{ moment(application.cooldown_till).format("D-MMMM-YYYY h:mm a") }}
+            Your Application has been rejected! You can apply again at {{ moment.utc(application.cooldown_till).local().format("D-MMMM-YYYY h:mm a") }}
         </div>
 
 
@@ -64,7 +64,7 @@ onMounted(() => {
 })
 
 const isRejected = computed(() => props.application?.status === 2);
-const isCooldownFinished = computed(() => props.application.status === 2 && moment(props.application.cooldown_till).diff(moment(), 'seconds') <= 0);
+const isCooldownFinished = computed(() => props.application.status === 2 && moment.utc(props.application.cooldown_till).diff(moment.utc(), 'seconds') <= 0);
 
 const page = usePage();
 

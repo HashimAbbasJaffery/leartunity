@@ -51,6 +51,6 @@ class ApplicationController extends Controller
             Storage::disk("local")->putFileAs("documents", $file, $fileName);
         }
 
-        $user->application()->update([...$request->except("read_conditions", "_method"), "status" => 0, "supporting_file" => $fileName]);
+        $user->application()->update([...$request->except("read_conditions", "_method"), "status" => 0, "supporting_file" => $fileName, "cooldown_till" => null]);
     }
 }
