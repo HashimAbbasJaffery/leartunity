@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\lteConstant;
+use App\Rules\WordLength;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -15,11 +16,6 @@ class ApplicationRequest extends FormRequest
     {
         return true;
     }
-    protected function lteConstant($constant) {
-        return Rule::custom(function($attribute, $value, $parameters) use ($constant) {
-            return $value <= $constant;
-        });
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -30,18 +26,17 @@ class ApplicationRequest extends FormRequest
     {
         return [
             "fullname" => ["required", "max:50"],
-            "email" => ["required", "email"],
-            "age" => ["required", "numeric", new lteConstant],
-            "qualification" => ["required", Rule::in(["matriculation", "intermediate", "undergraduate", "graduate", "post-graduate"])],
-            "niche" => ["required", Rule::in(["data-science", "web-development", "python"])],
-            "cover_letter" => ["required", "min:255", "max:1000"],
-            "supporting-file" => ["nullable", "extensions:pdf,rar,zip"],
-            "t&c" => ["required"]
+            "qualification" => ["required", Rule::in(["0", "1", "2", "3", "4"])],
+            "cover_letter" => ["required", new WordLength(3, 1000)],
+            "supporting_file" => ["nullable", "extensions:pdf,doc,docx", "max:2048"],
+            "read_conditions" => ["in:1"]
         ];
     }
     public function messages() {
         return [
-            't&c.required' => "You must accept the terms and conditions"
+            "fullname.required" => "You must provide your full name",
+            'supporting_file.extensions' => 'File must be PDF',
+            'read_conditions.in' => "You must accept the terms and conditions"
         ];
     }
 }

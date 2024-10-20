@@ -61,6 +61,7 @@ class ContentController extends Controller
 
     }
     public function update(ContentUpdateRequest $request, Content $content, LinkedList $list, ResumableJS $jws, Video $video) {
+        $this->authorize("update", $content);
         $title = $request->title;
         $description = $request->description;
 
@@ -89,6 +90,7 @@ class ContentController extends Controller
 
     }
     public function destroy(Content $content, LinkedList $list, Video $video) {
+        $this->authorize("delete", $content);
         $section = $content->section;
         $list->remove($content);
         $section->refresh();

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Content;
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -27,9 +28,9 @@ class ContentPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Content $content): bool
+    public function create(User $user, Course $course): bool
     {
-        return $user->isTeacher() && $user->isOwnerOfCourse($content->section->course);
+        return $user->isTeacher() && $user->isOwnerOfCourse($course);
     }
 
     /**
@@ -37,7 +38,7 @@ class ContentPolicy
      */
     public function update(User $user, Content $content): bool
     {
-        //
+        return $user->isTeacher() && $user->isOwnerOfCourse($content->section->course);
     }
 
     /**

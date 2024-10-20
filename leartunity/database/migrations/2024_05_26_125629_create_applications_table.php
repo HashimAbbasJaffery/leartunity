@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users")->cascadeOnDelete();
             $table->string("fullname");
-            $table->string("email");
-            $table->integer("age");
             $table->string("qualification");
-            $table->string("niche");
             $table->text("cover_letter");
             $table->string("supporting_file")->nullable();
+            $table->integer("status")->default(0);
+            $table->timestamp("cooldown_till");
             $table->timestamps();
         });
     }

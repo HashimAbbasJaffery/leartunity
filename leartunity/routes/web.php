@@ -31,9 +31,6 @@ use Stripe\Stripe;
 
 // Testing Routes
 Route::get("test", function (Video $video) {
-    $user = User::find(auth()->id());
-    $course = Course::find(107);
-    dd($user->isOwnerOfCourse($course));
 });
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {

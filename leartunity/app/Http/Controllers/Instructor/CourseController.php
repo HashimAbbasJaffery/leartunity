@@ -38,7 +38,6 @@ class CourseController extends Controller
         $this->authorize("delete", $course);
         $this->middleware("is_course_owner:$course->slug");
         $course->delete();
-        // return redirect()->back();
     }
     public function update(CourseRequest $request, Course $course) {
         $this->authorize("update", $course);

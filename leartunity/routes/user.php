@@ -34,7 +34,8 @@ Route::middleware("auth")->group(function() {
     // Route::get("teacher/learn-more", [ApplicationController::class, "index"])->name("apply.learn-more");
     Route::view("teacher/learn-more", "User.Application.learn-more")->name("apply.learn-more");
     Route::get("apply", [ApplicationController::class, "index"])->name("apply");
-    Route::post("apply", [ApplicationController::class, "store"])->name("apply");
+    Route::post("apply", [ApplicationController::class, "store"])->name("application.create");
+    Route::put("apply", [ApplicationController::class, "update"])->name("application.update");
 
 
     Route::get("video/{filename}", function($fileName) {

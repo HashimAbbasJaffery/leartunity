@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId("user_id")
                     ->constrained("users")
                     ->cascadeOnDelete();
-            $table->unsignedFloat("progress");
+            $table->float("progress");
             $table->boolean("status");
             $table->timestamps();
         });
