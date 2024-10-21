@@ -21,6 +21,12 @@
                     </NavLink>
                 </li>
                 <li>
+                    <NavLink class="py-3 px-4 block admin-nav" :class="{ 'header-active': $route().current() === 'category.index' }" :href="$route('application')">
+                        <i class="fa-solid fa-envelope"></i>
+                        Applications
+                    </NavLink>
+                </li>
+                <li>
                     <NavLink class="py-3 px-4 block admin-nav" :class="{ 'header-active': $route().current() === 'admin.setting' }" :href="`/admin/settings`">
                         <i class="fa-solid fa-gear"></i>
                         Settings

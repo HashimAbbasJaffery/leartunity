@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContentController;
@@ -35,3 +36,9 @@ Route::put("/category/{without_scope_category}/update", [CategoryController::cla
 Route::delete("/category/{without_scope_category}/delete", [CategoryController::class, "destroy"])->name("admin.category.delete");
 
 Route::put("/change/quote", [QuoteController::class, "update"])->name("quote.rename");
+
+Route::get("/applications", [ApplicationController::class, "index"])->name("application");
+Route::get("/{application}/application", [ApplicationController::class, "show"])->name("application.show");
+Route::get("/application/{file_name}/download", [ApplicationController::class, "file_download"])->name("application.file.download");
+Route::patch("/application/{application}/approve", [ApplicationController::class, "approve"])->name("application.approve");
+Route::patch("/application/{application}/reject", [ApplicationController::class, "reject"])->name("application.reject");

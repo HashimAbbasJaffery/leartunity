@@ -11,14 +11,8 @@ enum Qualification
     case GRADUATE;
     case POSTGRADUATE;
 
-    public function get(): int {
-        return match($this) {
-            Qualification::MATRICULATION => 0,
-            Qualification::INTERMEDIATE => 1,
-            Qualification::UNDERGRADUATE => 2,
-            Qualification::GRADUATE => 3,
-            Qualification::POSTGRADUATE => 4,
-        };
+    public static function get($value) {
+        return Qualification::toAssoc()[(int)$value];
     }
     public static function toAssoc() {
         $qualificationArray = [];

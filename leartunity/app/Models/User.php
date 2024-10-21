@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Classes\Balance;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Prunable;
 
@@ -113,4 +114,5 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function isNotOwnerOfCourse(Course $course) {
         return !$this->isOwnerOfCourse($course);
     }
+
 }
