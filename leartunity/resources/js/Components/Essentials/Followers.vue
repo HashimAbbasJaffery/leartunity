@@ -11,13 +11,17 @@
 </template>
 
 <script setup>
-import {ref} from "vue"
+import {ref, onMounted} from "vue"
 import axios from "axios";
 
 let props = defineProps({
     followers: Number,
     id: Number,
     isFollowed: Boolean
+})
+
+onMounted(() => {
+    console.log(isFollowed.value);
 })
 let followers = ref(props.followers);
 let isFollowed = ref(props.isFollowed);

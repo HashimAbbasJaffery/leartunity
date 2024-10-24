@@ -1,5 +1,8 @@
 <template>
     <Layout>
+        <Teleport to="body">
+            <AnnouncementModal :id="course.id" @announced="is_announcing = false" @cancel="is_announcing = false" :active="is_announcing"></AnnouncementModal>
+        </Teleport>
      <section id="add-section" class="container mx-auto mt-3">
         <h1 style="font-size: 25px; font-weight: 500;">Add Section</h1>
 
@@ -48,6 +51,8 @@
          </a>
         <button @click="changeAwardableStatus" v-if="is_awardable" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Award Certificates</button>
         <button @click="changeAwardableStatus" v-else type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">No Certificates Awarding</button>
+        <button @click="is_announcing = true" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">Make Announcement!</button>
+
      </section>
 
     </Layout>
@@ -60,6 +65,8 @@ import Modal from "../../../Classes/Modal";
 import {ref} from "vue"
 import Resumable from "../../../Classes/Resumable";
 import axios from "axios";
+import { Teleport } from "vue";
+import AnnouncementModal from "../../../Components/AnnouncementModal.vue";
 
 let props = defineProps({
     sections: Array,
@@ -70,6 +77,7 @@ let props = defineProps({
 let sections = ref(props.sections);
 let resumable = new Resumable();
 let is_awardable = ref(props.course.is_certifiable);
+let is_announcing = ref(false);
 
 const changeAwardableStatus = async () => {
     const status = await axios.put(route('course.is_awardable', { id: props.course.id }))

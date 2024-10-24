@@ -1,10 +1,12 @@
-<?php 
+<?php
 
 
 use App\Http\Controllers\Payment\StripeController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get("checkout/{id}", [StripeController::class, "checkout"])->name("checkout");
-Route::get("checkout-success/{id}", [StripeController::class, "success"])->name("checkout-success");
-Route::get("checkout-cancel", [StripeController::class, "cancel"])->name("checkout-cancel");
+Route::controller(StripeController::class)->group(function() {
+    Route::get("checkout/{id}", "checkout")->name("checkout");
+    Route::get("checkout-success/{id}", "success")->name("checkout-success");
+    Route::get("checkout-cancel", "cancel")->name("checkout-cancel");
+});

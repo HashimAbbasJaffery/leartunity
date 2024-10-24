@@ -23,7 +23,6 @@ class HomeController extends Controller
                         ->whereStatus(1)
                         ->orderBy("courses_count", "desc")
                         ->get();
-        // dd($categories);
 
         $plans = Plan::whereStatus(1)->get();
         return Inertia::render("Index", [

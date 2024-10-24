@@ -97,7 +97,4 @@ class ContentController extends Controller
         return $section->contents;
     }
 
-    public function deleteMultiple(Request $request) {
-        return $request->all();
-    }
 }

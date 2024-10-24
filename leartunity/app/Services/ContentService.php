@@ -47,4 +47,17 @@ class ContentService implements LinkedList {
             $this->remove($content);
         }
     }
+
+    public function getNextContent(Content $content) {
+        $next_content = $content->next()->first();
+        $section = $content->section;
+        $next_section = Section::where("course_id", $section->course_id)
+                                ->where("sequence", $section->sequence + 1)
+                                ->first();
+        if(!$next_content) {
+            $next_content = $next_section?->contents()?->first() ?? false;
+        }
+
+        return $next_content;
+    }
 }

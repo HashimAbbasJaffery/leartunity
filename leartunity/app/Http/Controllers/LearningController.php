@@ -6,8 +6,10 @@ use App\Models\Certificate;
 use App\Models\Content;
 use App\Models\Course;
 use App\Models\Purchase;
+use App\Services\ContentService;
 use App\Services\SectionContentService;
 use App\Models\Section;
+use App\Services\VideoTrackingService;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,39 +39,19 @@ class LearningController extends Controller
             "purchases" => $purchases
         ]);
     }
-    public function get(Course $course, Content $content) {
-        $course->load(["author", "sections"]);
+    public function get(Course $course, Content $content, ContentService $contentService) {
+        $course->load(["author", "sections", "tracker"]);
         $current_content = $content;
-        $comments = $course->comments()->where("content_id", $content->id)->whereNull("replies_to")->get();
-        $next_content = $content->next()->first();
-        $section = $content->section;
-        $next_section = Section::where("course_id", $section->course_id)
-                                ->where("sequence", $section->sequence + 1)
-                                ->first();
+        $comments = $course->comments()
+                            ->where("content_id", $content->id)
+                            ->whereNull("replies_to")
+                            ->paginate(2)
+                            ->withQueryString();
+        if(request()->expectsJson()) return $comments;
 
-        $tracker = [];
-        $instance_tracker = [];
-        $quiz_tracker = [];
         $is_purchased = $course->purchases()->where("user_id", auth()->id())->exists();
-        if($is_purchased) {
-            $instance_tracker = json_decode($content->section->course->tracker->tracking);
-            $quiz_tracker = json_decode($content->section->course->tracker->quiz_tracker);
 
-            $instance_tracker = array_filter($instance_tracker, function($track) use($content) {
-                return $track->id == $content->id;
-            });
-            $quiz_tracker = array_filter($quiz_tracker, function($track) use($content) {
-                return $track->id == $content->id;
-            });
-
-            $instance_tracker = !count($instance_tracker) ? $instance_tracker : reset($instance_tracker);
-            $quiz_tracker = !count($quiz_tracker) ? $quiz_tracker : reset($quiz_tracker);
-
-            $tracker = Arr::pluck(json_decode($course->tracker->tracking), "id");
-        }
-        if(!$next_content) {
-            $next_content = $next_section?->contents()?->first() ?? false;
-        }
+        $next_content = $contentService->getNextContent($content);
 
         $certificate = Certificate::where("user_id", auth()->id())->where("certificate_id", $course->id)->first();
         return Inertia::render("Learning/Course", [
@@ -77,9 +59,6 @@ class LearningController extends Controller
             "comments" => $comments,
             "current_content" => $current_content,
             "next_content" => $next_content,
-            "tracker" => $tracker,
-            "instance_tracker" => $instance_tracker,
-            "quiz_tracker" => $quiz_tracker,
             "certificate_id" => $certificate?->certificate_id ?? null,
             "is_purchased" => $is_purchased
         ]);

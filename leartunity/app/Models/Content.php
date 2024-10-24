@@ -39,6 +39,8 @@ class Content extends Model
         return $this->hasMany(Comment::class)->whereNull("replies_to");
     }
 
+
+
     protected static function booted() {
         static::deleting(function(Content $content) {
             File::delete(storage_path("app/videos/{$content->content}"));

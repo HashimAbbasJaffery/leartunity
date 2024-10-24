@@ -15,17 +15,24 @@
         </div>
     </div>
 </div>
+<div class="replies">
+    <CommentVue :course="course" v-for="reply in comment.replies" :key="reply.id" @toggleModal="toggle($event)" :comment="reply"></CommentVue>
+</div>
+
 </template>
 
 <script setup>
 import moment from 'moment';
-import {computed} from "vue"
+import CommentVue from "../Components/Comment.vue";
+import {computed, onMounted, ref} from "vue"
 import { usePage } from '@inertiajs/vue3';
 
 
 let props = defineProps({
-    comment: Object
+    comment: Object,
+    course: Object
 })
+
 
 let emit = defineEmits(["toggleModal"])
 console.log(props.comment);
@@ -33,7 +40,14 @@ console.log(props.comment);
 let page = usePage();
 const user = page.props.auth.user;
 
-let isInstructor = computed(() => user && user.id === props.comment.user_id)
+onMounted(() => {
+    console.log("comment's user_id");
+    console.log(props.comment.user_id);
+    console.log("Course author");
+    console.log(props.course.author_id);
+})
+
+let isInstructor = computed(() => props.course.author_id === props.comment.user_id)
 
 
 

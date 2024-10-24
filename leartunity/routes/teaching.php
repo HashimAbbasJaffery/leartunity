@@ -7,26 +7,34 @@ use App\Http\Controllers\QuizController;
 use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", [CourseController::class, "index"])->name("instructor");
 
-Route::delete("/section/{section}/delete", [SectionController::class, "destroy"])->name("section.delete");
-Route::post("/section/{course_slug_o}/create", [SectionController::class, "store"])->name("section.create");
-Route::put("/section/{section}/update", [SectionController::class, "update"])->name("section.update");
+Route::controller(SectionController::class)->name("section.")->group(function() {
+    Route::delete("/section/{section}/delete", "destroy")->name("delete");
+    Route::post("/section/{course_slug_o}/create", "store")->name("create");
+    Route::put("/section/{section}/update", "update")->name("update");
+});
 
-Route::post("/content/{section}/add", [ContentController::class, "store"])->name("content.store");
-Route::delete("/content/{content}/delete", [ContentController::class, "destroy"])->name("content.delete");
-Route::post("/content/{content}/update", [ContentController::class, "update"]);
+Route::controller(ContentController::class)->name("content.")->group(function() {
+    Route::post("/content/{section}/add", "store")->name("store");
+    Route::delete("/content/{content}/delete", "destroy")->name("delete");
+    Route::post("/content/{content}/update", "update")->name("update");
+});
 
-Route::get("/content/{section}/quiz/add", [QuizController::class, "create"])->name("quiz.get");
-Route::post("/content/{section}/quiz/add", [QuizController::class, "store"])->name("quiz.store");;
+Route::controller(QuizController::class)->name("quiz.")->group(function() {
+    Route::get("/content/{section}/quiz/add", "create")->name("get");
+    Route::post("/content/{section}/quiz/add", "store")->name("store");;
+});
 
-Route::get("/course/create", [CourseController::class, "create"]);
-Route::put("/course/{course_o}/status", [CourseController::class, "changeStatus"])->name("course.changeStatus");
-Route::get("/course/{course_slug_o}", [CourseController::class, "show"])->name("course.show");
-Route::post("/course/store", [CourseController::class, "store"])->name("course.create");
-Route::get("/course/{course_slug_o}/edit", [CourseController::class, "edit"])->name("course.edit");
-Route::put("/course/{course_slug_o}/create", [CourseController::class, "update"])->name("course.update");
-Route::delete("/course/{course:id}", [CourseController::class, "destroy"])->name("course.delete");
+Route::controller(CourseController::class)->group(function() {
+    Route::get("/", "index")->name("instructor");
+    Route::get("/course/create", "create");
+    Route::put("/course/{course_o}/status", "changeStatus")->name("course.changeStatus");
+    Route::get("/course/{course_slug_o}", "show")->name("course.show");
+    Route::post("/course/store", "store")->name("course.create");
+    Route::get("/course/{course_slug_o}/edit", "edit")->name("course.edit");
+    Route::put("/course/{course_slug_o}/create", "update")->name("course.update");
+    Route::delete("/course/{course:id}", "destroy")->name("course.delete");
+});
 
 Route::put("/course/{course:id}/awardables", function(Request $request, Course $course) {
    $course->is_certifiable = ! $course->is_certifiable;

@@ -57,8 +57,16 @@
                     </div>
                     <div class="comments mt-2" v-if="comments.length">
                         <div v-for="comment in comments" :key="comment.id" >
-                            <CommentVue @toggleModal="toggle($event)" :comment="comment"></CommentVue>
-                            <CommentVue v-for="reply in comment.replies" :key="reply.id" @toggleModal="toggle($event)" :comment="reply"></CommentVue>
+                            <CommentVue :course="course" @toggleModal="toggle($event)" :comment="comment"></CommentVue>
+                            <!-- <CommentVue :course="course" v-for="reply in comment.replies" :key="reply.id" @toggleModal="toggle($event)" :comment="reply"></CommentVue> -->
+                        </div>
+                        <div class="load-more w-full" v-if="next_link.url">
+                            <button @click="loadMore" :disabled="loading" type="button" class="w-full disabled:bg-gray-400 disabled:cursor-not-allowed text-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                <span class="flex items-center justify-center w-full">
+                                    <p class="mr-3">Load More</p>
+                                    <span v-if="loading" class="loader-spinner"></span>
+                                </span>
+                            </button>
                         </div>
                     </div>
                     <div v-else class="mt-6 no-comments bg-green-400 text-white px-4 py-2 rounded border-2 border-green-500">
@@ -101,27 +109,31 @@ import Quiz from "../../Components/Quiz.vue";
 import { router } from "@inertiajs/vue3";
 import Plyr from "plyr";
 import Modal from "../../Classes/Modal";
-import NavLink from "../../Components/NavLink.vue";
 import axios from "axios";
-
 let props = defineProps({
     course: Object,
     current_content: Object,
     next_content: Object,
     certificate_id: Number,
-    is_purchased: Boolean
+    is_purchased: Boolean,
+    comments: Array
 });
+
 let progress = ref(props.is_purchased ? props.course.tracker.progress : -1);
 provide("course", props.course);
 provide("current_content", props.current_content);
 provide("completed", props.is_purchased ? JSON.parse(props.course.tracker.tracking).map(tracker => tracker.id) : -1);
 
-let comments = ref(props.current_content.comments);
+let comments = ref(props.comments.data);
+let links = ref(props.comments.links);
+const next_link = computed(() => links.value[links.value.length - 1]);
 let active = ref(false);
 let replying_to = ref();
 let replying_name = ref();
 let video = ref(props.current_content.content);
 let certificate = ref(props.certificate_id);
+let loading = ref(false);
+
 
 function toggle(event) {
     active.value = !active.value;
@@ -172,6 +184,15 @@ onUnmounted(() => {
     player.destroy();
 })
 
+const loadMore = async () => {
+    loading.value = true;
+    const status = await axios.get(next_link.value.url);
+    links.value = status.data.links;
+    comments.value.push(...status.data.data);
+    console.log(next_link.value);
+    loading.value = false;
+}
+
 
 
 
@@ -179,6 +200,41 @@ onUnmounted(() => {
 
 </script>
 
-<style>
+<style scoped>
+
+.loader-spinner {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  position: relative;
+}
+.loader-spinner::after,
+.loader-spinner::before {
+  content: '';
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #FFF;
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: animloader-spinner 2s linear infinite;
+}
+.loader-spinner::after {
+  animation-delay: 1s;
+}
+
+@keyframes animloader-spinner {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
 
 </style>

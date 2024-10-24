@@ -10,6 +10,7 @@ class Purchase extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $with = "user";
     public function user(): BelongsTo {
         return $this->BelongsTo(User::class);
     }

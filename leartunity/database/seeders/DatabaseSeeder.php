@@ -19,12 +19,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // \App\Models\User::factory(10)->create();
-        // User::factory(10)->create();
+        User::factory(500)->create();
         // Course::factory(50)->create();
-        Category::factory($this->quantity)->create();
-        Course::factory()
-                ->has(Category::factory()->count(50))
-                ->create();
+        // Category::factory($this->quantity)->create();
+        // Course::factory()
+        //         ->has(Category::factory()->count(50))
+        //         ->create();
         // Setting::create([
         //     "primary_color" => "#333",
         //     "secondary_color" => "white",

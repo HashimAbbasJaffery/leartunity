@@ -58,7 +58,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function prunable() {
         return static::where("created_at", "<", now()->subDays(60))->whereNull("email_verified_at");
     }
-    protected function courses() {
+    public function courses() {
         return $this->hasMany(Course::class, "author_id");
     }
     public function purchases() {

@@ -13,11 +13,10 @@
 
             <div v-if="user" class="aside-wrapper">
                 <p style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">{{ profile.user.name }}</p>
-                <Followers v-if="user" :isFollowed="follows.includes(user_id)" :followers="profile.user.follows.length" :id="profile.id"></Followers>
+                <Followers v-if="user" :isFollowed="profile.user.follows.filter(follower => follower.id === user.id).length" :followers="profile.user.follows.length" :id="profile.id"></Followers>
                 <h1 style="font-weight: 600;" class="mb-1">Achievements</h1>
                 <section class="achievements flex">
-                        <img :src="`/badges/starting.png`" class="mr-2" style="border-radius: 50px;" height="50" width="50"/>
-                        <!-- <p style="font-size: 14px;">No badges have been awarded yet!</p> -->
+                    <img :src="`/badges/starting.png`" class="mr-2" style="border-radius: 50px;" height="50" width="50"/>
                 </section>
 
                 <h1 style="font-weight: 600;" class="mb-1 mt-3">Streak</h1>
@@ -54,7 +53,6 @@
             </section>
             <section id="other-info" style="width: 100%;" v-if="openTab === 'courses'">
                 <div>
-
                     <Loading v-if="loading" :active="true" style="width: auto; height: auto; margin: auto; top: 50%; left: 50%;  ">
                         <p class="mt-3" v-translate>Fetching...</p>
                     </Loading>
@@ -101,23 +99,13 @@ let courses = ref(props.courses);
 let links = ref(courses.value.links);
 let loading = ref(false);
 let openTab = ref('courses');
+let cropper = ref();
 
 
 let page = usePage();
 
 let user = page.props.auth.user;
-let cropper = ref();
 
-let user_id = null;
-let follows = [];
-if(user) {
-    user_id = page.props.auth.user.id;
-    follows = page.props.auth.user.follows;
-    follows = follows.map(follow => follow.id);
-}
-let watching = ref(0);
-
-let viewers = 0;
 
 let isOpen = ref(false);
 provide("isOpen", isOpen);

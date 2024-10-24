@@ -51,8 +51,7 @@
               </h1>
               <p>Start teaching right away, and arrange live sessions</p>
               <div class="flex">
-                <button class="mr-1">Apply</button>
-                <button style="background: transparent; color: black; border: 1px solid var(--primary)">Learn More</button>
+                <NavLink as="button" :href="$route('apply')" class="mr-1">Apply</NavLink>
               </div>
             </div>
           </section>
@@ -69,6 +68,7 @@ import { router } from "@inertiajs/vue3";
 import axios from "axios";
 
 import { useDebouncedRef } from "../debounce";
+import NavLink from "../Components/NavLink.vue";
 
 let props = defineProps({
     "categories": String,

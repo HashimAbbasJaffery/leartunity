@@ -1,5 +1,8 @@
 <script setup>
 import { trans } from 'laravel-vue-i18n';
+import NavLink from "../../Components/NavLink.vue"
+
+
 </script>
 <template>
 
@@ -12,8 +15,8 @@ import { trans } from 'laravel-vue-i18n';
             <li v-translate>Courses</li>
             <li v-translate>Books</li>
             <li v-translate>Live Sessions</li>
-            <li v-translate>Teachers</li>
           </ul>
+          <NavLink :href="$route('teachers')">Teachers</NavLink>
         </nav>
       </div>
       <div class="second-column column">
